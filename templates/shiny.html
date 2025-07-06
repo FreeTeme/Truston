@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Осмотр фар и освещения</title>
+    <title>Осмотр колес</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -16,6 +16,7 @@
 
 <!-- Иконка для старого Safari -->
 <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <style>
         :root {
             --primary: rgba(30, 41, 59, 0.8);
@@ -130,7 +131,7 @@
             border-bottom-right-radius: var(--radius-xl);
         }
         
-        .light-name {
+        .wheel-name {
             position: absolute;
             top: 1.5rem;
             left: 1.5rem;
@@ -165,7 +166,7 @@
             transform: scale(1.1);
         }
         
-        .light-menu {
+        .wheel-menu {
             position: absolute;
             bottom: 1.5rem;
             left: 0;
@@ -513,62 +514,6 @@
             margin-top: 1.5rem;
         }
         
-        /* Voice input styles */
-        .voice-input-container {
-            position: relative;
-            width: 100%;
-        }
-        
-        .voice-input-btn {
-            position: absolute;
-            right: 10px;
-            bottom: 25px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            z-index: 2;
-        }
-        
-        .voice-input-btn:hover {
-            background: var(--primary-light);
-            transform: scale(1.1);
-        }
-        
-        .voice-input-btn.listening {
-            animation: pulse 1.5s infinite;
-            background: var(--danger);
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(247, 37, 133, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
-        }
-        
-        .voice-status {
-            position: absolute;
-            bottom: 65px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--danger);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        
-        .voice-status.show {
-            opacity: 1;
-        }
-        
         /* Animation classes */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -642,7 +587,7 @@
                 padding: 1.5rem 2.5rem;
             }
             
-            .light-menu {
+            .wheel-menu {
                 bottom: auto;
                 top: 2rem;
                 right: 2rem;
@@ -661,7 +606,7 @@
                 text-align: center;
             }
             
-            .light-name {
+            .wheel-name {
                 top: 2rem;
                 left: 2rem;
                 font-size: 1.4rem;
@@ -697,12 +642,6 @@
             .review-photo {
                 height: 180px;
             }
-            
-            /* Voice input desktop */
-            .voice-input-btn {
-                right: 15px;
-                bottom: 30px;
-            }
         }
         
         /* Custom scrollbar */
@@ -729,26 +668,25 @@
     <div class="container">
         <!-- Photo section (25% height on mobile, full height on desktop) -->
         <div class="photo-section" id="photo-section">
-            <img id="photo-preview" alt="Фото фары">
+            <img id="photo-preview" alt="Фото колеса">
             <div class="photo-container">
                 <div class="photo-overlay" id="photo-placeholder">
                     <i class="fas fa-camera"></i>
-                    <span>Добавить фото фары</span>
+                    <span>Добавить фото колеса</span>
                 </div>
                 <input type="file" id="photo-input" accept="image/*" capture="environment">
                 
-                <div class="light-name">
-                    ОСМОТР ФАР И ОСВЕЩЕНИЯ
+                <div class="wheel-name">
+                    ОСМОТР КОЛЕС
                     <div class="info-icon" title="Детали осмотра">i</div>
                 </div>
                 
-                <div class="light-menu">
+                <div class="wheel-menu">
                     <div class="menu-container">
-                        <div class="menu-item active" data-light="front-r">Перед П</div>
-                        <div class="menu-item" data-light="front-l">Перед Л</div>
-                        <div class="menu-item" data-light="rear-r">Зад П</div>
-                        <div class="menu-item" data-light="rear-l">Зад Л</div>
-                        <div class="menu-item" data-light="interior">Салон</div>
+                        <div class="menu-item active" data-wheel="front-r">Перед П</div>
+                        <div class="menu-item" data-wheel="front-l">Перед Л</div>
+                        <div class="menu-item" data-wheel="rear-r">Зад П</div>
+                        <div class="menu-item" data-wheel="rear-l">Зад Л</div>
                     </div>
                 </div>
             </div>
@@ -762,33 +700,28 @@
                     Чек-лист осмотра
                 </h2>
                 
-                <div class="inspection-item animate-in delay-1" id="check-operation">
-                    <span>Проверить работу (включение/выключение)</span>
+                <div class="inspection-item animate-in delay-1" id="check-bolts">
+                    <span>Проверить затяжку болтов</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-2" id="check-glass">
-                    <span>Проверить состояние стекла (трещины, сколы)</span>
+                <div class="inspection-item animate-in delay-2" id="check-rim">
+                    <span>Проверить состояние диска</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-3" id="check-brightness">
-                    <span>Проверить яркость свечения</span>
+                <div class="inspection-item animate-in delay-3" id="check-pressure">
+                    <span>Измерить давление в шинах</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-1" id="check-mounting">
-                    <span>Проверить крепление (отсутствие люфтов)</span>
+                <div class="inspection-item animate-in delay-1" id="check-tread">
+                    <span>Проверить глубину протектора</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-2" id="check-sealing">
-                    <span>Проверить герметичность (отсутствие конденсата)</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-3" id="check-aim">
-                    <span>Проверить правильность настройки света</span>
+                <div class="inspection-item animate-in delay-2" id="check-valve">
+                    <span>Проверить состояние вентиля</span>
                     <i class="fas fa-check"></i>
                 </div>
             </div>
@@ -796,14 +729,12 @@
         
         <!-- Review section (hidden by default) -->
         <div class="review-section" id="review-section">
-            <h2 class="review-title">Результаты осмотра фар и освещения</h2>
-            
             <div class="review-grid" id="review-photos">
                 <!-- Фото будут добавлены динамически -->
             </div>
             
             <div class="rating-section">
-                <h3 class="rating-title">Оцените общее состояние освещения</h3>
+                <h3 class="rating-title">Оцените общее состояние колес</h3>
                 <div class="rating-stars">
                     <i class="fas fa-star rating-star" data-rating="1"></i>
                     <i class="fas fa-star rating-star" data-rating="2"></i>
@@ -814,13 +745,7 @@
             </div>
             
             <div class="review-comment">
-                <div class="voice-input-container">
-                    <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
-                    <button class="voice-input-btn" id="voice-comment-btn" title="Голосовой ввод">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <div class="voice-status" id="voice-status"></div>
-                </div>
+                <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
             </div>
         </div>
         
@@ -841,13 +766,7 @@
     <div class="modal" id="comment-modal">
         <div class="modal-content">
             <h3 class="modal-title">Опишите найденные проблемы</h3>
-            <div class="voice-input-container">
-                <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
-                <button class="voice-input-btn" id="voice-issue-btn" title="Голосовой ввод">
-                    <i class="fas fa-microphone"></i>
-                </button>
-                <div class="voice-status" id="voice-issue-status"></div>
-            </div>
+            <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
             <div class="modal-buttons">
                 <button class="modal-btn modal-btn-cancel" id="modal-cancel">Отмена</button>
                 <button class="modal-btn modal-btn-submit" id="modal-submit">Подтвердить</button>
@@ -858,10 +777,10 @@
     <!-- Modal for completion -->
     <div class="modal" id="complete-modal">
         <div class="modal-content">
-            <h3 class="modal-title">Осмотр фар завершен!</h3>
-            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр системы освещения.</p>
+            <h3 class="modal-title">Осмотр шин завершен!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр колес.</p>
             <div class="modal-buttons" style="justify-content: center;">
-                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 3.html'">Закрыть</button>
+                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 2.html'">Закрыть</button>
             </div>
         </div>
     </div>
@@ -869,15 +788,14 @@
     <script>
         // App state
         const appState = {
-            currentLight: 'front-r',
-            lights: {
+            currentWheel: 'front-r',
+            wheels: {
                 'front-r': { photo: null, checks: [], comment: '' },
                 'front-l': { photo: null, checks: [], comment: '' },
                 'rear-r': { photo: null, checks: [], comment: '' },
-                'rear-l': { photo: null, checks: [], comment: '' },
-                'interior': { photo: null, checks: [], comment: '' }
+                'rear-l': { photo: null, checks: [], comment: '' }
             },
-            completedLights: 0,
+            completedWheels: 0,
             rating: 0,
             finalComment: ''
         };
@@ -888,7 +806,7 @@
         const photoPreview = document.getElementById('photo-preview');
         const inspectionItems = document.querySelectorAll('.inspection-item');
         const menuItems = document.querySelectorAll('.menu-item');
-        const lightName = document.querySelector('.light-name');
+        const wheelName = document.querySelector('.wheel-name');
         const infoIcon = document.querySelector('.info-icon');
         const btnProblem = document.getElementById('btn-problem');
         const btnNoProblem = document.getElementById('btn-no-problem');
@@ -904,115 +822,24 @@
         const ratingStars = document.querySelectorAll('.rating-star');
         const finalComment = document.getElementById('final-comment');
         const photoSection = document.getElementById('photo-section');
-        const voiceCommentBtn = document.getElementById('voice-comment-btn');
-        const voiceIssueBtn = document.getElementById('voice-issue-btn');
-        const voiceStatus = document.getElementById('voice-status');
-        const voiceIssueStatus = document.getElementById('voice-issue-status');
-        
-        // Speech recognition setup
-        let recognition = null;
-        let currentTextarea = null;
-        let currentStatus = null;
-        
-        // Initialize speech recognition
-        function initSpeechRecognition() {
-            try {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (!SpeechRecognition) {
-                    console.warn('Браузер не поддерживает API распознавания речи');
-                    voiceCommentBtn.style.display = 'none';
-                    voiceIssueBtn.style.display = 'none';
-                    return;
-                }
-                
-                recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'ru-RU';
-                
-                recognition.onstart = function() {
-                    if (currentStatus) {
-                        currentStatus.textContent = 'Слушаю...';
-                        currentStatus.classList.add('show');
-                    }
-                };
-                
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    if (currentTextarea) {
-                        currentTextarea.value += ' ' + transcript;
-                    }
-                };
-                
-                recognition.onerror = function(event) {
-                    console.error('Ошибка распознавания:', event.error);
-                    if (currentStatus) {
-                        currentStatus.textContent = 'Ошибка: ' + event.error;
-                        setTimeout(() => {
-                            currentStatus.classList.remove('show');
-                        }, 3000);
-                    }
-                };
-                
-                recognition.onend = function() {
-                    if (currentStatus) {
-                        currentStatus.textContent = 'Готово';
-                        setTimeout(() => {
-                            currentStatus.classList.remove('show');
-                        }, 1000);
-                    }
-                };
-            } catch (e) {
-                console.error('Ошибка инициализации распознавания речи:', e);
-                voiceCommentBtn.style.display = 'none';
-                voiceIssueBtn.style.display = 'none';
-            }
-        }
-        
-        // Start voice input
-        function startVoiceInput(textarea, statusElement) {
-            if (!recognition) {
-                alert('Ваш браузер не поддерживает голосовой ввод или произошла ошибка инициализации');
-                return;
-            }
-            
-            currentTextarea = textarea;
-            currentStatus = statusElement;
-            
-            try {
-                recognition.start();
-                textarea.focus();
-            } catch (e) {
-                console.error('Ошибка запуска распознавания:', e);
-                if (currentStatus) {
-                    currentStatus.textContent = 'Ошибка запуска';
-                    setTimeout(() => {
-                        currentStatus.classList.remove('show');
-                    }, 2000);
-                }
-            }
-        }
         
         // Initialize the app
         function initApp() {
-            // Set current light from active menu item
+            // Set current wheel from active menu item
             const activeMenuItem = document.querySelector('.menu-item.active');
-            appState.currentLight = activeMenuItem.dataset.light;
+            appState.currentWheel = activeMenuItem.dataset.wheel;
             
             // Load saved data if available
-            loadLightData(appState.currentLight);
-            
-            // Initialize speech recognition
-            initSpeechRecognition();
+            loadWheelData(appState.currentWheel);
         }
         
-        // Load light data into UI
-        function loadLightData(light) {
-            const lightData = appState.lights[light];
+        // Load wheel data into UI
+        function loadWheelData(wheel) {
+            const wheelData = appState.wheels[wheel];
             
             // Load photo if exists
-            if (lightData.photo) {
-                photoPreview.src = lightData.photo;
+            if (wheelData.photo) {
+                photoPreview.src = wheelData.photo;
                 photoPreview.style.display = 'block';
                 photoPlaceholder.style.display = 'none';
             } else {
@@ -1023,7 +850,7 @@
             // Load checks
             inspectionItems.forEach(item => {
                 const checkId = item.id.replace('check-', '');
-                if (lightData.checks.includes(checkId)) {
+                if (wheelData.checks.includes(checkId)) {
                     item.classList.add('checked');
                 } else {
                     item.classList.remove('checked');
@@ -1031,60 +858,60 @@
             });
         }
         
-        // Save light data from UI
-        function saveLightData(light) {
-            const lightData = appState.lights[light];
+        // Save wheel data from UI
+        function saveWheelData(wheel) {
+            const wheelData = appState.wheels[wheel];
             
             // Save checks
-            lightData.checks = [];
+            wheelData.checks = [];
             inspectionItems.forEach(item => {
                 if (item.classList.contains('checked')) {
                     const checkId = item.id.replace('check-', '');
-                    lightData.checks.push(checkId);
+                    wheelData.checks.push(checkId);
                 }
             });
         }
         
-        // Move to next light
-        function moveToNextLight() {
-            // Save current light data
-            saveLightData(appState.currentLight);
+        // Move to next wheel
+        function moveToNextWheel() {
+            // Save current wheel data
+            saveWheelData(appState.currentWheel);
             
-            // Mark current light as completed
-            const currentMenuItem = document.querySelector(`.menu-item[data-light="${appState.currentLight}"]`);
+            // Mark current wheel as completed
+            const currentMenuItem = document.querySelector(`.menu-item[data-wheel="${appState.currentWheel}"]`);
             currentMenuItem.classList.add('completed');
-            appState.completedLights++;
+            appState.completedWheels++;
             
-            // Check if all lights are completed
-            if (appState.completedLights === 5) {
+            // Check if all wheels are completed
+            if (appState.completedWheels === 4) {
                 showReviewSection();
                 return;
             }
             
-            // Find next light that's not completed
-            let nextLight = null;
+            // Find next wheel that's not completed
+            let nextWheel = null;
             menuItems.forEach(item => {
-                if (!item.classList.contains('completed') && !nextLight) {
-                    nextLight = item.dataset.light;
+                if (!item.classList.contains('completed') && !nextWheel) {
+                    nextWheel = item.dataset.wheel;
                 }
             });
             
-            if (nextLight) {
-                switchToLight(nextLight);
+            if (nextWheel) {
+                switchToWheel(nextWheel);
             }
         }
         
-        // Switch to specific light
-        function switchToLight(light) {
-            // Save current light data
-            saveLightData(appState.currentLight);
+        // Switch to specific wheel
+        function switchToWheel(wheel) {
+            // Save current wheel data
+            saveWheelData(appState.currentWheel);
             
-            // Update current light
-            appState.currentLight = light;
+            // Update current wheel
+            appState.currentWheel = wheel;
             
             // Update active menu item
             menuItems.forEach(item => {
-                if (item.dataset.light === light) {
+                if (item.dataset.wheel === wheel) {
                     item.classList.add('active');
                     item.style.transform = 'scale(1.05)';
                     setTimeout(() => {
@@ -1096,19 +923,11 @@
                 }
             });
             
-            // Update light name
-            let displayName = '';
-            switch(light) {
-                case 'front-r': displayName = 'ПЕРЕДНЯЯ ПРАВАЯ ФАРА'; break;
-                case 'front-l': displayName = 'ПЕРЕДНЯЯ ЛЕВАЯ ФАРА'; break;
-                case 'rear-r': displayName = 'ЗАДНИЙ ПРАВЫЙ ФОНАРЬ'; break;
-                case 'rear-l': displayName = 'ЗАДНИЙ ЛЕВЫЙ ФОНАРЬ'; break;
-                case 'interior': displayName = 'САЛОННОЕ ОСВЕЩЕНИЕ'; break;
-            }
-            lightName.textContent = displayName;
+            // Update wheel name
+            wheelName.textContent = `ОСМОТР КОЛЕС: ${wheel.toUpperCase().replace('-', ' ')}`;
             
-            // Load new light data
-            loadLightData(light);
+            // Load new wheel data
+            loadWheelData(wheel);
         }
         
         // Show review section with all photos
@@ -1122,24 +941,13 @@
             // Clear existing photos
             reviewPhotos.innerHTML = '';
             
-            // Add all light photos
-            for (const [light, data] of Object.entries(appState.lights)) {
+            // Add all wheel photos
+            for (const [wheel, data] of Object.entries(appState.wheels)) {
                 if (data.photo) {
                     const photoDiv = document.createElement('div');
                     photoDiv.className = 'review-photo';
-                    
-                    let caption = '';
-                    switch(light) {
-                        case 'front-r': caption = 'Передняя правая'; break;
-                        case 'front-l': caption = 'Передняя левая'; break;
-                        case 'rear-r': caption = 'Задняя правая'; break;
-                        case 'rear-l': caption = 'Задняя левая'; break;
-                        case 'interior': caption = 'Салон'; break;
-                    }
-                    
                     photoDiv.innerHTML = `
-                        <img src="${data.photo}" alt="${light}">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; padding: 0.5rem; text-align: center; font-size: 0.8rem;">${caption}</div>
+                        <img src="${data.photo}" alt="${wheel}">
                     `;
                     reviewPhotos.appendChild(photoDiv);
                 }
@@ -1195,8 +1003,8 @@
                     photoPreview.style.display = 'block';
                     photoPlaceholder.style.display = 'none';
                     
-                    // Save photo to current light
-                    appState.lights[appState.currentLight].photo = event.target.result;
+                    // Save photo to current wheel
+                    appState.wheels[appState.currentWheel].photo = event.target.result;
                     
                     // Add slight zoom animation
                     photoPreview.style.transform = 'scale(1.05)';
@@ -1224,12 +1032,12 @@
             });
         });
         
-        // Light menu selection
+        // Wheel menu selection
         menuItems.forEach(item => {
             item.addEventListener('click', function() {
-                const light = this.dataset.light;
+                const wheel = this.dataset.wheel;
                 if (!this.classList.contains('completed')) {
-                    switchToLight(light);
+                    switchToWheel(wheel);
                 }
             });
         });
@@ -1239,7 +1047,7 @@
             this.style.transform = 'scale(1.2) rotate(180deg)';
             setTimeout(() => {
                 this.style.transform = 'scale(1) rotate(0)';
-                alert('Комплексный осмотр фар и освещения включает проверку:\n\n• Работы всех элементов освещения\n• Целостности стекол и корпусов\n• Яркости свечения ламп\n• Правильности настройки света фар\n• Герметичности (отсутствия конденсата)\n• Крепления фар и фонарей');
+                alert('Комплексный осмотр колес помогает выявить:\n\n• Ослабленные или поврежденные болты\n• Трещины/повреждения дисков\n• Проблемы с давлением в шинах\n• Износ протектора\n• Проблемы с вентилями');
             }, 300);
         });
         
@@ -1251,7 +1059,7 @@
             }, 200);
             
             // Show comment modal
-            issueComment.value = appState.lights[appState.currentLight].comment;
+            issueComment.value = appState.wheels[appState.currentWheel].comment;
             showModal(commentModal);
         });
         
@@ -1273,13 +1081,13 @@
                 }
                 
                 // Check if photo was added
-                if (!appState.lights[appState.currentLight].photo) {
-                    if (!confirm('Вы не добавили фото этого элемента освещения. Продолжить без фото?')) {
+                if (!appState.wheels[appState.currentWheel].photo) {
+                    if (!confirm('Вы не добавили фото этого колеса. Продолжить без фото?')) {
                         return;
                     }
                 }
                 
-                moveToNextLight();
+                moveToNextWheel();
             }
         });
         
@@ -1289,12 +1097,12 @@
         });
         
         modalSubmit.addEventListener('click', () => {
-            // Save comment to current light
-            appState.lights[appState.currentLight].comment = issueComment.value;
+            // Save comment to current wheel
+            appState.wheels[appState.currentWheel].comment = issueComment.value;
             hideModal(commentModal);
             
-            // Move to next light
-            moveToNextLight();
+            // Move to next wheel
+            moveToNextWheel();
         });
         
         modalClose.addEventListener('click', () => {
@@ -1317,31 +1125,9 @@
             });
         });
         
-        // Voice input buttons
-        voiceCommentBtn.addEventListener('click', function() {
-            this.classList.toggle('listening');
-            if (this.classList.contains('listening')) {
-                startVoiceInput(finalComment, voiceStatus);
-            } else {
-                if (recognition) {
-                    recognition.stop();
-                }
-            }
-        });
-        
-        voiceIssueBtn.addEventListener('click', function() {
-            this.classList.toggle('listening');
-            if (this.classList.contains('listening')) {
-                startVoiceInput(issueComment, voiceIssueStatus);
-            } else {
-                if (recognition) {
-                    recognition.stop();
-                }
-            }
-        });
-        
         // Initialize the app
         initApp();
+
 
         // Проверка поддержки и окружения
 if ('serviceWorker' in navigator && 
