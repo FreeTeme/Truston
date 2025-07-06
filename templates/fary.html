@@ -723,6 +723,91 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--secondary);
         }
+
+
+        /* Mobile adaptations */
+@media (max-width: 767px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .photo-section {
+        flex: 0 0 30vh;
+        min-height: 220px;
+        height: auto;
+    }
+    
+    .inspection-section {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 80px; /* Space for action buttons */
+    }
+    
+    .review-section {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 80px; /* Space for action buttons */
+    }
+    
+    .scroll-container {
+        max-height: none;
+        overflow-y: visible;
+    }
+    
+    .action-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    
+    /* Better spacing for mobile */
+    .inspection-item {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Adjust menu for small screens */
+    .menu-container {
+        max-width: 95%;
+        overflow-x: auto;
+        white-space: nowrap;
+        display: inline-flex;
+        padding: 0.5rem;
+    }
+    
+    .menu-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Photo section adjustments */
+    .photo-overlay span {
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 0 1rem;
+    }
+    
+    /* Better button sizing */
+    .btn {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Rating stars size */
+    .rating-star {
+        font-size: 1.5rem;
+    }
+}
+
+/* Prevent body scroll when modal is open */
+.modal-open {
+    overflow: hidden;
+    height: 100vh;
+}
     </style>
 </head>
 <body>
