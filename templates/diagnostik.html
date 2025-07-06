@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <style>
         :root {
             --primary: #6366f1;
@@ -2157,6 +2167,35 @@
         
         // Initialize first section
         document.querySelector('.inspection-btn.active').click();
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
         </script>
 </body>
 </html>

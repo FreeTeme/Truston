@@ -6,6 +6,16 @@
     <title>Осмотр автомобиля</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <style>
         :root {
             --primary: rgba(30, 41, 59, 0.8);
@@ -520,6 +530,117 @@
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
         
+        /* Slider verification block */
+        .verification-block {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            z-index: 1000;
+            transition: all 0.5s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .verification-block.show {
+            bottom: 100px;
+        }
+        
+        .verification-text {
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .slider-container {
+            width: 100%;
+            height: 50px;
+            background: #f1f1f1;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-track {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #666;
+            z-index: 1;
+            pointer-events: none;
+             transition: opacity 0.3s ease; 
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-radius: 50%;
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider-success {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+             pointer-events: none; 
+        }
+        
+        .verification-success {
+            font-size: 2rem;
+            color: var(--success);
+            margin-top: 1rem;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s ease;
+        }
+        
+        .verification-block.completed .slider-success {
+            opacity: 1;
+        }
+        
+        .verification-block.completed .verification-success {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
         /* Desktop adaptations - Premium Version */
         @media (min-width: 768px) {
             body {
@@ -634,6 +755,15 @@
             .review-photo {
                 height: 180px;
             }
+            
+            /* Verification block desktop */
+            .verification-block {
+                bottom: -120px;
+            }
+            
+            .verification-block.show {
+                bottom: 40px;
+            }
         }
         
         /* Custom scrollbar */
@@ -736,169 +866,43 @@
     </style>
 </head>
 <body>
-    <!-- <div class="container">
- 
-        <div class="photo-section" id="photo-section">
-            <img id="photo-preview" alt="Фото автомобиля">
-            <div class="photo-container">
-                <div class="photo-overlay" id="photo-placeholder">
-                    <i class="fas fa-car"></i>
-                    <span>Добавить фото автомобиля</span>
-                </div>
-                <input type="file" id="photo-input" accept="image/*" capture="environment">
-                
-                <div class="section-name">
-                    ОСМОТР АВТОМОБИЛЯ
-                    <div class="info-icon" title="Детали осмотра">i</div>
-                </div>
-                
-                <div class="section-menu">
-                    <div class="menu-container">
-                        <div class="menu-item active" data-section="exterior">Кузов</div>
-                        <div class="menu-item" data-section="wheels">Колёса</div>
-                        <div class="menu-item" data-section="interior">Салон</div>
-                        <div class="menu-item" data-section="engine">Двигатель</div>
-                        <div class="menu-item completed" data-section="lights">Фары</div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        
-        <!-- Inspection sections -->
-        <!-- <div class="inspection-section" id="inspection-section">
-            <div class="scroll-container"> -->
-                <!-- Кузов
-                <div class="section-title animate-in" id="exterior-title">
-                    <i class="fas fa-car-side"></i>
-                    Осмотр кузова
-                </div>
-                
-                <div class="inspection-item animate-in delay-1" id="check-body">
-                    <span>Проверить кузов на повреждения</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-2" id="check-doors">
-                    <span>Проверить двери и замки</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-3" id="check-windows">
-                    <span>Проверить стекла и зеркала</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-1" id="check-paint">
-                    <span>Проверить лакокрасочное покрытие</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                 -->
-                <!-- Колёса -->
-                <!-- <div class="section-title animate-in" id="wheels-title" style="display: none;">
-                    <i class="fas fa-tire"></i>
-                    Осмотр колёс
-                </div>
-                
-                <div class="inspection-item animate-in delay-1" id="check-tires" style="display: none;">
-                    <span>Проверить состояние шин</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-2" id="check-pressure" style="display: none;">
-                    <span>Проверить давление в шинах</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-3" id="check-rims" style="display: none;">
-                    <span>Проверить состояние дисков</span>
-                    <i class="fas fa-check"></i>
-                </div> -->
-                
-                <!-- Салон -->
-                <!-- <div class="section-title animate-in" id="interior-title" style="display: none;">
-                    <i class="fas fa-chair"></i>
-                    Осмотр салона
-                </div>
-                
-                <div class="inspection-item animate-in delay-1" id="check-seats" style="display: none;">
-                    <span>Проверить сиденья</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-2" id="check-dashboard" style="display: none;">
-                    <span>Проверить приборную панель</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-3" id="check-controls" style="display: none;">
-                    <span>Проверить органы управления</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                 -->
-                <!-- Двигатель -->
-                <!-- <div class="section-title animate-in" id="engine-title" style="display: none;">
-                    <i class="fas fa-oil-can"></i>
-                    Осмотр двигателя
-                </div>
-                
-                <div class="inspection-item animate-in delay-1" id="check-oil" style="display: none;">
-                    <span>Проверить уровень масла</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-2" id="check-coolant" style="display: none;">
-                    <span>Проверить охлаждающую жидкость</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="inspection-item animate-in delay-3" id="check-belts" style="display: none;">
-                    <span>Проверить ремни и шланги</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                 -->
-                <!-- Карточки осмотра (альтернативный вариант) -->
-
+    <div class="container">
+        <div class="inspection-section" id="inspection-section">
+            <div class="scroll-container">
                 <br>
                 <div class="section-title animate-in" style="margin-top: 2rem; margin-left: 20px;">
                     <i class="fas fa-clipboard-list"></i>
                     Карточки осмотра
                 </div>
-                
-
-
 
                 <div class="card-container">
-
                     <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Шины</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Давление в шинах</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Крепления</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Проверка болтов</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Состояние диска</span>
                                 <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Карточка осмотра фар (выполнена) -->
                     <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Фары и освещение</span>
-                            <!-- <i class="fas fa-lightbulb"></i> -->
                         </div>
                         <div class="card-body">
                             <div class="card-item checked">
@@ -920,595 +924,246 @@
                         </div>
                     </div>
                     
-                    <!-- Карточка осмотра тормозов -->
-                    <div class="inspection-card">
+                    <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Тормозная система</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозные колодки</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозные диски</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозная жидкость</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Ручной тормоз</span>
                                 <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Карточка осмотра подвески -->
-                    <div class="inspection-card">
+                    <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Подвеска</span>
-                            <!-- <i class="fas fa-car-bump"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Амортизаторы</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Пружины</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Рычаги</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Сайлентблоки</span>
                                 <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Карточка осмотра электроники -->
-                    <div class="inspection-card">
+                    <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Электроника</span>
-                            <!-- <i class="fas fa-bolt"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Аккумулятор</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Генератор</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Проводка</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Бортовой компьютер</span>
                                 <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="inspection-card">
+                    <div class="inspection-card card-completed">
                         <div class="card-header">
                             <span>Тормозная система</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозные колодки</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозные диски</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Тормозная жидкость</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item">
+                            <div class="card-item checked">
                                 <span>Ручной тормоз</span>
                                 <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </div>
-        </div>
-        
-        <!-- Review section (hidden by default) -->
-        <div class="review-section" id="review-section">
-            <div class="review-grid" id="review-photos">
-                <!-- Фото будут добавлены динамически -->
-            </div>
-            
-            <div class="rating-section">
-                <h3 class="rating-title">Оцените общее состояние автомобиля</h3>
-                <div class="rating-stars">
-                    <i class="fas fa-star rating-star" data-rating="1"></i>
-                    <i class="fas fa-star rating-star" data-rating="2"></i>
-                    <i class="fas fa-star rating-star" data-rating="3"></i>
-                    <i class="fas fa-star rating-star" data-rating="4"></i>
-                    <i class="fas fa-star rating-star" data-rating="5"></i>
-                </div>
-            </div>
-            
-            <div class="review-comment">
-                <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
-            </div>
-        </div>
-        
-        <!-- Action buttons -->
-        <!-- <div class="action-buttons">
-            <button class="btn btn-problem" id="btn-problem">
-                <i class="fas fa-exclamation-triangle"></i>
-                Найдены проблемы
-            </button>
-            <button class="btn btn-no-problem" id="btn-no-problem">
-                <i class="fas fa-check-circle"></i>
-                Все в порядке
-            </button>
-        </div> -->
-    </div>
-    
-    <!-- Modal for issues comment -->
-    <div class="modal" id="comment-modal">
-        <div class="modal-content">
-            <h3 class="modal-title">Опишите найденные проблемы</h3>
-            <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-btn-cancel" id="modal-cancel">Отмена</button>
-                <button class="modal-btn modal-btn-submit" id="modal-submit">Подтвердить</button>
             </div>
         </div>
     </div>
     
-    <!-- Modal for completion -->
-    <div class="modal" id="complete-modal">
-        <div class="modal-content">
-            <h3 class="modal-title">Осмотр автомобиля завершен!</h3>
-            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр.</p>
-            <div class="modal-buttons" style="justify-content: center;">
-                <button class="modal-btn modal-btn-submit" id="modal-close">Закрыть</button>
+    <!-- Verification block -->
+    <div class="verification-block" id="verification-block">
+        <div class="verification-text">Протяните ползунок вправо для завершения</div>
+        <div class="slider-container">
+            <div class="slider-track">
+                <div class="slider-text">Протяните вправо →</div>
+                <div class="slider-thumb"><i class="fas fa-arrow-right"></i></div>
+                <div class="slider-success"><i class="fas fa-check"></i> Проверка завершена</div>
             </div>
+        </div>
+        <div class="verification-success">
+            <i class="fas fa-check-circle"></i>
         </div>
     </div>
     
     <script>
-        // App state
-        const appState = {
-            currentSection: 'exterior',
-            sections: {
-                'exterior': { photo: null, checks: [], comment: '' },
-                'wheels': { photo: null, checks: [], comment: '' },
-                'interior': { photo: null, checks: [], comment: '' },
-                'engine': { photo: null, checks: [], comment: '' },
-                'lights': { photo: null, checks: [], comment: '' }
-            },
-            completedSections: 1, // Уже выполнена секция фар
-            rating: 0,
-            finalComment: ''
-        };
-        
-        // DOM elements
-        const photoInput = document.getElementById('photo-input');
-        const photoPlaceholder = document.getElementById('photo-placeholder');
-        const photoPreview = document.getElementById('photo-preview');
-        const inspectionItems = document.querySelectorAll('.inspection-item');
-        const menuItems = document.querySelectorAll('.menu-item');
-        const sectionName = document.querySelector('.section-name');
-        const infoIcon = document.querySelector('.info-icon');
-        const btnProblem = document.getElementById('btn-problem');
-        const btnNoProblem = document.getElementById('btn-no-problem');
-        const commentModal = document.getElementById('comment-modal');
-        const completeModal = document.getElementById('complete-modal');
-        const issueComment = document.getElementById('issue-comment');
-        const modalCancel = document.getElementById('modal-cancel');
-        const modalSubmit = document.getElementById('modal-submit');
-        const modalClose = document.getElementById('modal-close');
-        const inspectionSection = document.getElementById('inspection-section');
-        const reviewSection = document.getElementById('review-section');
-        const reviewPhotos = document.getElementById('review-photos');
-        const ratingStars = document.querySelectorAll('.rating-star');
-        const finalComment = document.getElementById('final-comment');
-        const photoSection = document.getElementById('photo-section');
-        
-        // Section titles
-        const sectionTitles = {
-            'exterior': document.getElementById('exterior-title'),
-            'wheels': document.getElementById('wheels-title'),
-            'interior': document.getElementById('interior-title'),
-            'engine': document.getElementById('engine-title')
-        };
-        
-        // Section items
-        const sectionItems = {
-            'exterior': [
-                document.getElementById('check-body'),
-                document.getElementById('check-doors'),
-                document.getElementById('check-windows'),
-                document.getElementById('check-paint')
-            ],
-            'wheels': [
-                document.getElementById('check-tires'),
-                document.getElementById('check-pressure'),
-                document.getElementById('check-rims')
-            ],
-            'interior': [
-                document.getElementById('check-seats'),
-                document.getElementById('check-dashboard'),
-                document.getElementById('check-controls')
-            ],
-            'engine': [
-                document.getElementById('check-oil'),
-                document.getElementById('check-coolant'),
-                document.getElementById('check-belts')
-            ]
-        };
-        
-        // Initialize the app
-        function initApp() {
-            // Set current section from active menu item
-            const activeMenuItem = document.querySelector('.menu-item.active');
-            appState.currentSection = activeMenuItem.dataset.section;
-            
-            // Load saved data if available
-            loadSectionData(appState.currentSection);
-            
-            // Set up card items
-            setupCardItems();
-        }
-        
-        // Set up card items functionality
-        function setupCardItems() {
-            const cardItems = document.querySelectorAll('.card-item');
-            cardItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    this.classList.toggle('checked');
-                    
-                    // Add bounce animation to checkmark
-                    const icon = this.querySelector('i');
-                    icon.style.transform = 'scale(1.3)';
-                    setTimeout(() => {
-                        icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
-                    }, 300);
-                });
-            });
-        }
-        
-        // Load section data into UI
-        function loadSectionData(section) {
-            const sectionData = appState.sections[section];
-            
-            // Load photo if exists
-            if (sectionData.photo) {
-                photoPreview.src = sectionData.photo;
-                photoPreview.style.display = 'block';
-                photoPlaceholder.style.display = 'none';
-            } else {
-                photoPreview.style.display = 'none';
-                photoPlaceholder.style.display = 'flex';
-            }
-            
-            // Show/hide sections
-            for (const [sec, title] of Object.entries(sectionTitles)) {
-                if (sec === section) {
-                    title.style.display = 'flex';
-                } else {
-                    title.style.display = 'none';
-                }
-            }
-            
-            for (const [sec, items] of Object.entries(sectionItems)) {
-                items.forEach(item => {
-                    if (sec === section) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            }
-            
-            // Load checks
-            if (sectionItems[section]) {
-                sectionItems[section].forEach(item => {
-                    const checkId = item.id.replace('check-', '');
-                    if (sectionData.checks.includes(checkId)) {
-                        item.classList.add('checked');
-                    } else {
-                        item.classList.remove('checked');
-                    }
-                });
-            }
-        }
-        
-        // Save section data from UI
-        function saveSectionData(section) {
-            const sectionData = appState.sections[section];
-            
-            // Save checks
-            if (sectionItems[section]) {
-                sectionData.checks = [];
-                sectionItems[section].forEach(item => {
-                    if (item.classList.contains('checked')) {
-                        const checkId = item.id.replace('check-', '');
-                        sectionData.checks.push(checkId);
-                    }
-                });
-            }
-        }
-        
-        // Move to next section
-        function moveToNextSection() {
-            // Save current section data
-            saveSectionData(appState.currentSection);
-            
-            // Mark current section as completed if not already
-            const currentMenuItem = document.querySelector(`.menu-item[data-section="${appState.currentSection}"]`);
-            if (!currentMenuItem.classList.contains('completed')) {
-                currentMenuItem.classList.add('completed');
-                appState.completedSections++;
-            }
-            
-            // Check if all sections are completed
-            if (appState.completedSections === 5) {
-                showReviewSection();
-                return;
-            }
-            
-            // Find next section that's not completed
-            let nextSection = null;
-            menuItems.forEach(item => {
-                if (!item.classList.contains('completed') && !nextSection) {
-                    nextSection = item.dataset.section;
-                }
-            });
-            
-            if (nextSection) {
-                switchToSection(nextSection);
-            }
-        }
-        
-        // Switch to specific section
-        function switchToSection(section) {
-            // Save current section data
-            saveSectionData(appState.currentSection);
-            
-            // Update current section
-            appState.currentSection = section;
-            
-            // Update active menu item
-            menuItems.forEach(item => {
-                if (item.dataset.section === section) {
-                    item.classList.add('active');
-                    item.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        item.style.transform = 'scale(1)';
-                    }, 200);
-                } else {
-                    item.classList.remove('active');
-                    item.style.transform = 'scale(1)';
-                }
-            });
-            
-            // Update section name
-            let sectionNameText = 'ОСМОТР АВТОМОБИЛЯ: ';
-            switch(section) {
-                case 'exterior': sectionNameText += 'КУЗОВ'; break;
-                case 'wheels': sectionNameText += 'КОЛЁСА'; break;
-                case 'interior': sectionNameText += 'САЛОН'; break;
-                case 'engine': sectionNameText += 'ДВИГАТЕЛЬ'; break;
-                case 'lights': sectionNameText += 'ФАРЫ'; break;
-            }
-            sectionName.textContent = sectionNameText;
-            
-            // Load new section data
-            loadSectionData(section);
-        }
-        
-        // Show review section with all photos
-        function showReviewSection() {
-            inspectionSection.style.display = 'none';
-            reviewSection.style.display = 'block';
-            
-            // Hide photo section and menu
-            photoSection.style.display = 'none';
-            
-            // Clear existing photos
-            reviewPhotos.innerHTML = '';
-            
-            // Add all section photos
-            for (const [section, data] of Object.entries(appState.sections)) {
-                if (data.photo) {
-                    const photoDiv = document.createElement('div');
-                    photoDiv.className = 'review-photo';
-                    
-                    let sectionTitle = '';
-                    switch(section) {
-                        case 'exterior': sectionTitle = 'Кузов'; break;
-                        case 'wheels': sectionTitle = 'Колёса'; break;
-                        case 'interior': sectionTitle = 'Салон'; break;
-                        case 'engine': sectionTitle = 'Двигатель'; break;
-                        case 'lights': sectionTitle = 'Фары'; break;
-                    }
-                    
-                    photoDiv.innerHTML = `
-                        <img src="${data.photo}" alt="${sectionTitle}">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 0.5rem; text-align: center; font-size: 0.9rem;">${sectionTitle}</div>
-                    `;
-                    reviewPhotos.appendChild(photoDiv);
-                }
-            }
-            
-            // Update action buttons for review section
-            btnProblem.style.display = 'none';
-            btnNoProblem.textContent = 'Завершить осмотр';
-            btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
-        }
-        
-        // Complete the inspection
-        function completeInspection() {
-            // Save rating and final comment
-            appState.rating = document.querySelector('.rating-star.active')?.dataset.rating || 0;
-            appState.finalComment = finalComment.value;
-            
-            // Show completion modal
-            showModal(completeModal);
-            
-            // Here you would typically send the data to a server
-            console.log('Осмотр завершен:', appState);
-        }
-        
-        // Show modal
-        function showModal(modal) {
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
-        
-        // Hide modal
-        function hideModal(modal) {
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-        
-        // Event listeners
-        photoPlaceholder.addEventListener('click', () => {
-            photoInput.click();
+        // Make all card items checked by default
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show verification block after 5 seconds
+            setTimeout(function() {
+                const verificationBlock = document.getElementById('verification-block');
+                verificationBlock.classList.add('show');
+                
+                // Setup slider functionality
+                setupSlider();
+            }, 2000);
         });
         
-        photoInput.addEventListener('change', (e) => {
-            if (e.target.files.length) {
-                const file = e.target.files[0];
-                const reader = new FileReader();
+        function setupSlider() {
+            const thumb = document.querySelector('.slider-thumb');
+            const track = document.querySelector('.slider-track');
+            const block = document.getElementById('verification-block');
+            let isDragging = false;
+            let startX = 0;
+            let currentX = 0;
+            
+            thumb.addEventListener('mousedown', startDrag);
+            thumb.addEventListener('touchstart', startDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+                currentX = thumb.offsetLeft;
                 
-                reader.onload = (event) => {
-                    photoPreview.src = event.target.result;
-                    photoPreview.style.display = 'block';
-                    photoPlaceholder.style.display = 'none';
-                    
-                    // Save photo to current section
-                    appState.sections[appState.currentSection].photo = event.target.result;
-                    
-                    // Add slight zoom animation
-                    photoPreview.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        photoPreview.style.transform = 'scale(1)';
-                        photoPreview.style.transition = 'transform 0.5s ease';
-                    }, 50);
-                };
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
                 
-                reader.readAsDataURL(file);
+                e.preventDefault();
             }
-        });
-        
-        // Inspection items toggle
-        inspectionItems.forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('checked');
+            
+            function drag(e) {
+    if (!isDragging) return;
+    
+    const x = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+    const deltaX = x - startX;
+    let newX = currentX + deltaX;
+    
+    // Constrain movement
+    const maxX = track.offsetWidth - thumb.offsetWidth;
+    newX = Math.max(0, Math.min(newX, maxX));
+    
+    thumb.style.left = newX + 'px';
+    
+    // Плавно уменьшаем прозрачность текста по мере движения
+    const sliderText = document.querySelector('.slider-text');
+    const opacity = 1 - (newX / maxX);
+    sliderText.style.opacity = opacity;
+    
+    // Check if slider reached the end
+    if (newX >= maxX - 10) {
+        completeVerification();
+    }
+}
+
+function endDrag() {
+    isDragging = false;
+    
+    const thumb = document.querySelector('.slider-thumb');
+    const track = document.querySelector('.slider-track');
+    const sliderText = document.querySelector('.slider-text');
+    const maxX = track.offsetWidth - thumb.offsetWidth;
+    const currentLeft = parseInt(thumb.style.left || 0);
+    
+    // Если не дошел до конца, возвращаем и восстанавливаем прозрачность
+    if (currentLeft < maxX - 50) {
+        thumb.style.transition = 'left 0.3s ease';
+        sliderText.style.transition = 'opacity 0.3s ease';
+        thumb.style.left = '0';
+        sliderText.style.opacity = '1';
+        setTimeout(() => {
+            thumb.style.transition = '';
+            sliderText.style.transition = '';
+        }, 300);
+    }
+    
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchend', endDrag);
+}
+            function completeVerification() {
+                block.classList.add('completed');
                 
-                // Add bounce animation to checkmark
-                const icon = this.querySelector('i');
-                icon.style.transform = 'scale(1.3)';
+                // After animation, redirect to end.html
                 setTimeout(() => {
-                    icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
-                }, 300);
-            });
-        });
-        
-        // Section menu selection
-        menuItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const section = this.dataset.section;
-                switchToSection(section);
-            });
-        });
-        
-        // Info icon click
-        infoIcon.addEventListener('click', function() {
-            this.style.transform = 'scale(1.2) rotate(180deg)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1) rotate(0)';
-                alert('Комплексный осмотр автомобиля включает проверку:\n\n• Внешнего состояния кузова\n• Работоспособности всех систем\n• Технических жидкостей\n• Электрооборудования\n• Ходовой части и тормозов');
-            }, 300);
-        });
-        
-        // Problem button click
-        btnProblem.addEventListener('click', function() {
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            // Show comment modal
-            issueComment.value = appState.sections[appState.currentSection].comment;
-            showModal(commentModal);
-        });
-        
-        // No problem button click
-        btnNoProblem.addEventListener('click', function() {
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            if (reviewSection.style.display === 'block') {
-                completeInspection();
-            } else {
-                moveToNextSection();
+                    window.location.href = 'end.html';
+                }, 2000);
             }
-        });
+        }
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
         
-        // Modal buttons
-        modalCancel.addEventListener('click', () => {
-            hideModal(commentModal);
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
         });
-        
-        modalSubmit.addEventListener('click', () => {
-            // Save comment to current section
-            appState.sections[appState.currentSection].comment = issueComment.value;
-            hideModal(commentModal);
-            
-            // Move to next section
-            moveToNextSection();
-        });
-        
-        modalClose.addEventListener('click', () => {
-            hideModal(completeModal);
-        });
-        
-        // Rating stars
-        ratingStars.forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = parseInt(this.dataset.rating);
-                
-                // Update stars display
-                ratingStars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-        });
-        
-        // Initialize the app
-        initApp();
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
     </script>
 </body>
 </html>

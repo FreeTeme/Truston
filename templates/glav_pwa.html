@@ -6,6 +6,18 @@
     <title>Осмотр автомобиля</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <style>
         :root {
             --primary: rgba(30, 41, 59, 0.8);
@@ -870,11 +882,11 @@
                 <div class="card-container">
 
                     <div class="inspection-card">
-                        <div class="card-header" onclick="window.location.href='pwa.html'">
+                        <div class="card-header" onclick="window.location.href='salon.html'">
  <span>Осмотр салона</span>
                             <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='salon.html'">
                             <div class="card-item">
                                 <span>Передние сиденья</span>
                                 <i class="fas fa-check"></i>
@@ -937,19 +949,19 @@
                             <!-- <i class="fas fa-lightbulb"></i> -->
                         </div>
                         <div class="card-body">
-                            <div class="card-item checked">
+                            <div class="card-item ">
                                 <span>Передние фары</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item checked">
+                            <div class="card-item">
                                 <span>Задние фонари</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item checked">
+                            <div class="card-item">
                                 <span>Поворотники</span>
                                 <i class="fas fa-check"></i>
                             </div>
-                            <div class="card-item checked">
+                            <div class="card-item ">
                                 <span>Стоп-сигналы</span>
                                 <i class="fas fa-check"></i>
                             </div>
@@ -1522,6 +1534,35 @@
         
         // Initialize the app
         initApp();
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
     </script>
 </body>
 </html>

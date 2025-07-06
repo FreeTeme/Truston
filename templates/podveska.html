@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Осмотр фар и освещения</title>
+    <title>Осмотр подвески</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -16,6 +16,7 @@
 
 <!-- Иконка для старого Safari -->
 <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <style>
         :root {
             --primary: rgba(30, 41, 59, 0.8);
@@ -729,16 +730,16 @@
     <div class="container">
         <!-- Photo section (25% height on mobile, full height on desktop) -->
         <div class="photo-section" id="photo-section">
-            <img id="photo-preview" alt="Фото фары">
+            <img id="photo-preview" alt="Фото подвески">
             <div class="photo-container">
                 <div class="photo-overlay" id="photo-placeholder">
                     <i class="fas fa-camera"></i>
-                    <span>Добавить фото фары</span>
+                    <span>Добавить фото подвески</span>
                 </div>
                 <input type="file" id="photo-input" accept="image/*" capture="environment">
                 
                 <div class="light-name">
-                    ОСМОТР ФАР И ОСВЕЩЕНИЯ
+                    ОСМОТР ПОДВЕСКИ
                     <div class="info-icon" title="Детали осмотра">i</div>
                 </div>
                 
@@ -748,7 +749,7 @@
                         <div class="menu-item" data-light="front-l">Перед Л</div>
                         <div class="menu-item" data-light="rear-r">Зад П</div>
                         <div class="menu-item" data-light="rear-l">Зад Л</div>
-                        <div class="menu-item" data-light="interior">Салон</div>
+                        <div class="menu-item" data-light="components">Компоненты</div>
                     </div>
                 </div>
             </div>
@@ -762,33 +763,48 @@
                     Чек-лист осмотра
                 </h2>
                 
-                <div class="inspection-item animate-in delay-1" id="check-operation">
-                    <span>Проверить работу (включение/выключение)</span>
+                <div class="inspection-item animate-in delay-1" id="check-springs">
+                    <span>Проверить состояние пружин подвески</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-2" id="check-glass">
-                    <span>Проверить состояние стекла (трещины, сколы)</span>
+                <div class="inspection-item animate-in delay-2" id="check-shock-absorbers">
+                    <span>Проверить амортизаторы на подтеки</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-3" id="check-brightness">
-                    <span>Проверить яркость свечения</span>
+                <div class="inspection-item animate-in delay-3" id="check-bushings">
+                    <span>Проверить сайлентблоки и втулки</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-1" id="check-mounting">
-                    <span>Проверить крепление (отсутствие люфтов)</span>
+                <div class="inspection-item animate-in delay-1" id="check-ball-joints">
+                    <span>Проверить шаровые опоры (люфты)</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-2" id="check-sealing">
-                    <span>Проверить герметичность (отсутствие конденсата)</span>
+                <div class="inspection-item animate-in delay-2" id="check-wheel-bearings">
+                    <span>Проверить ступичные подшипники</span>
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <div class="inspection-item animate-in delay-3" id="check-aim">
-                    <span>Проверить правильность настройки света</span>
+                <div class="inspection-item animate-in delay-3" id="check-stabilizer">
+                    <span>Проверить стабилизатор и тяги</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-levers">
+                    <span>Проверить рычаги подвески</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-brakes">
+                    <span>Проверить тормозные элементы</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-wheel-play">
+                    <span>Проверить люфт колеса</span>
                     <i class="fas fa-check"></i>
                 </div>
             </div>
@@ -796,14 +812,14 @@
         
         <!-- Review section (hidden by default) -->
         <div class="review-section" id="review-section">
-            <h2 class="review-title">Результаты осмотра фар и освещения</h2>
+            <h2 class="review-title">Результаты осмотра подвески</h2>
             
             <div class="review-grid" id="review-photos">
                 <!-- Фото будут добавлены динамически -->
             </div>
             
             <div class="rating-section">
-                <h3 class="rating-title">Оцените общее состояние освещения</h3>
+                <h3 class="rating-title">Оцените общее состояние подвески</h3>
                 <div class="rating-stars">
                     <i class="fas fa-star rating-star" data-rating="1"></i>
                     <i class="fas fa-star rating-star" data-rating="2"></i>
@@ -858,10 +874,10 @@
     <!-- Modal for completion -->
     <div class="modal" id="complete-modal">
         <div class="modal-content">
-            <h3 class="modal-title">Осмотр фар завершен!</h3>
-            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр системы освещения.</p>
+            <h3 class="modal-title">Осмотр подвески завершен!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр подвески автомобиля.</p>
             <div class="modal-buttons" style="justify-content: center;">
-                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 3.html'">Закрыть</button>
+                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 4.html'">Закрыть</button>
             </div>
         </div>
     </div>
@@ -875,7 +891,7 @@
                 'front-l': { photo: null, checks: [], comment: '' },
                 'rear-r': { photo: null, checks: [], comment: '' },
                 'rear-l': { photo: null, checks: [], comment: '' },
-                'interior': { photo: null, checks: [], comment: '' }
+                'components': { photo: null, checks: [], comment: '' }
             },
             completedLights: 0,
             rating: 0,
@@ -1099,11 +1115,11 @@
             // Update light name
             let displayName = '';
             switch(light) {
-                case 'front-r': displayName = 'ПЕРЕДНЯЯ ПРАВАЯ ФАРА'; break;
-                case 'front-l': displayName = 'ПЕРЕДНЯЯ ЛЕВАЯ ФАРА'; break;
-                case 'rear-r': displayName = 'ЗАДНИЙ ПРАВЫЙ ФОНАРЬ'; break;
-                case 'rear-l': displayName = 'ЗАДНИЙ ЛЕВЫЙ ФОНАРЬ'; break;
-                case 'interior': displayName = 'САЛОННОЕ ОСВЕЩЕНИЕ'; break;
+                case 'front-r': displayName = 'ПЕРЕДНЯЯ ПРАВАЯ СТОРОНА'; break;
+                case 'front-l': displayName = 'ПЕРЕДНЯЯ ЛЕВАЯ СТОРОНА'; break;
+                case 'rear-r': displayName = 'ЗАДНЯЯ ПРАВАЯ СТОРОНА'; break;
+                case 'rear-l': displayName = 'ЗАДНЯЯ ЛЕВАЯ СТОРОНА'; break;
+                case 'components': displayName = 'КОМПОНЕНТЫ ПОДВЕСКИ'; break;
             }
             lightName.textContent = displayName;
             
@@ -1134,7 +1150,7 @@
                         case 'front-l': caption = 'Передняя левая'; break;
                         case 'rear-r': caption = 'Задняя правая'; break;
                         case 'rear-l': caption = 'Задняя левая'; break;
-                        case 'interior': caption = 'Салон'; break;
+                        case 'components': caption = 'Компоненты'; break;
                     }
                     
                     photoDiv.innerHTML = `
@@ -1239,7 +1255,7 @@
             this.style.transform = 'scale(1.2) rotate(180deg)';
             setTimeout(() => {
                 this.style.transform = 'scale(1) rotate(0)';
-                alert('Комплексный осмотр фар и освещения включает проверку:\n\n• Работы всех элементов освещения\n• Целостности стекол и корпусов\n• Яркости свечения ламп\n• Правильности настройки света фар\n• Герметичности (отсутствия конденсата)\n• Крепления фар и фонарей');
+                alert('Комплексный осмотр подвески включает проверку:\n\n• Состояния пружин и амортизаторов\n• Целостности сайлентблоков и втулок\n• Люфтов шаровых опор и подшипников\n• Состояния рычагов и стабилизаторов\n• Герметичности элементов подвески\n• Крепления всех компонентов');
             }, 300);
         });
         
@@ -1274,7 +1290,7 @@
                 
                 // Check if photo was added
                 if (!appState.lights[appState.currentLight].photo) {
-                    if (!confirm('Вы не добавили фото этого элемента освещения. Продолжить без фото?')) {
+                    if (!confirm('Вы не добавили фото этого элемента подвески. Продолжить без фото?')) {
                         return;
                     }
                 }
