@@ -1004,5 +1004,28 @@ if ('serviceWorker' in navigator &&
   console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
 }
     </script>
+    <!-- Кнопка установки PWA -->
+    <button id="installPwaBtn" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 22px;font-size:1rem;border-radius:12px;background:linear-gradient(135deg,#6366f1,#a855f7,#561bb6);color:#fff;border:none;box-shadow:0 4px 16px rgba(99,102,241,0.18);font-weight:600;cursor:pointer;">
+        <i class="fas fa-download"></i> Установить приложение
+    </button>
+    <script>
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installPwaBtn').style.display = 'block';
+    });
+    document.getElementById('installPwaBtn').addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('PWA установка подтверждена');
+        }
+        deferredPrompt = null;
+        document.getElementById('installPwaBtn').style.display = 'none';
+      }
+    });
+    </script>
 </body>
 </html>

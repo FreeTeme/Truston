@@ -355,6 +355,10 @@ def report_view(order_id):
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory(os.path.abspath(os.path.dirname(__file__)), 'manifest.json')
 # === Конец роутинга для html-страниц ===
 
 # === Автоматическое создание тестовой станции и пользователя ===
