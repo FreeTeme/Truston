@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Итоговый отчёт по заявке</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+        .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px; }
+        h1 { margin-bottom: 8px; }
+        .order-info { margin-bottom: 32px; }
+        .chapter { margin-bottom: 32px; border-bottom: 1px solid #eee; padding-bottom: 24px; }
+        .chapter:last-child { border-bottom: none; }
+        .chapter-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; }
+        .chapter-content { margin-bottom: 12px; }
+        .photos { display: flex; flex-wrap: wrap; gap: 12px; }
+        .photos img { max-width: 220px; max-height: 180px; border-radius: 8px; border: 1px solid #ddd; }
+        .no-photos { color: #aaa; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Итоговый отчёт по заявке №{{ order.id }}</h1>
+        <div class="order-info">
+            <b>Клиент:</b> {{ order.client_full_name }}<br>
+            <b>Телефон:</b> {{ order.client_phone }}<br>
+            <b>VIN:</b> {{ order.vin }}<br>
+            <b>Авто:</b> {{ order.brand }} {{ order.model }} ({{ order.license_plate }})<br>
+            <b>СТО:</b> {{ order.station.name if order.station else '' }}
+        </div>
+        {% set general = chapters_data | selectattr('chapter.chapter_number', 'equalto', 69) | list %}
+        {% if general %}
+            <div class="chapter">
+                <div class="chapter-title">Тормозная система: общий комментарий</div>
+                {% set content = general[0].chapter.content | from_json %}
+                {% if content.comment %}
+                    <div class="chapter-content"><b>Комментарий:</b> {{ content.comment }}</div>
+                {% endif %}
+                <div class="photos">
+                    {% if general[0].photos %}
+                        {% for photo in general[0].photos %}
+                            <img src="/uploads/{{ photo.path }}" alt="Фото" loading="lazy">
+                        {% endfor %}
+                    {% else %}
+                        <span class="no-photos">Фото не загружены</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% for item in chapters_data if item.chapter.chapter_number in [61,62,63] %}
+            <div class="chapter">
+                <div class="chapter-title">{{ item.chapter.title }}</div>
+                {% set content = item.chapter.content | from_json %}
+                {% if content.checks %}
+                <ul style="margin-bottom:12px;">
+                    {% for check in content.checks %}
+                        <li>
+                            {{ check.label }} — 
+                            {% if check.status == 'ok' %}
+                                <span style="color:green;">Всё хорошо</span>
+                            {% else %}
+                                <span style="color:#d9534f;">Проблема</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if content.comment %}
+                <div class="chapter-content"><b>Комментарий:</b> {{ content.comment }}</div>
+                {% endif %}
+                <div class="photos">
+                    {% if item.photos %}
+                        {% for photo in item.photos %}
+                            <img src="/uploads/{{ photo.path }}" alt="Фото" loading="lazy">
+                        {% endfor %}
+                    {% else %}
+                        <span class="no-photos">Фото не загружены</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html> 

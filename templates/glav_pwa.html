@@ -882,11 +882,10 @@
                 <div class="card-container">
 
                     <div class="inspection-card">
-                        <div class="card-header" onclick="window.location.href='salon.html'">
- <span>Осмотр салона</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
+                        <div class="card-header" onclick="window.location.href='/salon'">
+                            <span>Осмотр салона</span>
                         </div>
-                        <div class="card-body" onclick="window.location.href='salon.html'">
+                        <div class="card-body" onclick="window.location.href='/salon'">
                             <div class="card-item">
                                 <span>Передние сиденья</span>
                                 <i class="fas fa-check"></i>
@@ -909,20 +908,10 @@
 
 
                             <div class="inspection-card">
-                        <div class="card-header">
-                           
-
-
-
-
-
-
-
-
+                        <div class="card-header" onclick="window.location.href='/shiny'">
                             <span>Шины</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='/shiny'">
                             <div class="card-item">
                                 <span>Давление в шинах</span>
                                 <i class="fas fa-check"></i>
@@ -944,11 +933,10 @@
 
                     <!-- Карточка осмотра фар (выполнена) -->
                     <div class="inspection-card">
-                        <div class="card-header">
+                        <div class="card-header" onclick="window.location.href='/fary'">
                             <span>Фары и освещение</span>
-                            <!-- <i class="fas fa-lightbulb"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='/fary'">
                             <div class="card-item ">
                                 <span>Передние фары</span>
                                 <i class="fas fa-check"></i>
@@ -973,11 +961,10 @@
                     
                     <!-- Карточка осмотра подвески -->
                     <div class="inspection-card">
-                        <div class="card-header">
+                        <div class="card-header" onclick="window.location.href='/podveska'">
                             <span>Подвеска</span>
-                            <!-- <i class="fas fa-car-bump"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='/podveska'">
                             <div class="card-item">
                                 <span>Амортизаторы</span>
                                 <i class="fas fa-check"></i>
@@ -999,11 +986,10 @@
                     
                     <!-- Карточка осмотра электроники -->
                     <div class="inspection-card">
-                        <div class="card-header">
+                        <div class="card-header" onclick="window.location.href='/electric'">
                             <span>Электроника</span>
-                            <!-- <i class="fas fa-bolt"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='/electric'">
                             <div class="card-item">
                                 <span>Аккумулятор</span>
                                 <i class="fas fa-check"></i>
@@ -1024,11 +1010,10 @@
                     </div>
 
                     <div class="inspection-card">
-                        <div class="card-header">
+                        <div class="card-header" onclick="window.location.href='/tormoz'">
                             <span>Тормозная система</span>
-                            <!-- <i class="fas fa-stopwatch"></i> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" onclick="window.location.href='/tormoz'">
                             <div class="card-item">
                                 <span>Тормозные колодки</span>
                                 <i class="fas fa-check"></i>
@@ -1534,6 +1519,42 @@
         
         // Initialize the app
         initApp();
+
+        // === ОТМЕЧАНИЕ ВЫПОЛНЕННЫХ РАЗДЕЛОВ ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const ORDER_ID = 1; // TODO: подставлять реальный order_id
+            fetch(`/api/report/completed_sections/${ORDER_ID}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.completed_sections) return;
+                    const completed = data.completed_sections;
+                    // Карта: section_name -> data-section
+                    const sectionMap = {
+                        'salon': 'salon',
+                        'shiny': 'shiny',
+                        'fary': 'fary',
+                        'podveska': 'podveska',
+                        'electric': 'electric',
+                        'tormoz': 'tormoz',
+                    };
+                    document.querySelectorAll('.inspection-card').forEach(card => {
+                        const header = card.querySelector('.card-header');
+                        if (!header) return;
+                        // Определяем data-section по тексту заголовка
+                        let section = null;
+                        const text = header.textContent.trim().toLowerCase();
+                        if (text.includes('салон')) section = 'salon';
+                        else if (text.includes('шины')) section = 'shiny';
+                        else if (text.includes('фары')) section = 'fary';
+                        else if (text.includes('подвеск')) section = 'podveska';
+                        else if (text.includes('электро')) section = 'electric';
+                        else if (text.includes('тормоз')) section = 'tormoz';
+                        if (section && completed.includes(section)) {
+                            card.classList.add('card-completed');
+                        }
+                    });
+                });
+        });
 
 
         // Проверка поддержки и окружения

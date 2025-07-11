@@ -546,11 +546,12 @@
             <h3 class="modal-title">Осмотр завершен!</h3>
             <p style="margin-bottom: 1.5rem;">Спасибо за проведенный осмотр тормозной системы.</p>
             <div class="modal-buttons" style="justify-content: center;">
-                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav3.html'">Закрыть</button>
+                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='/glav3'">Закрыть</button>
             </div>
         </div>
     </div>
     
+    <!-- Удалена форма и скрипт для reportFormTormoz, чтобы не было двойного перехода между секциями -->
     <script>
         // App state
         const appState = {
@@ -560,7 +561,8 @@
                 'rear': { photo: null, checks: [], comment: '' },
                 'hydraulics': { photo: null, checks: [], comment: '' }
             },
-            completedSections: 0
+            completedSections: 0,
+            busy: false // предотвращает двойной переход
         };
         
         // DOM elements
@@ -586,14 +588,58 @@
         const reviewSection = document.getElementById('review-section');
         const infoIcon = document.querySelector('.info-icon');
         
+        const ORDER_ID = 1; // TODO: подставлять реальный order_id
+        // === Маппинг для уникальных chapter_number и title по секциям ===
+        const SECTION_CHAPTER_MAP = {
+            'front': { number: 61, title: 'Тормоза: Передние' },
+            'rear': { number: 62, title: 'Тормоза: Задние' },
+            'hydraulics': { number: 63, title: 'Тормоза: Гидравлика' }
+        };
+
+        let lastSectionStatus = null; // 'ok' или 'problem'
+        
+        function sendSectionState() {
+            // Всегда отправляем все пункты чек-листа
+            const checks = Array.from(sectionChecks[appState.currentSection].querySelectorAll('.inspection-item')).map(i => {
+                return {
+                    label: i.querySelector('span').textContent,
+                    status: i.classList.contains('checked') ? 'ok' : 'problem'
+                };
+            });
+            const comment = appState.sections[appState.currentSection].comment || '';
+            const content = JSON.stringify({ checks, comment });
+            const photoFile = photoInput && photoInput.files.length ? photoInput.files[0] : null;
+            const formData = new FormData();
+            formData.append('order_id', ORDER_ID);
+            formData.append('chapter_number', SECTION_CHAPTER_MAP[appState.currentSection].number);
+            formData.append('title', SECTION_CHAPTER_MAP[appState.currentSection].title);
+            formData.append('content', content);
+            if (photoFile) formData.append('photos', photoFile);
+            fetch('/api/report/chapter', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.message) {
+                    alert('Ошибка сохранения: ' + (data.error || 'Не удалось сохранить'));
+                }
+                // Очищаем фото после отправки секции
+                if (photoInput) photoInput.value = '';
+                if (photoPreview) photoPreview.style.display = 'none';
+                if (photoPlaceholder) photoPlaceholder.style.display = 'flex';
+            })
+            .catch(()=>alert('Ошибка при отправке данных!'));
+        }
+        
         // Initialize the app
         function initApp() {
             // Set current section from active menu item
             const activeMenuItem = document.querySelector('.menu-item.active');
             appState.currentSection = activeMenuItem.dataset.section;
-            
             // Load saved data if available
             loadSectionData(appState.currentSection);
+            // setSectionBtnHandler(); // назначаем обработчик при старте - УДАЛЕНО
         }
         
         // Load section data into UI
@@ -644,7 +690,8 @@
         
         // Move to next section
         function moveToNextSection() {
-            // Save current section data
+            if (appState.busy) return;
+            appState.busy = true;
             saveSectionData(appState.currentSection);
             
             // Mark current section as completed
@@ -655,6 +702,8 @@
             // Check if all sections are completed
             if (appState.completedSections === 3) {
                 showReviewSection();
+                // НЕ открываем отчёт автоматически!
+                appState.busy = false;
                 return;
             }
             
@@ -669,6 +718,8 @@
             if (nextSection) {
                 switchToSection(nextSection);
             }
+            // setSectionBtnHandler(); // переназначаем обработчик после перехода - УДАЛЕНО
+            setTimeout(()=>{appState.busy = false;}, 300); // сбросить флаг через короткое время
         }
         
         // Switch to specific section
@@ -690,20 +741,21 @@
             
             // Load new section data
             loadSectionData(section);
+            // setSectionBtnHandler(); // переназначаем обработчик при ручном переходе - УДАЛЕНО
         }
         
         // Show review section
         function showReviewSection() {
             inspectionSection.style.display = 'none';
             reviewSection.style.display = 'block';
-            
-            // Hide photo section
             document.getElementById('photo-section').style.display = 'none';
-            
-            // Update action buttons
             btnProblem.style.display = 'none';
             btnNoProblem.textContent = 'Завершить осмотр';
             btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
+            btnNoProblem.blur();
+            btnNoProblem.disabled = true;
+            setTimeout(()=>{ btnNoProblem.disabled = false; }, 600);
+            // setReviewBtnHandler(); // УДАЛЕНО
         }
         
         // Complete the inspection
@@ -762,24 +814,33 @@
         
         // Problem button click
         btnProblem.addEventListener('click', function() {
-            // Show comment modal
             issueComment.value = appState.sections[appState.currentSection].comment;
             commentModal.style.display = 'flex';
+            lastSectionStatus = 'problem';
         });
         
         // No problem button click
         btnNoProblem.addEventListener('click', function() {
             if (reviewSection.style.display === 'block') {
-                completeInspection();
-            } else {
-                // Check if at least one item is checked
-                const currentChecks = sectionChecks[appState.currentSection];
-                const checkedItems = currentChecks.querySelectorAll('.inspection-item.checked');
-                if (checkedItems.length === 0) {
-                    alert('Пожалуйста, отметьте хотя бы один пункт осмотра перед продолжением.');
-                    return;
+                // Отправляем финальный комментарий как отдельную главу
+                const finalComment = document.getElementById('final-comment').value.trim();
+                const finalPhotoFile = photoInput && photoInput.files.length ? photoInput.files[0] : null;
+                if (finalComment || finalPhotoFile) {
+                    const formData = new FormData();
+                    formData.append('order_id', ORDER_ID);
+                    formData.append('chapter_number', 69); // уникальный номер для общего комментария
+                    formData.append('title', 'Тормозная система: общий комментарий');
+                    formData.append('content', JSON.stringify({comment: finalComment}));
+                    if (finalPhotoFile) formData.append('photos', finalPhotoFile);
+                    fetch('/api/report/chapter', {
+                        method: 'POST',
+                        body: formData
+                    });
                 }
-                
+                window.location.href = `/report/${ORDER_ID}`;
+            } else {
+                lastSectionStatus = 'ok';
+                sendSectionState();
                 moveToNextSection();
             }
         });
@@ -789,12 +850,12 @@
             commentModal.style.display = 'none';
         });
         
+        // Modal submit button (problem)
         modalSubmit.addEventListener('click', () => {
-            // Save comment to current section
             appState.sections[appState.currentSection].comment = issueComment.value;
             commentModal.style.display = 'none';
-            
-            // Move to next section
+            lastSectionStatus = 'problem';
+            sendSectionState();
             moveToNextSection();
         });
         

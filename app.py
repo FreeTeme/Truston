@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import bcrypt
@@ -6,6 +6,8 @@ from datetime import datetime
 import os
 import enum
 import uuid
+from werkzeug.utils import secure_filename
+import json
 
 app = Flask(__name__)
 
@@ -14,6 +16,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'car_service.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your-secret-key'  # Замените на реальный секретный ключ
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads') # Папка для сохранения фото
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -29,7 +32,7 @@ class ServiceStation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
     address = db.Column(db.Text, nullable=False)
-    work_hours = db.Column(db.String(255), nullable=False)  # Для SQLite используем строку
+    work_hours = db.Column(db.JSON, nullable=False)  # Для SQLite используем JSON
     
     employees = db.relationship('Employee', backref='station', lazy=True)
     slots = db.relationship('Slot', backref='station', lazy=True)
@@ -40,7 +43,7 @@ class Employee(db.Model):
     full_name = db.Column(db.String(255), nullable=False)
     position = db.Column(db.String(100), nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    station_id = db.Column(db.Integer, db.ForeignKey('service_station.id'), nullable=False)
+    service_station_id = db.Column(db.Integer, db.ForeignKey('service_station.id'), nullable=False)
     
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -65,7 +68,7 @@ class Order(db.Model):
     brand = db.Column(db.String(100), nullable=False)
     model = db.Column(db.String(100), nullable=False)
     license_plate = db.Column(db.String(15), nullable=False)
-    station_id = db.Column(db.Integer, db.ForeignKey('service_station.id'), nullable=False)
+    service_station_id = db.Column(db.Integer, db.ForeignKey('service_station.id'), nullable=False)
     slot_id = db.Column(db.Integer, db.ForeignKey('slot.id'))
     report = db.relationship('Report', backref='order_ref', uselist=False)
     
@@ -79,7 +82,7 @@ class Order(db.Model):
             'brand': self.brand,
             'model': self.model,
             'license_plate': self.license_plate,
-            'station_id': self.station_id,
+            'service_station_id': self.service_station_id,
             'slot_id': self.slot_id
         }
 
@@ -95,6 +98,7 @@ class ReportChapter(db.Model):
     content = db.Column(db.Text)
     report_id = db.Column(db.String(36), db.ForeignKey('report.id'), nullable=False)
     photos = db.relationship('ReportPhoto', backref='chapter_ref', lazy=True)
+    extra = db.Column(db.Text) # Добавляем поле extra для хранения дополнительных данных
 
 class ReportPhoto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -102,10 +106,9 @@ class ReportPhoto(db.Model):
     description = db.Column(db.Text)
     chapter_id = db.Column(db.Integer, db.ForeignKey('report_chapter.id'), nullable=False)
 
-# Создание таблиц перед первым запросом
-@app.before_first_request
-def create_tables():
-    db.create_all()
+# Создание таблиц (выполните вручную в консоли Python при необходимости):
+# with app.app_context():
+#     db.create_all()
 
 # Эндпоинты для СТО
 @app.route('/api/stations', methods=['POST'])
@@ -137,7 +140,7 @@ def create_employee():
     employee = Employee(
         full_name=data['full_name'],
         position=data['position'],
-        station_id=data['station_id']
+        service_station_id=data['service_station_id']
     )
     employee.set_password(data['password'])
     db.session.add(employee)
@@ -173,7 +176,7 @@ def create_order():
         brand=data['brand'],
         model=data['model'],
         license_plate=data['license_plate'],
-        station_id=data['station_id']
+        service_station_id=data['service_station_id']
     )
     
     if slot:
@@ -252,8 +255,280 @@ def login():
         'id': employee.id,
         'full_name': employee.full_name,
         'position': employee.position,
-        'station_id': employee.station_id
+        'station_id': employee.service_station_id
     }), 200
 
+# === Роутинг для всех html-страниц ===
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/demo')
+def demo():
+    return render_template('demo.html')
+
+@app.route('/diagnostik')
+def diagnostik():
+    return render_template('diagnostik.html')
+
+@app.route('/electric')
+def electric():
+    return render_template('electric.html')
+
+@app.route('/end')
+def end():
+    return render_template('end.html')
+
+@app.route('/fary')
+def fary():
+    return render_template('fary.html')
+
+@app.route('/glav_pwa')
+def glav_pwa():
+    return render_template('glav_pwa.html')
+
+@app.route('/glav_pwa_copy')
+def glav_pwa_copy():
+    return render_template('glav_pwa copy.html')
+
+@app.route('/glav_pwa_copy2')
+def glav_pwa_copy2():
+    return render_template('glav_pwa copy 2.html')
+
+@app.route('/glav_pwa_copy3')
+def glav_pwa_copy3():
+    return render_template('glav_pwa copy 3.html')
+
+@app.route('/glav_pwa_copy4')
+def glav_pwa_copy4():
+    return render_template('glav_pwa copy 4.html')
+
+@app.route('/glav_pwa_copy5')
+def glav_pwa_copy5():
+    return render_template('glav_pwa copy 5.html')
+
+@app.route('/glav3')
+def glav3():
+    return render_template('glav3.html')
+
+@app.route('/index_pwa')
+def index_pwa():
+    return render_template('index_pwa.html')
+
+@app.route('/podveska')
+def podveska():
+    return render_template('podveska.html')
+
+@app.route('/salon')
+def salon():
+    return render_template('salon.html')
+
+@app.route('/shiny')
+def shiny():
+    return render_template('shiny.html')
+
+@app.route('/tormoz')
+def tormoz():
+    return render_template('tormoz.html')
+
+@app.route('/zapis')
+def zapis():
+    return render_template('сайт/zapis.html')
+
+@app.route('/report/<int:order_id>')
+def report_view(order_id):
+    order = Order.query.get_or_404(order_id)
+    report = Report.query.filter_by(order_id=order_id).first()
+    chapters = []
+    if report:
+        chapters = ReportChapter.query.filter_by(report_id=report.id).order_by(ReportChapter.chapter_number).all()
+    # Для каждой главы получаем фото
+    chapters_data = []
+    for chapter in chapters:
+        photos = ReportPhoto.query.filter_by(chapter_id=chapter.id).all()
+        chapters_data.append({
+            'chapter': chapter,
+            'photos': photos
+        })
+    return render_template('report.html', order=order, chapters_data=chapters_data)
+
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+# === Конец роутинга для html-страниц ===
+
+# === Автоматическое создание тестовой станции и пользователя ===
+@app.before_request
+def create_test_user_and_order():
+    # Создаём тестовую станцию, если нет
+    station = ServiceStation.query.filter_by(name='Test Station').first()
+    if not station:
+        station = ServiceStation(name='Test Station', address='Test Address', work_hours={"monday": "9:00-18:00"})
+        db.session.add(station)
+        db.session.commit()
+    # Создаём тестового сотрудника, если нет, или обновляем пароль
+    employee = Employee.query.filter_by(full_name='Тестовый Сотрудник').first()
+    if not employee:
+        employee = Employee(full_name='Тестовый Сотрудник', position='менеджер', service_station_id=station.id)
+        employee.set_password('1111')
+        db.session.add(employee)
+        db.session.commit()
+    else:
+        employee.set_password('1111')
+        db.session.commit()
+    # === Автосоздание тестовой заявки ===
+    order = Order.query.get(1)
+    if not order:
+        order = Order(
+            id=1,
+            client_phone='+79998887766',
+            client_full_name='Иванов Иван',
+            vin='TESTVIN1234567890',
+            brand='TestBrand',
+            model='TestModel',
+            license_plate='A123AA77',
+            service_station_id=station.id
+        )
+        db.session.add(order)
+        db.session.commit()
+
+@app.template_filter('from_json')
+def from_json_filter(s):
+    try:
+        return json.loads(s)
+    except Exception:
+        return {}
+
+@app.route('/api/report/chapter', methods=['POST'])
+def save_report_chapter():
+    # Убедиться, что папка для загрузок существует
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    order_id = request.form.get('order_id')
+    chapter_number = request.form.get('chapter_number')
+    title = request.form.get('title')
+    content = request.form.get('content')
+    extra = request.form.get('extra')
+    files = request.files.getlist('photos')
+
+    print('=== save_report_chapter ===')
+    print('order_id:', order_id)
+    print('chapter_number:', chapter_number)
+    print('title:', title)
+    print('content:', content)
+    print('extra:', extra)
+    print('files:', [f.filename for f in files if f])
+
+    if not order_id or not chapter_number or not title:
+        return jsonify({'error': 'Недостаточно данных'}), 400
+
+    # Найти или создать Report для заявки
+    report = Report.query.filter_by(order_id=order_id).first()
+    if not report:
+        report = Report(order_id=order_id)
+        db.session.add(report)
+        db.session.commit()
+
+    # Найти или создать главу
+    chapter = ReportChapter.query.filter_by(report_id=report.id, chapter_number=chapter_number).first()
+    if not chapter:
+        chapter = ReportChapter(report_id=report.id, chapter_number=chapter_number, title=title, content=content)
+        db.session.add(chapter)
+    else:
+        chapter.title = title
+        chapter.content = content
+    # Сохраняем extra, если есть
+    if extra:
+        chapter.extra = extra
+    db.session.commit()
+
+    # Сохраняем фото
+    for file in files:
+        if file:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            # Сохраняем только имя файла, а не полный путь
+            photo = ReportPhoto(path=filename, description='', chapter_id=chapter.id)
+            db.session.add(photo)
+    db.session.commit()
+
+    return jsonify({'message': 'Глава отчёта и фото сохранены'}), 200
+
+@app.route('/api/report/salon_area', methods=['POST'])
+def save_salon_area():
+    order_id = request.form.get('order_id')
+    area = request.form.get('area')  # front/rear/trunk
+    checks = request.form.get('checks')  # JSON-строка с id отмеченных пунктов
+    comment = request.form.get('comment')
+    file = request.files.get('photo')
+
+    if not order_id or not area:
+        return jsonify({'error': 'Недостаточно данных'}), 400
+
+    # Найти или создать Report для заявки
+    report = Report.query.filter_by(order_id=order_id).first()
+    if not report:
+        report = Report(order_id=order_id)
+        db.session.add(report)
+        db.session.commit()
+
+    # Для каждой зоны салона chapter_number: 1-front, 2-rear, 3-trunk
+    area_map = {'front': 1, 'rear': 2, 'trunk': 3}
+    chapter_number = area_map.get(area)
+    if not chapter_number:
+        return jsonify({'error': 'Некорректная зона'}), 400
+
+    chapter = ReportChapter.query.filter_by(report_id=report.id, chapter_number=chapter_number).first()
+    if not chapter:
+        chapter = ReportChapter(report_id=report.id, chapter_number=chapter_number, title=f'Салон: {area}', content=comment)
+        db.session.add(chapter)
+    else:
+        chapter.content = comment
+    db.session.commit()
+
+    # Сохраняем отмеченные пункты (checks) как текст (можно расширить под отдельную таблицу)
+    chapter.extra = checks  # Нужно добавить поле extra в модель ReportChapter, если его нет
+    db.session.commit()
+
+    # Сохраняем фото
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        photo = ReportPhoto(path=filename, description='', chapter_id=chapter.id)
+        db.session.add(photo)
+        db.session.commit()
+
+    return jsonify({'message': 'Данные зоны салона сохранены'}), 200
+
+@app.route('/api/report/completed_sections/<int:order_id>', methods=['GET'])
+def get_completed_sections(order_id):
+    """
+    Возвращает список завершённых разделов по заявке (order_id).
+    Раздел считается завершённым, если по нему есть глава отчёта (ReportChapter).
+    Названия разделов: salon, shiny, fary, podveska, electric, tormoz
+    """
+    # Карта соответствия chapter_number -> section_name
+    section_map = {
+        1: 'salon',
+        2: 'shiny',
+        3: 'fary',
+        4: 'podveska',
+        5: 'electric',
+        6: 'tormoz',
+    }
+    report = Report.query.filter_by(order_id=order_id).first()
+    if not report:
+        return jsonify({'completed_sections': []})
+    chapters = ReportChapter.query.filter_by(report_id=report.id).all()
+    completed = set()
+    for chapter in chapters:
+        section = section_map.get(chapter.chapter_number)
+        if section:
+            completed.add(section)
+    return jsonify({'completed_sections': list(completed)})
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, port=5010)

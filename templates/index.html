@@ -323,19 +323,26 @@
                     return;
                 }
                 
-                // Here you would normally validate the PIN with your backend
-                // For demo purposes, we'll use a hardcoded PIN "1234"
-                if (pin === '1234') {
-                    pinError.style.display = 'none';
-                    // Redirect to dashboard or main page
-                    window.location.href = 'index_pwa.html';
-                } else {
-                    pinError.style.display = 'block';
-                    pinInputs.forEach(input => {
-                        input.value = '';
-                    });
-                    pinInputs[0].focus();
-                }
+                // Новый код: отправляем запрос на сервер
+                fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: 'Тестовый Сотрудник', // Можно заменить на значение из формы, если нужно
+                        password: pin
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Успешный вход
+                        window.location.href = '/index_pwa';
+                    } else {
+                        // Ошибка входа
+                        pinError.style.display = 'block';
+                        pinInputs.forEach(input => { input.value = ''; });
+                        pinInputs[0].focus();
+                    }
+                });
             });
             
             // Focus first input on page load
