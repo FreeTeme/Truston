@@ -367,7 +367,7 @@
             
             <div class="qr-code">
                 <!-- QR code would be generated here -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html" alt="QR Code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vladtichonenko.github.io/diagnostik/diagnostik.html" alt="QR Code" onclick="window.location.href='https://vladtichonenko.github.io/diagnostik/diagnostik.html'">
             </div>
             
             <div class="report-actions">
@@ -440,7 +440,7 @@
             // Share button functionality
             shareBtn.addEventListener('click', function() {
                 // Copy link to clipboard
-                navigator.clipboard.writeText('https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html')
+                navigator.clipboard.writeText('https://vladtichonenko.github.io/diagnostik/diagnostik.html')
                     .then(() => {
                         // Show animation
                         shareAnimation.classList.add('show');
