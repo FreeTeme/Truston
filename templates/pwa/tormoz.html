@@ -3,19 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Осмотр тормозной системы</title>
+    <title>Осмотр салона</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#4285f4">
-<link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4285f4">
+    <link rel="manifest" href="/manifest.json">
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- Иконка для старого Safari -->
-<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <style>
         :root {
             --primary: rgba(30, 41, 59, 0.8);
@@ -96,6 +91,27 @@
             border-bottom-right-radius: var(--radius-xl);
         }
         
+        .photo-overlay:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-overlay i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .photo-overlay:hover i {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay span {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
         #photo-preview {
             position: absolute;
             top: 0;
@@ -109,7 +125,7 @@
             border-bottom-right-radius: var(--radius-xl);
         }
         
-        .section-name {
+        .salon-name {
             position: absolute;
             top: 1.5rem;
             left: 1.5rem;
@@ -139,7 +155,12 @@
             transition: var(--transition);
         }
         
-        .section-menu {
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .salon-menu {
             position: absolute;
             bottom: 1.5rem;
             left: 0;
@@ -256,6 +277,7 @@
             position: relative;
             z-index: 2;
             font-weight: 500;
+            flex-grow: 1;
         }
         
         .inspection-item i {
@@ -275,6 +297,10 @@
         .inspection-item.checked i {
             color: white;
             transform: scale(1.1);
+        }
+        
+        .inspection-item.checked::before {
+            display: none;
         }
         
         /* Action buttons */
@@ -317,9 +343,24 @@
             color: white;
         }
         
+        .btn-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+        }
+        
         .btn-no-problem {
             background: linear-gradient(135deg, #4cc9f0, #4361ee);
             color: white;
+        }
+        
+        .btn-no-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        /* Hidden file input for photo */
+        #photo-input {
+            display: none;
         }
         
         /* Modal styles */
@@ -343,6 +384,14 @@
             border-radius: var(--radius-lg);
             padding: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
         }
         
         .modal-title {
@@ -375,6 +424,7 @@
             font-weight: 600;
             cursor: pointer;
             margin-left: 1rem;
+            transition: var(--transition);
         }
         
         .modal-btn-cancel {
@@ -387,16 +437,15 @@
             color: white;
         }
         
-        /* Hidden file input */
-        #photo-input {
-            display: none;
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         
-        /* Review section */
+        /* Review section (hidden by default) */
         .review-section {
             display: none;
             padding: 2rem 1.5rem;
-            text-align: center;
         }
         
         .review-title {
@@ -404,111 +453,666 @@
             font-weight: 700;
             margin-bottom: 1.5rem;
             color: var(--dark);
+            text-align: center;
+        }
+        
+        .review-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .review-photo {
+            height: 150px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .review-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .rating-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .rating-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-star {
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .rating-star.active {
+            color: #ffc107;
         }
         
         .review-comment {
             margin-top: 1.5rem;
         }
         
-        .review-comment textarea {
+        /* Animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        /* Desktop adaptations - Premium Version */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                max-width: 800px;
+                min-height: auto;
+                border-radius: var(--radius-xl);
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .photo-section {
+                grid-column: 1;
+                grid-row: 1 / span 3;
+                height: 100%;
+                min-height: auto;
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .photo-overlay,
+            #photo-preview {
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .inspection-section {
+                grid-column: 2;
+                grid-row: 1;
+                padding: 2.5rem;
+                border-top-right-radius: var(--radius-xl);
+            }
+            
+            .review-section {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+                padding: 2.5rem;
+            }
+            
+            .action-buttons {
+                grid-column: 2;
+                grid-row: 3;
+                position: relative;
+                border-radius: 0 0 var(--radius-xl) 0;
+                box-shadow: none;
+                padding: 1.5rem 2.5rem;
+            }
+            
+            .salon-menu {
+                bottom: auto;
+                top: 2rem;
+                right: 2rem;
+                left: auto;
+            }
+            
+            .menu-container {
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.3);
+                padding: 0.5rem;
+            }
+            
+            .menu-item {
+                padding: 0.8rem 1.5rem;
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+            
+            .salon-name {
+                top: 2rem;
+                left: 2rem;
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+            }
+            
+            .inspection-item {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Custom scroll for content */
+            .scroll-container {
+                overflow-y: auto;
+                max-height: calc(100% - 120px);
+                padding-right: 1rem;
+            }
+            
+            .scroll-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            /* Review section desktop */
+            .review-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            
+            .review-photo {
+                height: 180px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Add to existing CSS */
+        .modal-buttons.column {
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        #go-to-photo-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Task icons */
+        .task-icons {
+            display: flex;
+            gap: 10px;
+            margin-left: 10px;
+        }
+
+        .task-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .task-icon.info {
+            background: rgba(30, 41, 59, 0.1);
+            color: rgba(30, 41, 59, 0.8);
+        }
+
+        .task-icon.comment {
+            background: rgba(72, 149, 239, 0.1);
+            color: rgba(72, 149, 239, 0.8);
+        }
+
+        .task-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Enhanced Stories modal styles */
+        .stories-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 1rem;
-            border: 1px solid var(--gray);
-            border-radius: var(--radius);
-            min-height: 120px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stories-container {
+            width: 100%;
+            max-width: 420px;
+            height: 85vh;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stories-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            z-index: 2;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+        }
+
+        .progress-bars {
+            display: flex;
+            gap: 5px;
             margin-bottom: 1.5rem;
-            resize: none;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0;
+            background: white;
+            transition: width 5s linear;
+        }
+
+        .close-stories {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            transition: var(--transition);
+        }
+
+        .close-stories:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .stories-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        .story-caption {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .story-nav {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .story-nav.prev {
+            left: 0;
+        }
+
+        .story-nav.next {
+            right: 0;
+        }
+
+        /* Comment modal with photos */
+        .comment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .comment-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .comment-modal.show .comment-modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .photo-upload-area {
+            border: 2px dashed var(--gray);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .photo-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(72, 149, 239, 0.05);
+        }
+
+        .photo-upload-area i {
+            font-size: 2rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .photo-upload-area p {
+            color: var(--gray);
+            margin-bottom: 0;
+        }
+
+        .photo-preview-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .voice-recording {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .record-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .record-btn.recording {
+            background: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .recording-timer {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .recording-wave {
+            flex-grow: 1;
+            height: 20px;
+            background: linear-gradient(90deg, #f72585, #4361ee);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wave-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.3) 50%, 
+                transparent 100%);
+            animation: wave 1s infinite linear;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* New class for commented items */
+        .inspection-item.commented {
+            position: relative;
+        }
+
+        .inspection-item.commented::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Photo section -->
+        <!-- Photo section (25% height on mobile, full height on desktop) -->
         <div class="photo-section" id="photo-section">
-            <img id="photo-preview" alt="Фото тормозной системы">
+            <img id="photo-preview" alt="Фото салона">
             <div class="photo-container">
                 <div class="photo-overlay" id="photo-placeholder">
                     <i class="fas fa-camera"></i>
-                    <span>Добавить фото</span>
+                    <span>Добавить фото салона</span>
                 </div>
                 <input type="file" id="photo-input" accept="image/*" capture="environment">
                 
-                <div class="section-name">
-                    ОСМОТР ТОРМОЗНОЙ СИСТЕМЫ
+                <div class="salon-name">
+                    ОСМОТР САЛОНА
                     <div class="info-icon" title="Детали осмотра">i</div>
                 </div>
                 
-                <div class="section-menu">
+                <div class="salon-menu">
                     <div class="menu-container">
-                        <div class="menu-item active" data-section="front">Передние</div>
-                        <div class="menu-item" data-section="rear">Задние</div>
-                        <div class="menu-item" data-section="hydraulics">Гидравлика</div>
+                        <div class="menu-item active" data-area="front">Передняя часть</div>
+                        <div class="menu-item" data-area="rear">Задняя часть</div>
+                        <div class="menu-item" data-area="trunk">Багажник</div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Inspection section -->
+        <!-- Inspection items -->
         <div class="inspection-section" id="inspection-section">
-            <h2 class="section-title">
-                <i class="fas fa-clipboard-check"></i>
-                Чек-лист осмотра
-            </h2>
-            
-            <div id="front-checks" class="section-checks">
-                <div class="inspection-item" id="check-front-pads">
-                    <span>Проверить толщину передних колодок</span>
+            <div class="scroll-container">
+                <h2 class="section-title animate-in">
+                    <i class="fas fa-clipboard-check"></i>
+                    Чек-лист осмотра
+                </h2>
+                
+                <div class="inspection-item animate-in delay-1" id="check-seats">
+                    <span>Проверить кнопку массажа</span>
+                    <div class="task-icons">
+                        <div class="task-icon info" title="Показать пример">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div class="task-icon comment" title="Добавить комментарий">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
                     <i class="fas fa-check"></i>
                 </div>
-                <div class="inspection-item" id="check-front-discs">
-                    <span>Проверить состояние передних дисков</span>
+                
+                <div class="inspection-item animate-in delay-2" id="check-dashboard">
+                    <span>Осмотреть приборную панель</span>
+                    <div class="task-icons">
+                        <div class="task-icon info" title="Показать пример">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div class="task-icon comment" title="Добавить комментарий">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
                     <i class="fas fa-check"></i>
                 </div>
-                <div class="inspection-item" id="check-front-calipers">
-                    <span>Проверить передние суппорта</span>
+                
+                <div class="inspection-item animate-in delay-1" id="check-electronics">
+                    <span>Проверить электронику</span>
+                    <div class="task-icons">
+                        <div class="task-icon info" title="Показать пример">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div class="task-icon comment" title="Добавить комментарий">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
                     <i class="fas fa-check"></i>
                 </div>
-            </div>
-            
-            <div id="rear-checks" class="section-checks" style="display:none;">
-                <div class="inspection-item" id="check-rear-pads">
-                    <span>Проверить толщину задних колодок</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="inspection-item" id="check-rear-drums">
-                    <span>Проверить состояние задних барабанов/дисков</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="inspection-item" id="check-rear-mechanism">
-                    <span>Проверить механизм задних тормозов</span>
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
-            
-            <div id="hydraulics-checks" class="section-checks" style="display:none;">
-                <div class="inspection-item" id="check-fluid">
-                    <span>Проверить уровень тормозной жидкости</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="inspection-item" id="check-hoses">
-                    <span>Проверить состояние шлангов</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="inspection-item" id="check-cylinder">
-                    <span>Проверить главный тормозной цилиндр</span>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="inspection-item" id="check-abs">
-                    <span>Проверить работу ABS (если есть)</span>
+                
+                <div class="inspection-item animate-in delay-1" id="check-smells">
+                    <span>Проверить отсутствие запахов</span>
+                    <div class="task-icons">
+                        <!-- <div class="task-icon info" title="Показать пример">
+                            <i class="fas fa-info"></i>
+                        </div> -->
+                        <div class="task-icon comment" title="Добавить комментарий">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
                     <i class="fas fa-check"></i>
                 </div>
             </div>
         </div>
         
-        <!-- Review section -->
+        <!-- Review section (hidden by default) -->
         <div class="review-section" id="review-section">
-            <h2 class="review-title">Осмотр тормозов завершен</h2>
-            <p>Все разделы проверены</p>
+            <div class="review-grid" id="review-photos">
+                <!-- Фото будут добавлены динамически -->
+            </div>
+            
+            <div class="rating-section">
+                <h3 class="rating-title">Оцените общее состояние салона</h3>
+                <div class="rating-stars">
+                    <i class="fas fa-star rating-star" data-rating="1"></i>
+                    <i class="fas fa-star rating-star" data-rating="2"></i>
+                    <i class="fas fa-star rating-star" data-rating="3"></i>
+                    <i class="fas fa-star rating-star" data-rating="4"></i>
+                    <i class="fas fa-star rating-star" data-rating="5"></i>
+                </div>
+            </div>
             
             <div class="review-comment">
                 <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
@@ -543,10 +1147,78 @@
     <!-- Modal for completion -->
     <div class="modal" id="complete-modal">
         <div class="modal-content">
-            <h3 class="modal-title">Осмотр завершен!</h3>
-            <p style="margin-bottom: 1.5rem;">Спасибо за проведенный осмотр тормозной системы.</p>
+            <h3 class="modal-title">Осмотр салона завершен!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр салона автомобиля.</p>
             <div class="modal-buttons" style="justify-content: center;">
                 <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav3.html'">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for all items checked -->
+    <div class="modal" id="all-checked-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Все пункты проверены!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Вы успешно проверили все элементы салона.</p>
+            <div class="modal-buttons" style="flex-direction: column; gap: 0.8rem;">
+                <button class="modal-btn modal-btn-submit" id="go-to-photo-btn">
+                    <i class="fas fa-camera"></i> Перейти к фото
+                </button>
+                <button class="modal-btn modal-btn-cancel" id="continue-btn">
+                    Продолжить осмотр
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stories-like modal -->
+    <div class="stories-modal" id="stories-modal">
+        <div class="stories-container">
+            <div class="stories-header">
+                <div class="progress-bars" id="progress-bars">
+                    <!-- Progress bars will be added dynamically -->
+                </div>
+            </div>
+            <button class="close-stories">&times;</button>
+            <div class="stories-content">
+                <img src="" alt="Story image" class="story-image">
+                <div class="story-caption" id="story-caption"></div>
+                <div class="story-nav prev" id="prev-story"></div>
+                <div class="story-nav next" id="next-story"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comment modal with photos and voice -->
+    <div class="comment-modal" id="task-comment-modal">
+        <div class="comment-modal-content">
+            <h3 class="modal-title">Добавить комментарий</h3>
+            
+            <div class="photo-upload-area" id="photo-upload-area">
+                <i class="fas fa-camera"></i>
+                <p>Добавить фото (максимум 3)</p>
+                <input type="file" id="task-photo-input" accept="image/*" multiple style="display: none;">
+            </div>
+            
+            <div class="photo-preview-container" id="photo-preview-container">
+                <!-- Photo previews will be added here -->
+            </div>
+            
+            <div class="voice-recording">
+                <button class="record-btn" id="record-btn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="recording-timer" id="recording-timer">00:00</div>
+                <div class="recording-wave" id="recording-wave">
+                    <div class="wave-animation"></div>
+                </div>
+            </div>
+            
+            <textarea class="modal-textarea" id="task-comment" placeholder="Введите комментарий..."></textarea>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="task-comment-cancel">Отмена</button>
+                <button class="modal-btn modal-btn-submit" id="task-comment-submit">Сохранить</button>
             </div>
         </div>
     </div>
@@ -554,55 +1226,332 @@
     <script>
         // App state
         const appState = {
-            currentSection: 'front',
-            sections: {
+            currentArea: 'front',
+            areas: {
                 'front': { photo: null, checks: [], comment: '' },
                 'rear': { photo: null, checks: [], comment: '' },
-                'hydraulics': { photo: null, checks: [], comment: '' }
+                'trunk': { photo: null, checks: [], comment: '' }
             },
-            completedSections: 0
+            completedAreas: 0,
+            rating: 0,
+            finalComment: '',
+            taskComments: {
+                'seats': {
+                    text: 'Кнопка массажа работает с перебоями, иногда не включается',
+                    photos: [
+                        'https://a.d-cd.net/grVEzTDdA-o9iFC4TKJDIlwNV7M-960.jpg',
+                        'https://a.d-cd.net/6umAarUfzzUXKQ8RMHbwSNEGHhA-960.jpg'
+                    ]
+                },
+                'dashboard': {
+                    text: 'На приборной панели есть царапины в правом нижнем углу',
+                    photos: [
+                        'https://a.d-cd.net/5aAAAgG6ueA-960.jpg'
+                    ]
+                },
+                'electronics': {
+                    text: 'Мультимедийная система работает нормально, но есть проблемы с правым динамиком',
+                    photos: []
+                },
+                'smells': {
+                    text: 'Запахов не обнаружено, салон чистый',
+                    photos: []
+                }
+            }
         };
         
         // DOM elements
         const photoInput = document.getElementById('photo-input');
         const photoPlaceholder = document.getElementById('photo-placeholder');
         const photoPreview = document.getElementById('photo-preview');
-        const menuItems = document.querySelectorAll('.menu-item');
-        const sectionChecks = {
-            'front': document.getElementById('front-checks'),
-            'rear': document.getElementById('rear-checks'),
-            'hydraulics': document.getElementById('hydraulics-checks')
-        };
         const inspectionItems = document.querySelectorAll('.inspection-item');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const salonName = document.querySelector('.salon-name');
+        const infoIcon = document.querySelector('.info-icon');
         const btnProblem = document.getElementById('btn-problem');
         const btnNoProblem = document.getElementById('btn-no-problem');
         const commentModal = document.getElementById('comment-modal');
         const completeModal = document.getElementById('complete-modal');
+        const allCheckedModal = document.getElementById('all-checked-modal');
         const issueComment = document.getElementById('issue-comment');
         const modalCancel = document.getElementById('modal-cancel');
         const modalSubmit = document.getElementById('modal-submit');
         const modalClose = document.getElementById('modal-close');
+        const goToPhotoBtn = document.getElementById('go-to-photo-btn');
+        const continueBtn = document.getElementById('continue-btn');
         const inspectionSection = document.getElementById('inspection-section');
         const reviewSection = document.getElementById('review-section');
-        const infoIcon = document.querySelector('.info-icon');
+        const reviewPhotos = document.getElementById('review-photos');
+        const ratingStars = document.querySelectorAll('.rating-star');
+        const finalComment = document.getElementById('final-comment');
+        const photoSection = document.getElementById('photo-section');
+        
+        // Stories elements
+        const storiesModal = document.getElementById('stories-modal');
+        const storyImage = document.querySelector('.story-image');
+        const progressBars = document.getElementById('progress-bars');
+        const closeStoriesBtn = document.querySelector('.close-stories');
+        const prevStoryBtn = document.getElementById('prev-story');
+        const nextStoryBtn = document.getElementById('next-story');
+        const storyCaption = document.getElementById('story-caption');
+        
+        // Comment modal elements
+        const taskCommentModal = document.getElementById('task-comment-modal');
+        const photoUploadArea = document.getElementById('photo-upload-area');
+        const taskPhotoInput = document.getElementById('task-photo-input');
+        const photoPreviewContainer = document.getElementById('photo-preview-container');
+        const recordBtn = document.getElementById('record-btn');
+        const recordingTimer = document.getElementById('recording-timer');
+        const recordingWave = document.getElementById('recording-wave');
+        const taskComment = document.getElementById('task-comment');
+        const taskCommentCancel = document.getElementById('task-comment-cancel');
+        const taskCommentSubmit = document.getElementById('task-comment-submit');
+        
+        // Данные для сторис
+        const storiesData = {
+            'seats': [
+                {
+                    image: 'https://a.d-cd.net/grVEzTDdA-o9iFC4TKJDIlwNV7M-960.jpg',
+                    caption: 'Пример правильного состояния кнопок массажа'
+                },
+                {
+                    image: 'https://a.d-cd.net/6umAarUfzzUXKQ8RMHbwSNEGHhA-960.jpg',
+                    caption: 'Проверьте работоспособность всех кнопок'
+                }
+            ],
+            'dashboard': [
+                {
+                    image: 'https://a.d-cd.net/gYAAAgLEXeA-960.jpg',
+                    caption: 'Осмотрите приборную панель на предмет повреждений'
+                },
+                {
+                    image: 'https://images.drive.ru/i/0/5b07fd36ec05c4e84a000078',
+                    caption: 'Проверьте работу всех индикаторов'
+                }
+            ],
+            'electronics': [
+                {
+                    image: 'https://www.kibercar.com/upload/resize_cache/iblock/38c/tbe1c352og8s8q6owkp5cb1z5g521hgx/600_360_0/carplay_detal_audi.png',
+                    caption: 'Проверьте работу мультимедийной системы'
+                },
+                {
+                    image: 'https://a.d-cd.net/hEAAAgCIkeA-960.jpg',
+                    caption: 'Убедитесь в исправности всех электронных систем'
+                }
+            ],
+            'smells': [
+                {
+                    image: 'https://a.d-cd.net/9aAAAgG6ueA-960.jpg',
+                    caption: 'Проверьте салон на отсутствие посторонних запахов'
+                }
+            ]
+        };
         
         // Initialize the app
         function initApp() {
-            // Set current section from active menu item
+            // Set current area from active menu item
             const activeMenuItem = document.querySelector('.menu-item.active');
-            appState.currentSection = activeMenuItem.dataset.section;
+            appState.currentArea = activeMenuItem.dataset.area;
             
             // Load saved data if available
-            loadSectionData(appState.currentSection);
+            loadAreaData(appState.currentArea);
+            
+            // Add event listeners for task icons
+            document.querySelectorAll('.task-icon.info').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const taskId = this.closest('.inspection-item').id.replace('check-', '');
+                    showStories(storiesData[taskId] || storiesData['seats']);
+                });
+            });
+            
+            document.querySelectorAll('.task-icon.comment').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const taskId = this.closest('.inspection-item').id.replace('check-', '');
+                    showTaskCommentModal(taskId);
+                });
+            });
+            
+            // Mark items with comments
+            updateCommentIndicators();
         }
         
-        // Load section data into UI
-        function loadSectionData(section) {
-            const sectionData = appState.sections[section];
+        // Update comment indicators
+        function updateCommentIndicators() {
+            for (const taskId in appState.taskComments) {
+                const commentData = appState.taskComments[taskId];
+                const item = document.getElementById(`check-${taskId}`);
+                
+                if (commentData.text || (commentData.photos && commentData.photos.length > 0)) {
+                    item.classList.add('commented');
+                } else {
+                    item.classList.remove('commented');
+                }
+            }
+        }
+        
+        // Show task comment modal
+        function showTaskCommentModal(taskId) {
+            // Clear previous photos
+            photoPreviewContainer.innerHTML = '';
+            
+            // Load existing comment if available
+            if (appState.taskComments[taskId]) {
+                taskComment.value = appState.taskComments[taskId].text || '';
+                
+                // Add photo previews if available
+                if (appState.taskComments[taskId].photos) {
+                    appState.taskComments[taskId].photos.forEach((photo, index) => {
+                        addPhotoPreview(photo, index);
+                    });
+                }
+            } else {
+                taskComment.value = '';
+            }
+            
+            // Show modal
+            showModal(taskCommentModal);
+            
+            // Store current task ID in the modal
+            taskCommentModal.dataset.taskId = taskId;
+        }
+        
+        // Add photo preview
+        function addPhotoPreview(photoData, index) {
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'photo-preview';
+            photoDiv.innerHTML = `
+                <img src="${photoData}" alt="Фото комментария">
+                <div class="remove-photo" data-index="${index}">&times;</div>
+            `;
+            photoPreviewContainer.appendChild(photoDiv);
+            
+            // Add event listener for remove button
+            photoDiv.querySelector('.remove-photo').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const index = parseInt(this.dataset.index);
+                removePhoto(index);
+            });
+        }
+        
+        // Remove photo
+        function removePhoto(index) {
+            const taskId = taskCommentModal.dataset.taskId;
+            if (appState.taskComments[taskId] && appState.taskComments[taskId].photos) {
+                appState.taskComments[taskId].photos.splice(index, 1);
+                
+                // Update preview
+                photoPreviewContainer.innerHTML = '';
+                appState.taskComments[taskId].photos.forEach((photo, i) => {
+                    addPhotoPreview(photo, i);
+                });
+                
+                // Update comment indicator
+                updateCommentIndicators();
+            }
+        }
+        
+        // Функция для показа сторис
+        function showStories(stories) {
+            let currentStory = 0;
+            let timer;
+            let isPaused = false;
+            
+            // Clear existing progress bars
+            progressBars.innerHTML = '';
+            
+            // Add progress bars for each story
+            stories.forEach((story, index) => {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                progressBar.innerHTML = '<div class="progress-bar-fill"></div>';
+                progressBars.appendChild(progressBar);
+            });
+            
+            function playStory(index) {
+                if (index >= stories.length) {
+                    closeStories();
+                    return;
+                }
+                
+                currentStory = index;
+                
+                // Reset all progress bars
+                document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+                    bar.style.width = '0';
+                    bar.style.transition = 'none';
+                });
+                
+                // Show current story
+                const story = stories[index];
+                storyImage.src = story.image;
+                storyCaption.textContent = story.caption || '';
+                
+                // Start progress bar animation
+                const currentProgressBar = document.querySelectorAll('.progress-bar-fill')[index];
+                currentProgressBar.style.transition = 'width 5s linear';
+                currentProgressBar.style.width = '100%';
+                
+                // Auto-advance after 5 seconds if not paused
+                if (!isPaused) {
+                    timer = setTimeout(() => {
+                        playStory(index + 1);
+                    }, 5000);
+                }
+            }
+            
+            // Start playing stories
+            playStory(0);
+            
+            // Show modal
+            storiesModal.style.display = 'flex';
+            setTimeout(() => {
+                storiesModal.style.opacity = '1';
+            }, 10);
+            
+            // Navigation handlers
+            prevStoryBtn.onclick = (e) => {
+                e.stopPropagation();
+                clearTimeout(timer);
+                playStory(Math.max(0, currentStory - 1));
+            };
+            
+            nextStoryBtn.onclick = (e) => {
+                e.stopPropagation();
+                clearTimeout(timer);
+                playStory(currentStory + 1);
+            };
+            
+            // Pause on hover
+            storiesModal.addEventListener('mouseenter', () => {
+                isPaused = true;
+                clearTimeout(timer);
+                document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+                    bar.style.transition = 'none';
+                });
+            });
+            
+            storiesModal.addEventListener('mouseleave', () => {
+                isPaused = false;
+                playStory(currentStory);
+            });
+        }
+        
+        function closeStories() {
+            storiesModal.style.opacity = '0';
+            setTimeout(() => {
+                storiesModal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Load area data into UI
+        function loadAreaData(area) {
+            const areaData = appState.areas[area];
             
             // Load photo if exists
-            if (sectionData.photo) {
-                photoPreview.src = sectionData.photo;
+            if (areaData.photo) {
+                photoPreview.src = areaData.photo;
                 photoPreview.style.display = 'block';
                 photoPlaceholder.style.display = 'none';
             } else {
@@ -610,16 +1559,10 @@
                 photoPlaceholder.style.display = 'flex';
             }
             
-            // Show correct checks section
-            for (const [sec, element] of Object.entries(sectionChecks)) {
-                element.style.display = sec === section ? 'block' : 'none';
-            }
-            
             // Load checks
-            const sectionItems = sectionChecks[section].querySelectorAll('.inspection-item');
-            sectionItems.forEach(item => {
+            inspectionItems.forEach(item => {
                 const checkId = item.id.replace('check-', '');
-                if (sectionData.checks.includes(checkId)) {
+                if (areaData.checks.includes(checkId)) {
                     item.classList.add('checked');
                 } else {
                     item.classList.remove('checked');
@@ -627,80 +1570,131 @@
             });
         }
         
-        // Save section data from UI
-        function saveSectionData(section) {
-            const sectionData = appState.sections[section];
+        // Save area data from UI
+        function saveAreaData(area) {
+            const areaData = appState.areas[area];
             
             // Save checks
-            sectionData.checks = [];
-            const sectionItems = sectionChecks[section].querySelectorAll('.inspection-item');
-            sectionItems.forEach(item => {
+            areaData.checks = [];
+            inspectionItems.forEach(item => {
                 if (item.classList.contains('checked')) {
                     const checkId = item.id.replace('check-', '');
-                    sectionData.checks.push(checkId);
+                    areaData.checks.push(checkId);
                 }
             });
         }
         
-        // Move to next section
-        function moveToNextSection() {
-            // Save current section data
-            saveSectionData(appState.currentSection);
+        // Check if all items are completed
+        function checkAllItemsCompleted() {
+            const allItems = document.querySelectorAll('.inspection-item');
+            let allChecked = true;
             
-            // Mark current section as completed
-            const currentMenuItem = document.querySelector(`.menu-item[data-section="${appState.currentSection}"]`);
+            allItems.forEach(item => {
+                if (!item.classList.contains('checked')) {
+                    allChecked = false;
+                }
+            });
+            
+            return allChecked;
+        }
+        
+        // Move to next area
+        function moveToNextArea() {
+            // Save current area data
+            saveAreaData(appState.currentArea);
+            
+            // Mark current area as completed
+            const currentMenuItem = document.querySelector(`.menu-item[data-area="${appState.currentArea}"]`);
             currentMenuItem.classList.add('completed');
-            appState.completedSections++;
+            appState.completedAreas++;
             
-            // Check if all sections are completed
-            if (appState.completedSections === 3) {
+            // Check if all areas are completed
+            if (appState.completedAreas === 3) {
                 showReviewSection();
                 return;
             }
             
-            // Find next section that's not completed
-            let nextSection = null;
+            // Find next area that's not completed
+            let nextArea = null;
             menuItems.forEach(item => {
-                if (!item.classList.contains('completed') && !nextSection) {
-                    nextSection = item.dataset.section;
+                if (!item.classList.contains('completed') && !nextArea) {
+                    nextArea = item.dataset.area;
                 }
             });
             
-            if (nextSection) {
-                switchToSection(nextSection);
+            if (nextArea) {
+                switchToArea(nextArea);
             }
         }
         
-        // Switch to specific section
-        function switchToSection(section) {
-            // Save current section data
-            saveSectionData(appState.currentSection);
+        // Switch to specific area
+        function switchToArea(area) {
+            // Save current area data
+            saveAreaData(appState.currentArea);
             
-            // Update current section
-            appState.currentSection = section;
+            // Update current area
+            appState.currentArea = area;
             
             // Update active menu item
             menuItems.forEach(item => {
-                if (item.dataset.section === section) {
+                if (item.dataset.area === area) {
                     item.classList.add('active');
+                    item.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        item.style.transform = 'scale(1)';
+                    }, 200);
                 } else {
                     item.classList.remove('active');
+                    item.style.transform = 'scale(1)';
                 }
             });
             
-            // Load new section data
-            loadSectionData(section);
+            // Update area name
+            let areaName = '';
+            switch(area) {
+                case 'front': areaName = 'ПЕРЕДНЯЯ ЧАСТЬ'; break;
+                case 'rear': areaName = 'ЗАДНЯЯ ЧАСТЬ'; break;
+                case 'trunk': areaName = 'БАГАЖНИК'; break;
+            }
+            salonName.textContent = `ОСМОТР САЛОНА: ${areaName}`;
+            
+            // Load new area data
+            loadAreaData(area);
         }
         
-        // Show review section
+        // Show review section with all photos
         function showReviewSection() {
             inspectionSection.style.display = 'none';
             reviewSection.style.display = 'block';
             
-            // Hide photo section
-            document.getElementById('photo-section').style.display = 'none';
+            // Hide photo section and menu
+            photoSection.style.display = 'none';
             
-            // Update action buttons
+            // Clear existing photos
+            reviewPhotos.innerHTML = '';
+            
+            // Add all area photos
+            for (const [area, data] of Object.entries(appState.areas)) {
+                if (data.photo) {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'review-photo';
+                    
+                    let areaName = '';
+                    switch(area) {
+                        case 'front': areaName = 'Передняя часть'; break;
+                        case 'rear': areaName = 'Задняя часть'; break;
+                        case 'trunk': areaName = 'Багажник'; break;
+                    }
+                    
+                    photoDiv.innerHTML = `
+                        <img src="${data.photo}" alt="${areaName}">
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; padding: 0.5rem; font-size: 0.8rem;">${areaName}</div>
+                    `;
+                    reviewPhotos.appendChild(photoDiv);
+                }
+            }
+            
+            // Update action buttons for review section
             btnProblem.style.display = 'none';
             btnNoProblem.textContent = 'Завершить осмотр';
             btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
@@ -708,16 +1702,68 @@
         
         // Complete the inspection
         function completeInspection() {
+            // Save rating and final comment
+            appState.rating = document.querySelector('.rating-star.active')?.dataset.rating || 0;
+            appState.finalComment = finalComment.value;
+            
             // Show completion modal
-            completeModal.style.display = 'flex';
+            showModal(completeModal);
             
             // Here you would typically send the data to a server
             console.log('Осмотр завершен:', appState);
         }
         
+        // Show modal
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                // Проверяем, есть ли .modal-content или .comment-modal-content
+                const modalContent = modal.querySelector('.modal-content') || modal.querySelector('.comment-modal-content');
+                if (modalContent) {
+                    modalContent.style.transform = 'translateY(0)';
+                    modalContent.style.opacity = '1';
+                } else {
+                    console.error('Modal content element not found');
+                }
+            }, 10);
+        }
+        
+        // Hide modal
+        function hideModal(modal) {
+            const modalContent = modal.querySelector('.modal-content') || modal.querySelector('.comment-modal-content');
+            if (modalContent) {
+                modalContent.style.transform = 'translateY(20px)';
+                modalContent.style.opacity = '0';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            } else {
+                console.error('Modal content element not found');
+            }
+        }
+        
         // Event listeners
         photoPlaceholder.addEventListener('click', () => {
-            photoInput.click();
+            // Use predefined photo for demo
+            const predefinedPhotos = {
+                'front': 'https://carexpert.ru/img/int1200/audi6i18-02.jpg',
+                'rear': 'https://lh6.googleusercontent.com/proxy/eZfTTDcwcVAOBzhQeQIH-451aQ09iWHtv-SSor0zgaOm2Welf413jEunO9bocTRbOrI1xz3uZomMsR3y7veR',
+                'trunk': 'https://i.infocar.ua/img/mats/8348/ins/1337241442205.jpg'
+            };
+            
+            photoPreview.src = predefinedPhotos[appState.currentArea];
+            photoPreview.style.display = 'block';
+            photoPlaceholder.style.display = 'none';
+            
+            // Save photo to current area
+            appState.areas[appState.currentArea].photo = predefinedPhotos[appState.currentArea];
+            
+            // Add slight zoom animation
+            photoPreview.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                photoPreview.style.transform = 'scale(1)';
+                photoPreview.style.transition = 'transform 0.5s ease';
+            }, 50);
         });
         
         photoInput.addEventListener('change', (e) => {
@@ -730,109 +1776,306 @@
                     photoPreview.style.display = 'block';
                     photoPlaceholder.style.display = 'none';
                     
-                    // Save photo to current section
-                    appState.sections[appState.currentSection].photo = event.target.result;
+                    // Save photo to current area
+                    appState.areas[appState.currentArea].photo = event.target.result;
+                    
+                    // Add slight zoom animation
+                    photoPreview.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        photoPreview.style.transform = 'scale(1)';
+                        photoPreview.style.transition = 'transform 0.5s ease';
+                    }, 50);
                 };
                 
                 reader.readAsDataURL(file);
             }
         });
         
+        // Photo upload for task comments
+        photoUploadArea.addEventListener('click', () => {
+            taskPhotoInput.click();
+        });
+        
+        taskPhotoInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                const files = Array.from(e.target.files).slice(0, 3); // Limit to 3 files
+                
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (event) => {
+                        const taskId = taskCommentModal.dataset.taskId;
+                        
+                        // Initialize task comment if not exists
+                        if (!appState.taskComments[taskId]) {
+                            appState.taskComments[taskId] = {
+                                text: '',
+                                photos: []
+                            };
+                        }
+                        
+                        // Add photo if we have less than 3
+                        if (appState.taskComments[taskId].photos.length < 3) {
+                            appState.taskComments[taskId].photos.push(event.target.result);
+                            
+                            // Update preview
+                            photoPreviewContainer.innerHTML = '';
+                            appState.taskComments[taskId].photos.forEach((photo, index) => {
+                                addPhotoPreview(photo, index);
+                            });
+                            
+                            // Update comment indicator
+                            updateCommentIndicators();
+                        }
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+        
+        // Voice recording
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingStartTime;
+        let recordingInterval;
+        
+        recordBtn.addEventListener('click', function() {
+            if (this.classList.contains('recording')) {
+                // Stop recording
+                this.classList.remove('recording');
+                mediaRecorder.stop();
+                clearInterval(recordingInterval);
+                recordingWave.querySelector('.wave-animation').style.display = 'none';
+            } else {
+                // Start recording
+                this.classList.add('recording');
+                audioChunks = [];
+                recordingStartTime = Date.now();
+                
+                // Update timer
+                recordingInterval = setInterval(updateRecordingTimer, 1000);
+                recordingWave.querySelector('.wave-animation').style.display = 'block';
+                
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        
+                        mediaRecorder.ondataavailable = event => {
+                            audioChunks.push(event.data);
+                        };
+                        
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            
+                            // For demo purposes, we'll just show a message
+                            // In a real app, you would upload this or convert to text
+                            alert('Аудиозапись сохранена! В реальном приложении здесь будет преобразование в текст или загрузка.');
+                        };
+                        
+                        mediaRecorder.start();
+                    })
+                    .catch(error => {
+                        console.error('Ошибка доступа к микрофону:', error);
+                        this.classList.remove('recording');
+                        clearInterval(recordingInterval);
+                        alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте разрешения.');
+                    });
+            }
+        });
+        
+        function updateRecordingTimer() {
+            const seconds = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            
+            recordingTimer.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Save task comment
+        taskCommentSubmit.addEventListener('click', function() {
+            const taskId = taskCommentModal.dataset.taskId;
+            
+            if (!appState.taskComments[taskId]) {
+                appState.taskComments[taskId] = {
+                    text: '',
+                    photos: []
+                };
+            }
+            
+            appState.taskComments[taskId].text = taskComment.value;
+            
+            // Update comment indicator
+            updateCommentIndicators();
+            
+            // Close modal
+            hideModal(taskCommentModal);
+        });
+        
+        taskCommentCancel.addEventListener('click', function() {
+            hideModal(taskCommentModal);
+        });
+
         // Inspection items toggle
         inspectionItems.forEach(item => {
             item.addEventListener('click', function() {
                 this.classList.toggle('checked');
+                
+                // Add bounce animation to checkmark
+                const icon = this.querySelector('.fa-check');
+                icon.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
+                }, 300);
+                
+                // Check if all items are now checked
+                if (checkAllItemsCompleted()) {
+                    setTimeout(() => {
+                        showModal(allCheckedModal);
+                    }, 500);
+                }
             });
         });
         
-        // Section menu selection
+        // Area menu selection
         menuItems.forEach(item => {
             item.addEventListener('click', function() {
-                const section = this.dataset.section;
+                const area = this.dataset.area;
                 if (!this.classList.contains('completed')) {
-                    switchToSection(section);
+                    switchToArea(area);
                 }
             });
         });
         
         // Info icon click
         infoIcon.addEventListener('click', function() {
-            alert('Комплексный осмотр тормозной системы включает проверку:\n\n• Передних тормозных механизмов\n• Задних тормозных механизмов\n• Гидравлической системы\n• Состояния колодок и дисков\n• Уровня тормозной жидкости');
+            this.style.transform = 'scale(1.2) rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1) rotate(0)';
+                alert('Комплексный осмотр салона включает проверку:\n\n• Состояния сидений и обивки\n• Работоспособности приборной панели\n• Органов управления и электроники\n• Чистоты и отсутствия повреждений\n• Отсутствия посторонних запахов');
+            }, 300);
         });
         
         // Problem button click
         btnProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
             // Show comment modal
-            issueComment.value = appState.sections[appState.currentSection].comment;
-            commentModal.style.display = 'flex';
+            issueComment.value = appState.areas[appState.currentArea].comment;
+            showModal(commentModal);
         });
         
         // No problem button click
         btnNoProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
             if (reviewSection.style.display === 'block') {
                 completeInspection();
             } else {
                 // Check if at least one item is checked
-                const currentChecks = sectionChecks[appState.currentSection];
-                const checkedItems = currentChecks.querySelectorAll('.inspection-item.checked');
+                const checkedItems = document.querySelectorAll('.inspection-item.checked');
                 if (checkedItems.length === 0) {
                     alert('Пожалуйста, отметьте хотя бы один пункт осмотра перед продолжением.');
                     return;
                 }
                 
-                moveToNextSection();
+                // Check if photo was added
+                if (!appState.areas[appState.currentArea].photo) {
+                    if (!confirm('Вы не добавили фото этой зоны салона. Продолжить без фото?')) {
+                        return;
+                    }
+                }
+                
+                moveToNextArea();
             }
         });
         
         // Modal buttons
         modalCancel.addEventListener('click', () => {
-            commentModal.style.display = 'none';
+            hideModal(commentModal);
         });
         
         modalSubmit.addEventListener('click', () => {
-            // Save comment to current section
-            appState.sections[appState.currentSection].comment = issueComment.value;
-            commentModal.style.display = 'none';
+            // Save comment to current area
+            appState.areas[appState.currentArea].comment = issueComment.value;
+            hideModal(commentModal);
             
-            // Move to next section
-            moveToNextSection();
+            // Move to next area
+            moveToNextArea();
         });
         
         modalClose.addEventListener('click', () => {
-            completeModal.style.display = 'none';
+            hideModal(completeModal);
         });
+        
+        // All checked modal buttons
+        goToPhotoBtn.addEventListener('click', function() {
+            hideModal(allCheckedModal);
+            // Scroll to photo section
+            photoSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        continueBtn.addEventListener('click', function() {
+            hideModal(allCheckedModal);
+        });
+        
+        // Rating stars
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                
+                // Update stars display
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Close stories button
+        closeStoriesBtn.addEventListener('click', closeStories);
         
         // Initialize the app
         initApp();
 
-
         // Проверка поддержки и окружения
-if ('serviceWorker' in navigator && 
-    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
-  
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js')
-      .then(function(registration) {
-        console.log('ServiceWorker зарегистрирован:', registration.scope);
-        
-        // Отслеживание обновлений
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'activated') {
-              console.log('Новая версия SW готова к использованию!');
-              // Можно добавить уведомление для пользователя
-            }
+        if ('serviceWorker' in navigator && 
+            (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+          
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js')
+              .then(function(registration) {
+                console.log('ServiceWorker зарегистрирован:', registration.scope);
+                
+                // Отслеживание обновлений
+                registration.addEventListener('updatefound', () => {
+                  const newWorker = registration.installing;
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'activated') {
+                      console.log('Новая версия SW готова к использованию!');
+                      // Можно добавить уведомление для пользователя
+                    }
+                  });
+                });
+              })
+              .catch(function(error) {
+                console.error('Ошибка регистрации ServiceWorker:', error);
+              });
           });
-        });
-      })
-      .catch(function(error) {
-        console.error('Ошибка регистрации ServiceWorker:', error);
-      });
-  });
-} else {
-  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
-}
+        } else {
+          console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+        }
     </script>
 </body>
 </html>
