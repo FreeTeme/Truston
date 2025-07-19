@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truston</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --secondary-dark: #9333ea;
+            --accent: #561bb6;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --light-gray: #e2e8f0;
+            --gray: #94a3b8;
+            --dark-gray: #475569;
+            --card-bg: #1e293b;
+            --card-bg-hover: #334155;
+            --badge-new: #10b981;
+            --badge-electric: #3b82f6;
+            --badge-best-price: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #46465b;
+            color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'gill sens', serif;
+            font-weight: 700;
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .preloader.fade-out {
+            opacity: 0;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--secondary);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        .loader::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: var(--primary);
+            animation: rotationBack 0.5s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes rotationBack {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(-360deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: white;
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-left: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            min-height: 800px;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        url('https://www.iphones.ru/wp-content/uploads/2017/03/mb_gt.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            max-width: 600px;
+            color: white;
+            
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(to right, white, var(--light-gray));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--glass-border);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: var(--glass);
+            transform: translateY(-3px);
+            border-color: white;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .hero-scroll:hover {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .scroll-icon {
+            width: 40px;
+            height: 60px;
+            border: 2px solid white;
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .scroll-icon::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .section-title p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        /* Search and Filters */
+        .search-filter {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem auto;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 1rem 1.5rem 1rem 4rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--gray);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            color: white;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn.apply {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filter-btn.apply:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .filter-btn.reset {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-btn.reset:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Cars Grid - Исправленные карточки */
+        .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); /* Было 480px */
+    gap: 1.5rem; /* Было 2rem - уменьшаем отступы */
+    margin: 3rem 0;
+}
+
+        .car-card {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 240px; /* Было 280px - уменьшаем высоту */
+            height: auto;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: var(--card-bg-hover);
+        }
+
+        .car-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .car-image {
+            width: 50%; /* Было 45% - делаем изображение шире */
+            min-width: 220px; /* Было 200px */
+            height: auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+    min-height: 140px; /* Ограничиваем высоту изображения */
+    object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .car-card:hover .car-image img {
+            transform: scale(1.05);
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .badge-new {
+            background: var(--badge-new);
+        }
+
+        .badge-electric {
+            background: var(--badge-electric);
+        }
+
+        .badge-best-price {
+            background: var(--badge-best-price);
+        }
+
+        .car-details {
+            width: 50%; /* Было 55% - соответственно уменьшаем */
+    padding: 1.2rem; /* Было 1.5rem - уменьшаем отступы */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-title {
+            font-size: 1.2rem; /* Было 1.3rem */
+    margin-bottom: 0.3rem; /* Было 0.5rem */
+            font-weight: 700;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .car-year {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .car-description {
+            color: var(--gray);
+            font-size: 0.85rem; /* Было 0.9rem */
+             margin-bottom: 0.5rem; /* Было 0.8rem */
+            -webkit-line-clamp: 2; /* Оставляем 2 строки */
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .car-price {
+            font-size: 1.2rem; /* Было 1.4rem */
+    margin-bottom: 0.5rem; /* Было 0.8rem */
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .car-price span {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .car-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .car-rating i {
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .car-rating span {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-left: 0.3rem;
+        }
+
+        .car-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .car-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            color: white;
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.3rem 0.7rem;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .car-feature i {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .car-qr {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .car-qr img {
+            width: 70px; /* Было 80px */
+    height: 70px; /* Было 80px */
+            object-fit: contain;
+            background: white;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .view-btn {
+            display: inline-flex;
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: auto;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .view-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 3rem 0;
+        }
+
+        .page-btn {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .page-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .page-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Features Section */
+        .features {
+            background:  var(--darker);
+            padding: 6rem 0;
+            margin: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #46465b, rgba(99, 102, 241, 0.2));
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 16px;
+            margin: 5rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .newsletter::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+
+        .newsletter-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .newsletter h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+            padding-right: 150px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .newsletter-form button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 0 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .newsletter-form button:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .footer-column p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .footer-column a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            z-index: 99;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-qr {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            display: inline-flex;
+        }
+
+        .modal-qr img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .modal-text {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            display: inline-flex;
+            padding: 0.8rem 1.8rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Slider */
+        .news-slider {
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .news-slider .slick-list {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .news-slide {
+            position: relative;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .news-slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .news-slide:hover .news-slide-bg {
+            transform: scale(1.05);
+        }
+
+        .news-slide-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+            color: white;
+        }
+
+        .news-slide.registration-slide .news-slide-content {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7));
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+        }
+
+        .news-slide-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+
+        .news-slide.registration-slide .news-slide-tag {
+            align-self: center;
+        }
+
+        .news-slide-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .news-slide-text {
+            color: var(--light-gray);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+
+        .news-slide-btn {
+            display: inline-flex;
+            padding: 0.7rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            align-self: flex-start;
+        }
+
+        .news-slide-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .news-slide.registration-slide .news-slide-btn {
+            background: white;
+            color: var(--primary);
+            align-self: center;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
+
+        .news-slide.registration-slide .news-slide-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .slick-dots {
+            bottom: -40px;
+        }
+
+        .slick-dots li button:before {
+            color: var(--gray);
+            opacity: 0.5;
+            font-size: 10px;
+        }
+
+        .slick-dots li.slick-active button:before {
+            color: var(--primary);
+            opacity: 1;
+        }
+
+        .slick-arrow {
+            width: 40px;
+            height: 40px;
+            z-index: 1;
+        }
+
+        .slick-arrow:before {
+            font-size: 40px;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        .slick-arrow:hover:before {
+            opacity: 1;
+        }
+
+        .slick-prev {
+            left: 20px;
+        }
+
+        .slick-next {
+            right: 20px;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .cars-grid {
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            }
+            
+            .car-details {
+                padding: 1.2rem;
+            }
+            
+            .car-title {
+                font-size: 1.2rem;
+            }
+            
+            .car-description {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero {
+                min-height: 700px;
+                text-align: center;
+            }
+
+            .hero-text {
+                margin: 0 auto;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar input {
+                padding-left: 1.5rem;
+            }
+
+            .search-bar i {
+                display: none;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .newsletter-form input {
+                padding-right: 1.5rem;
+            }
+
+            .newsletter-form button {
+                position: static;
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .car-card {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .car-image {
+                width: 100%;
+                height: 220px;
+                min-width: auto;
+            }
+            
+            .car-details {
+                width: 100%;
+                padding: 1.5rem;
+            }
+            
+            .car-description {
+                -webkit-line-clamp: 3;
+            }
+
+            .news-slide-content {
+                padding: 1.5rem;
+            }
+
+            .news-slide-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .car-image {
+                height: 200px;
+            }
+            
+            .car-features {
+                gap: 0.4rem;
+            }
+            
+            .car-feature {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.6rem;
+            }
+            
+            .view-btn {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .modal-qr img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .news-slide {
+                height: 250px;
+            }
+
+            .news-slide-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="glav.html">Главная</a></li>
+                    <li><a href="#">Каталог</a></li>
+                    <li><a href="#">О компании</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <li><a href="#" class="nav-cta">Регистрация</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 style="font-family: 'Inter', system-ui, sans-serif;"><b>Truston Market</b></h1>
+                <p style="font-family: 'Inter', system-ui, sans-serif;">Более 10 000 премиальных автомобилей,проверенные нашим сервисом. Лучшие условия покупки и гарантия качества.</p>
+                <div class="hero-cta">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Найти авто
+                    </a>
+                    <a href="zapis.html" class="btn btn-outline">
+                        <i class="fas fa-play-circle"></i> Записаться
+                    </a>
+                </div>
+            </div>
+            <a href="#catalog" class="hero-scroll">
+                <div class="scroll-icon"></div>
+                <span>Листайте вниз</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content" id="catalog">
+        <!-- <div class="section-title">
+            <h2>Премиальные автомобили</h2>
+            <p>Эксклюзивная подборка самых надежных и стильных автомобилей на рынке</p>
+        </div> -->
+
+        <div class="search-filter">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Поиск по марке, модели, характеристикам и id..." id="searchInput">
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="brand">Марка</label>
+                    <select id="brand">
+                        <option value="">Все марки</option>
+                        <option value="Audi">Audi</option>
+                        <option value="BMW">BMW</option>
+                        <option value="Mercedes">Mercedes</option>
+                        <option value="Toyota">Toyota</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Volkswagen">Volkswagen</option>
+                        <option value="Ford">Ford</option>
+                        <option value="Hyundai">Hyundai</option>
+                        <option value="Kia">Kia</option>
+                        <option value="Lexus">Lexus</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price">Цена</label>
+                    <select id="price">
+                        <option value="">Любая цена</option>
+                        <option value="0-10000">До 10 000$</option>
+                        <option value="10000-20000">10 000$ - 20 000$</option>
+                        <option value="20000-30000">20 000$ - 30 000$</option>
+                        <option value="30000-50000">30 000$ - 50 000$</option>
+                        <option value="50000+">От 50 000$</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year">Год выпуска</label>
+                    <select id="year">
+                        <option value="">Любой год</option>
+                        <option value="2020-2023">2020-2023</option>
+                        <option value="2015-2019">2015-2019</option>
+                        <option value="2010-2014">2010-2014</option>
+                        <option value="2005-2009">2005-2009</option>
+                        <option value="2000-2004">2000-2004</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="type">Тип кузова</label>
+                    <select id="type">
+                        <option value="">Любой тип</option>
+                        <option value="Седан">Седан</option>
+                        <option value="Внедорожник">Внедорожник</option>
+                        <option value="Хэтчбек">Хэтчбек</option>
+                        <option value="Универсал">Универсал</option>
+                        <option value="Купе">Купе</option>
+                        <option value="Минивэн">Минивэн</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="filter-btn apply">
+                    <i class="fas fa-filter"></i> Применить
+                </button>
+                <button class="filter-btn reset">
+                    <i class="fas fa-redo"></i> Сбросить
+                </button>
+            </div>
+        </div>
+
+        <h1><b>Наши возможности:</b></h1>
+
+        <!-- News Slider -->
+        <div class="news-slider">
+            <div class="news-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1283&q=80');"></div>
+                <div class="news-slide-content">
+                    <span class="news-slide-tag">Проверить авто</span>
+                    <h3 class="news-slide-title" style="margin-left: 30%;">Проверить ваше авто у нас в сервисе</h3>
+                    <p class="news-slide-text" style="margin-left: 30%;">Пройти конвеер , получите qr-code</p>
+                    <a href="#" class="news-slide-btn">Подробнее</a>
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                <div class="news-slide-content">
+                    <span class="news-slide-tag">Купить авто</span>
+                    <h3 class="news-slide-title" style="margin-left: 30%;">Покупай автомобиль просто!</h3>
+                    <p class="news-slide-text" style="margin-left: 30%;">Только в этом месяце специальные условия кредитования на покупку автомобилей из нашего каталога. Ставка от 5,9%.</p>
+                    <a href="#" class="news-slide-btn">Узнать условия</a>
+                </div>
+            </div>
+            <div class="news-slide registration-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                <div class="news-slide-content">
+                    <h3 class="news-slide-title">Записшись на конвеер</h3>
+                    <p class="news-slide-text">пройди регистрацию на осмотр авто</p>
+                    <a href="zapis.html " class="news-slide-btn">Записаться</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cars-grid" id="carsContainer">
+            <!-- Карточки автомобилей будут добавлены через JavaScript -->
+        </div>
+
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <div class="section-title">
+                <h2>Почему выбирают нас</h2>
+                <p>Мы предлагаем лучшие условия для покупки и продажи автомобилей</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card floating">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Гарантия качества</h3>
+                    <p>Все автомобили проходят тщательную проверку нашими экспертами перед размещением в каталоге</p>
+                </div>
+                <div class="feature-card floating delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Полная информация</h3>
+                    <p>У каждого авто есть свой QR-code, отсканировав который вы сможете просмотреть подробную информацию о машине</p>
+                </div>
+                <div class="feature-card floating delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Поддержка 24/7</h3>
+                    <p>Наши консультанты всегда готовы помочь вам с выбором и ответить на любые вопросы</p>
+                </div>
+            </div>
+        </div>
+
+
+        
+    </section>
+
+
+    
+
+    <!-- Newsletter -->
+    <div class="main-content">
+
+        <!-- News Slider -->
+        <div class="news-slider">
+            <div class="news-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1283&q=80');"></div>
+                <div class="news-slide-content">
+                    <span class="news-slide-tag">Новости</span>
+                    <h3 class="news-slide-title">Новые поступления премиальных авто</h3>
+                    <p class="news-slide-text">В нашем каталоге появились новые экземпляры премиальных автомобилей 2023 года выпуска. Ограниченное предложение!</p>
+                    <a href="#" class="news-slide-btn">Подробнее</a>
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                <div class="news-slide-content">
+                    <span class="news-slide-tag">Акция</span>
+                    <h3 class="news-slide-title">Специальные условия кредитования</h3>
+                    <p class="news-slide-text">Только в этом месяце специальные условия кредитования на покупку автомобилей из нашего каталога. Ставка от 5,9%.</p>
+                    <a href="#" class="news-slide-btn">Узнать условия</a>
+                </div>
+            </div>
+            <!-- <div class="news-slide registration-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                <div class="news-slide-content">
+                    <h3 class="news-slide-title">Станьте частью нашего клуба</h3>
+                    <p class="news-slide-text">Зарегистрируйтесь и получите доступ к эксклюзивным предложениям и персональному менеджеру</p>
+                    <a href="#" class="news-slide-btn">Зарегистрироваться</a>
+                </div>
+            </div> -->
+        </div>
+
+
+        <div class="newsletter">
+            <div class="newsletter-content">
+                <h2>Поддержка 24\7</h2>
+                <p>Оставьте свой вопрос, в тчении часа с вами свяжется наш менеджер!</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Ваш email" required>
+                    <button type="submit">Отправить</button>
+                </form>
+            </div>
+        </div>
+
+        
+    </div>
+
+
+
+    
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Truston</h3>
+                <p>Ведущая платформа для покупки и продажи премиальных автомобилей в Беларуси и за рубежом.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Каталог</h3>
+                <ul>
+                    <li><a href="#">Новые автомобили</a></li>
+                    <li><a href="#">Автомобили с пробегом</a></li>
+                    <li><a href="#">Электромобили</a></li>
+                    <li><a href="#">Коммерческий транспорт</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Компания</h3>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Команда</a></li>
+                    <li><a href="#">Конвеер</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> 8029 </li>
+                    <li><i class="fas fa-envelope"></i> truston@gmail.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Минск</li>
+                    <li><i class="fas fa-clock"></i> Пн-Пт: 9:00 - 19:00</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <!-- &copy; 2023 Truston. Все права защищены. -->
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h3 class="modal-title">QR-код автомобиля</h3>
+            <p class="modal-text">Отсканируйте QR-код для получения полной информации об автомобиле</p>
+            <div class="modal-qr">
+                <img id="modalQrImage" src="" alt="QR Code">
+            </div>
+            <a href="#" class="modal-btn" id="modalInfoBtn">
+                <i class="fas fa-info-circle"></i> Просмотреть информацию
+            </a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        // Массив автомобилей с разными бейджами
+        const cars = [
+            {
+                id: 1,
+                brand: "Audi",
+                model: "A6",
+                year: 2020,
+                price: 42000,
+                rating: 4.5,
+                type: "Седан",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg",
+                description: "Audi A6 2020 года в отличном состоянии. Полный привод, автоматическая коробка передач.",
+                features: ["Автомат", "Полный привод", "Дизель", "Кожаный салон"],
+                badge: "new"
+            },
+            {
+                id: 2,
+                brand: "BMW",
+                model: "X5",
+                year: 2018,
+                price: 38000,
+                rating: 4.7,
+                type: "Внедорожник",
+                image: "https://avatars.mds.yandex.net/get-verba/3587101/2a00000186371facfbe93727d461bd1c4381/cattouchretcr",
+                description: "BMW X5 2018 года, пробег 45 000 км. Отличное техническое состояние.",
+                features: ["Автомат", "Полный привод", "Бензин", "Парктроник"],
+                badge: "best-price"
+            },
+            {
+                id: 3,
+                brand: "Mercedes",
+                model: "E-Class",
+                year: 2019,
+                price: 45000,
+                rating: 4.8,
+                type: "Седан",
+                image: "https://cdn3.riastatic.com/photosnew/auto/photo/mercedes-benz_e-class__591521492fx.jpg",
+                description: "Mercedes E-Class 2019 года, премиум комплектация. Все сервисные работы проведены вовремя.",
+                features: ["Автомат", "Задний привод", "Бензин", "Память сидений"],
+            
+            },
+            {
+                id: 4,
+                brand: "Toyota",
+                model: "Camry",
+                year: 2021,
+                price: 32000,
+                rating: 4.6,
+                type: "Седан",
+                image: "https://hips.hearstapps.com/hmg-prod/images/2025-toyota-camry-xse-awd-123-66993cc94cc40.jpg?crop=0.676xw:0.506xh;0.101xw,0.399xh&resize=1200:*",
+                description: "Новая Toyota Camry 2021 года. Гарантия от официального дилера.",
+                features: ["Автомат", "Передний привод", "Бензин", "Камера заднего вида"],
+                badge: "new"
+            },
+            {
+                id: 5,
+                brand: "Honda",
+                model: "CR-V",
+                year: 2017,
+                price: 25000,
+                rating: 4.4,
+                type: "Внедорожник",
+                image: "https://avcdn.av.by/cargeneration/0000/7721/8070.jpg",
+                description: "Honda CR-V 2017 года в отличном состоянии. Экономичный двигатель.",
+                features: ["Автомат", "Полный привод", "Бензин", "Круиз-контроль"],
+                badge: "best-price"
+            },
+            {
+                id: 6,
+                brand: "Volkswagen",
+                model: "Tiguan",
+                year: 2019,
+                price: 28000,
+                rating: 4.3,
+                type: "Внедорожник",
+                image: "https://avcdn.av.by/wisiwigimage/0004/4107/2989.jpeg",
+                description: "Volkswagen Tiguan 2019 года, пробег 30 000 км. Один владелец.",
+                features: ["Автомат", "Полный привод", "Бензин", "Панорамная крыша"]
+            },
+            {
+                id: 7,
+                brand: "Ford",
+                model: "Focus",
+                year: 2018,
+                price: 18000,
+                rating: 4.2,
+                type: "Хэтчбек",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/2003_Ford_Focus_Zetec_1.6_Front.jpg/305px-2003_Ford_Focus_Zetec_1.6_Front.jpg",
+                description: "Ford Focus 2018 года в хорошем состоянии. Экономичный и надежный.",
+                features: ["Механика", "Передний привод", "Бензин", "Кондиционер"]
+            },
+            {
+                id: 8,
+                brand: "Hyundai",
+                model: "Tucson",
+                year: 2020,
+                price: 26000,
+                rating: 4.5,
+                type: "Внедорожник",
+                image: "https://avatars.mds.yandex.net/get-verba/216201/2a0000018cfcb8524f306a51ecf60fff22c3/cattouchretcr",
+                description: "Hyundai Tucson 2020 года, новый. Полный комплект документов.",
+                features: ["Автомат", "Полный привод", "Дизель", "Подогрев сидений"],
+                badge: "electric"
+            },
+            {
+                id: 9,
+                brand: "Kia",
+                model: "Sportage",
+                year: 2017,
+                price: 22000,
+                rating: 4.3,
+                type: "Внедорожник",
+                image: "https://multisalon.by/files/galleries/89/3072/src.jpg",
+                description: "Kia Sportage 2017 года. Отличное состояние, не битая, не крашенная.",
+                features: ["Автомат", "Полный привод", "Бензин", "Климат-контроль"]
+            },
+            {
+                id: 10,
+                brand: "Lexus",
+                model: "RX 350",
+                year: 2018,
+                price: 48000,
+                rating: 4.9,
+                type: "Внедорожник",
+                image: "https://assets.avtocod.ru/storage/images/articles/ED0RiLUhz4SJKIOBTKOk3XzXPJ80HLx6S7lrI6a1.jpeg ",
+                description: "Lexus RX 350 2018 года в идеальном состоянии. Премиум комплектация.",
+                features: ["Автомат", "Полный привод", "Бензин", "Вентиляция сидений"],
+                badge: "new"
+            },
+            {
+                id: 11,
+                brand: "Audi",
+                model: "Q7",
+                year: 2019,
+                price: 52000,
+                rating: 4.7,
+                type: "Внедорожник",
+                image: "https://columbauto.by/upload/iblock/1b0/1b0f2bf89da1e83109d6cb778b402cd2.jpg",
+                description: "Audi Q7 2019 года, мощный двигатель, полный привод. Все опции.",
+                features: ["Автомат", "Полный привод", "Дизель", "Пневмоподвеска"]
+            },
+            {
+                id: 12,
+                brand: "BMW",
+                model: "3 Series",
+                year: 2020,
+                price: 36000,
+                rating: 4.6,
+                type: "Седан",
+                image: "https://www.topgear.com/sites/default/files/2022/09/1-BMW-3-Series.jpg",
+                description: "BMW 3 Series 2020 года. Динамичный и стильный седан с отличной управляемостью.",
+                features: ["Автомат", "Задний привод", "Бензин", "Спортивный пакет"]
+            }
+            
+        ];
+         
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Back to Top Button
+        const backToTopBtn = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('active');
+            } else {
+                backToTopBtn.classList.remove('active');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Generate QR code URL
+        function generateQrCodeUrl(text) {
+            return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}`;
+        }
+
+        // Modal functionality
+        const modal = document.getElementById('qrModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalQrImage = document.getElementById('modalQrImage');
+        const modalInfoBtn = document.getElementById('modalInfoBtn');
+
+        function openModal(car) {
+            const carInfo = `${car.brand} ${car.model} ${car.year}\nЦена: ${car.price}$\n${car.description}`;
+            modalQrImage.src = generateQrCodeUrl(carInfo);
+            modalInfoBtn.href = `#car-${car.id}`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Initialize slider
+        $(document).ready(function(){
+            $('.news-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 200,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                arrows: true,
+                fade: true,
+                cssEase: 'linear'
+            });
+        });
+
+        function displayCars(carsToDisplay) {
+            const carsContainer = document.getElementById('carsContainer');
+            if (!carsContainer) {
+                console.error('Контейнер для автомобилей не найден!');
+                return;
+            }
+
+            // Очищаем контейнер
+            carsContainer.innerHTML = '';
+
+            // Если нет автомобилей для отображения
+            if (!carsToDisplay || carsToDisplay.length === 0) {
+                carsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+                        <i class="fas fa-car-crash" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--light); margin-bottom: 0.5rem;">Автомобили не найдены</h3>
+                        <p style="color: var(--gray);">Попробуйте изменить параметры поиска</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Для каждого автомобиля создаем карточку
+            carsToDisplay.forEach(car => {
+                const carCard = document.createElement('div');
+                carCard.className = 'car-card';
+                carCard.id = `car-${car.id}`;
+                
+                // Генерация звезд рейтинга
+                let stars = '';
+                const fullStars = Math.floor(car.rating);
+                const hasHalfStar = car.rating % 1 >= 0.5;
+
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else if (i === fullStars && hasHalfStar) {
+                        stars += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+
+                // Генерация бейджа
+                let badge = '';
+                if (car.badge === 'new') {
+                    badge = '<div class="car-badge badge-new">Новое</div>';
+                } else if (car.badge === 'electric') {
+                    badge = '<div class="car-badge badge-electric">Электрокар</div>';
+                } else if (car.badge === 'best-price') {
+                    badge = '<div class="car-badge badge-best-price">Лучшая цена</div>';
+                }
+
+                // Создаем fallback изображение
+                const fallbackImage = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect width='100%25' height='100%25' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='24' text-anchor='middle' dominant-baseline='middle' fill='%2394a3b8'%3E${encodeURIComponent(car.brand + ' ' + car.model)}%3C/text%3E%3C/svg%3E`;
+
+                // QR code for the car
+                const qrCodeUrl = generateQrCodeUrl(`${car.brand} ${car.model} ${car.year}`);
+
+                // Создаем HTML карточки
+                carCard.innerHTML = `
+                    <div class="car-image">
+                        <img 
+                            src="${car.image || fallbackImage}" 
+                            alt="${car.brand} ${car.model}"
+                            onerror="this.src='${fallbackImage}'"
+                            loading="lazy"
+                        >
+                        ${badge}
+                    </div>
+                    <div class="car-details">
+                        <h3 class="car-title">
+                            ${car.brand} ${car.model}
+                            <span class="car-year">${car.year}</span>
+                        </h3>
+                        <p class="car-description">${car.description}</p>
+                        <div class="car-price">
+                            ${car.price.toLocaleString()}$
+                            <span>/ без торга</span>
+                        </div>
+                        <div class="car-rating">
+                            ${stars}
+                            <span>${car.rating.toFixed(1)}</span>
+                        </div>
+                        <div class="car-features">
+                            ${car.features.map(feature => `
+                                <div class="car-feature">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>${feature}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="car-qr">
+                            <img src="${qrCodeUrl}" alt="QR Code">
+                        </div>
+                        <a href="diagnostik.html" class="view-btn">
+                            <i class="fas fa-eye"></i> Подробнее
+                        </a>
+                    </div>
+                `;
+
+                // Add click event to open modal
+                carCard.addEventListener('click', function(e) {
+                    // Don't open modal if clicked on a link or button
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
+                        return;
+                    }
+                    openModal(car);
+                });
+
+                carsContainer.appendChild(carCard);
+            });
+
+            // Инициализация ленивой загрузки изображений
+            if ('IntersectionObserver' in window) {
+                const lazyImages = document.querySelectorAll('.car-image img[loading="lazy"]');
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src || img.src;
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+
+                lazyImages.forEach(img => {
+                    if (img.complete && img.naturalHeight !== 0) return;
+                    imageObserver.observe(img);
+                });
+            }
+        }
+
+        // Функция для фильтрации автомобилей
+        function filterCars() {
+            const brandFilter = document.getElementById('brand').value;
+            const priceFilter = document.getElementById('price').value;
+            const yearFilter = document.getElementById('year').value;
+            const typeFilter = document.getElementById('type').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredCars = cars.filter(car => {
+                // Фильтр по марке
+                if (brandFilter && car.brand !== brandFilter) return false;
+
+                // Фильтр по цене
+                if (priceFilter) {
+                    const [min, max] = priceFilter.split('-');
+                    if (max === '+') {
+                        if (car.price < parseInt(min)) return false;
+                    } else {
+                        if (car.price < parseInt(min) || car.price > parseInt(max)) return false;
+                    }
+                }
+
+                // Фильтр по году
+                if (yearFilter) {
+                    const [min, max] = yearFilter.split('-');
+                    if (car.year < parseInt(min) || car.year > parseInt(max)) return false;
+                }
+
+                // Фильтр по типу кузова
+                if (typeFilter && car.type !== typeFilter) return false;
+
+                // Поиск по тексту
+                if (searchInput) {
+                    const searchStr = `${car.brand} ${car.model} ${car.year} ${car.type} ${car.features.join(' ')}`.toLowerCase();
+                    if (!searchStr.includes(searchInput)) return false;
+                }
+
+                return true;
+            });
+
+            displayCars(filteredCars);
+        }
+
+        // Инициализация страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCars(cars);
+
+            // Назначение обработчиков событий для фильтров
+            document.getElementById('brand').addEventListener('change', filterCars);
+            document.getElementById('price').addEventListener('change', filterCars);
+            document.getElementById('year').addEventListener('change', filterCars);
+            document.getElementById('type').addEventListener('change', filterCars);
+            document.getElementById('searchInput').addEventListener('input', filterCars);
+
+            // Обработчики для кнопок фильтров
+            document.querySelector('.filter-btn.apply').addEventListener('click', filterCars);
+            document.querySelector('.filter-btn.reset').addEventListener('click', function() {
+                document.getElementById('brand').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('year').value = '';
+                document.getElementById('type').value = '';
+                document.getElementById('searchInput').value = '';
+                filterCars();
+            });
+
+            // Обработчики для пагинации
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('active')) return;
+                    
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    
+                    if (!this.querySelector('i')) {
+                        this.classList.add('active');
+                    }
+                    
+                    // Здесь можно добавить логику загрузки других страниц
+                });
+            });
+        });
+    </script>
+</body>
+</html>

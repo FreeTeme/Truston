@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Осмотр подвески</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <style>
+        :root {
+            --primary: rgba(30, 41, 59, 0.8);
+            --primary-light: #4895ef;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --danger: #f72585;
+            --success: #a855f7;
+            --success-dark: #38b6db;
+            --dark: #212529;
+            --light: #dadada;
+            --gray: #adb5bd;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #dadada ;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Header with photo section */
+        .photo-section {
+            height: 25vh;
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: var(--transition);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-overlay:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-overlay i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .photo-overlay:hover i {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay span {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        #photo-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 1;
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .light-name {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.8rem;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .light-menu {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        .menu-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.3rem;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .menu-item.active {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item.completed::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+        
+        /* Inspection section */
+        .inspection-section {
+            background-color: white;
+            padding: 2rem 1.5rem 6rem;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.8rem;
+            color: var(--primary);
+        }
+        
+        .inspection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: var(--radius);
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspection-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .inspection-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .inspection-item:hover::before {
+            width: 5px;
+        }
+        
+        .inspection-item span {
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+        
+        .inspection-item i {
+            color: var(--gray);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        
+        .inspection-item.checked {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(72, 201, 240, 0.3);
+        }
+        
+        .inspection-item.checked i {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .inspection-item.checked::before {
+            display: none;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 10;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+        
+        .btn {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-problem {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .btn-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+        }
+        
+        .btn-no-problem {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+        
+        .btn-no-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        /* Hidden file input for photo */
+        #photo-input {
+            display: none;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .modal-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-cancel {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .modal-btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Review section (hidden by default) */
+        .review-section {
+            display: none;
+            padding: 2rem 1.5rem;
+        }
+        
+        .review-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        .review-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .review-photo {
+            height: 150px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .review-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .rating-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .rating-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-star {
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .rating-star.active {
+            color: #ffc107;
+        }
+        
+        .review-comment {
+            margin-top: 1.5rem;
+        }
+        
+        /* Voice input styles */
+        .voice-input-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .voice-input-btn {
+            position: absolute;
+            right: 10px;
+            bottom: 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+        }
+        
+        .voice-input-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.1);
+        }
+        
+        .voice-input-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(247, 37, 133, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
+        }
+        
+        .voice-status {
+            position: absolute;
+            bottom: 65px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--danger);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .voice-status.show {
+            opacity: 1;
+        }
+        
+        /* Animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        /* Desktop adaptations - Premium Version */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                max-width: 800px;
+                min-height: auto;
+                border-radius: var(--radius-xl);
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .photo-section {
+                grid-column: 1;
+                grid-row: 1 / span 3;
+                height: 100%;
+                min-height: auto;
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .photo-overlay,
+            #photo-preview {
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .inspection-section {
+                grid-column: 2;
+                grid-row: 1;
+                padding: 2.5rem;
+                border-top-right-radius: var(--radius-xl);
+            }
+            
+            .review-section {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+                padding: 2.5rem;
+            }
+            
+            .action-buttons {
+                grid-column: 2;
+                grid-row: 3;
+                position: relative;
+                border-radius: 0 0 var(--radius-xl) 0;
+                box-shadow: none;
+                padding: 1.5rem 2.5rem;
+            }
+            
+            .light-menu {
+                bottom: auto;
+                top: 2rem;
+                right: 2rem;
+                left: auto;
+            }
+            
+            .menu-container {
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.3);
+                padding: 0.5rem;
+            }
+            
+            .menu-item {
+                padding: 0.8rem 1.5rem;
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+            
+            .light-name {
+                top: 2rem;
+                left: 2rem;
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+            }
+            
+            .inspection-item {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Custom scroll for content */
+            .scroll-container {
+                overflow-y: auto;
+                max-height: calc(100% - 120px);
+                padding-right: 1rem;
+            }
+            
+            .scroll-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            /* Review section desktop */
+            .review-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            
+            .review-photo {
+                height: 180px;
+            }
+            
+            /* Voice input desktop */
+            .voice-input-btn {
+                right: 15px;
+                bottom: 30px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+
+        /* Mobile adaptations */
+@media (max-width: 767px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .photo-section {
+        flex: 0 0 30vh;
+        min-height: 220px;
+        height: auto;
+    }
+    
+    .inspection-section {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 80px; /* Space for action buttons */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    .review-section {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 80px; /* Space for action buttons */
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .scroll-container {
+        max-height: none;
+        overflow-y: visible;
+        padding-bottom: 20px; /* Extra space at bottom */
+    }
+    
+    .action-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+    
+    /* Better spacing for mobile */
+    .inspection-item {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    /* Adjust menu for small screens */
+    .menu-container {
+        max-width: 95%;
+        overflow-x: auto;
+        white-space: nowrap;
+        display: inline-flex;
+        padding: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .menu-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+        min-width: 80px;
+    }
+    
+    /* Photo section adjustments */
+    .photo-overlay span {
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 0 1rem;
+    }
+    
+    /* Better button sizing */
+    .btn {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+        min-height: 50px;
+    }
+    
+    /* Rating stars size */
+    .rating-star {
+        font-size: 1.8rem;
+    }
+    
+    /* Review photos grid */
+    .review-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .review-photo {
+        height: 180px;
+    }
+}
+
+/* Prevent body scroll when modal is open */
+.modal-open {
+    overflow: hidden;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Photo section (25% height on mobile, full height on desktop) -->
+        <div class="photo-section" id="photo-section">
+            <img id="photo-preview" alt="Фото подвески">
+            <div class="photo-container">
+                <div class="photo-overlay" id="photo-placeholder">
+                    <i class="fas fa-camera"></i>
+                    <span>Добавить фото подвески</span>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" capture="environment">
+                
+                <div class="light-name">
+                    ОСМОТР ПОДВЕСКИ
+                    <div class="info-icon" title="Детали осмотра">i</div>
+                </div>
+                
+                <div class="light-menu">
+                    <div class="menu-container">
+                        <div class="menu-item active" data-light="front-r">Перед П</div>
+                        <div class="menu-item" data-light="front-l">Перед Л</div>
+                        <div class="menu-item" data-light="rear-r">Зад П</div>
+                        <div class="menu-item" data-light="rear-l">Зад Л</div>
+                        <div class="menu-item" data-light="components">Компоненты</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inspection items -->
+        <div class="inspection-section" id="inspection-section">
+            <div class="scroll-container">
+                <h2 class="section-title animate-in">
+                    <i class="fas fa-clipboard-check"></i>
+                    Чек-лист осмотра
+                </h2>
+                
+                <div class="inspection-item animate-in delay-1" id="check-springs">
+                    <span>Проверить состояние пружин подвески</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-shock-absorbers">
+                    <span>Проверить амортизаторы на подтеки</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-bushings">
+                    <span>Проверить сайлентблоки и втулки</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-ball-joints">
+                    <span>Проверить шаровые опоры (люфты)</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-wheel-bearings">
+                    <span>Проверить ступичные подшипники</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-stabilizer">
+                    <span>Проверить стабилизатор и тяги</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-levers">
+                    <span>Проверить рычаги подвески</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-brakes">
+                    <span>Проверить тормозные элементы</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-wheel-play">
+                    <span>Проверить люфт колеса</span>
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Review section (hidden by default) -->
+        <div class="review-section" id="review-section">
+            <h2 class="review-title">Результаты осмотра подвески</h2>
+            
+            <div class="review-grid" id="review-photos">
+                <!-- Фото будут добавлены динамически -->
+            </div>
+            
+            <div class="rating-section">
+                <h3 class="rating-title">Оцените общее состояние подвески</h3>
+                <div class="rating-stars">
+                    <i class="fas fa-star rating-star" data-rating="1"></i>
+                    <i class="fas fa-star rating-star" data-rating="2"></i>
+                    <i class="fas fa-star rating-star" data-rating="3"></i>
+                    <i class="fas fa-star rating-star" data-rating="4"></i>
+                    <i class="fas fa-star rating-star" data-rating="5"></i>
+                </div>
+            </div>
+            
+            <div class="review-comment">
+                <div class="voice-input-container">
+                    <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
+                    <button class="voice-input-btn" id="voice-comment-btn" title="Голосовой ввод">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <div class="voice-status" id="voice-status"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-problem" id="btn-problem">
+                <i class="fas fa-exclamation-triangle"></i>
+                Найдены проблемы
+            </button>
+            <button class="btn btn-no-problem" id="btn-no-problem">
+                <i class="fas fa-check-circle"></i>
+                Все в порядке
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal for issues comment -->
+    <div class="modal" id="comment-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Опишите найденные проблемы</h3>
+            <div class="voice-input-container">
+                <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
+                <button class="voice-input-btn" id="voice-issue-btn" title="Голосовой ввод">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="voice-status" id="voice-issue-status"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modal-cancel">Отмена</button>
+                <button class="modal-btn modal-btn-submit" id="modal-submit">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for completion -->
+    <div class="modal" id="complete-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Осмотр подвески завершен!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр подвески автомобиля.</p>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 4.html'">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // App state
+        const appState = {
+            currentLight: 'front-r',
+            lights: {
+                'front-r': { photo: null, checks: [], comment: '' },
+                'front-l': { photo: null, checks: [], comment: '' },
+                'rear-r': { photo: null, checks: [], comment: '' },
+                'rear-l': { photo: null, checks: [], comment: '' },
+                'components': { photo: null, checks: [], comment: '' }
+            },
+            completedLights: 0,
+            rating: 0,
+            finalComment: ''
+        };
+        
+        // DOM elements
+        const photoInput = document.getElementById('photo-input');
+        const photoPlaceholder = document.getElementById('photo-placeholder');
+        const photoPreview = document.getElementById('photo-preview');
+        const inspectionItems = document.querySelectorAll('.inspection-item');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const lightName = document.querySelector('.light-name');
+        const infoIcon = document.querySelector('.info-icon');
+        const btnProblem = document.getElementById('btn-problem');
+        const btnNoProblem = document.getElementById('btn-no-problem');
+        const commentModal = document.getElementById('comment-modal');
+        const completeModal = document.getElementById('complete-modal');
+        const issueComment = document.getElementById('issue-comment');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalSubmit = document.getElementById('modal-submit');
+        const modalClose = document.getElementById('modal-close');
+        const inspectionSection = document.getElementById('inspection-section');
+        const reviewSection = document.getElementById('review-section');
+        const reviewPhotos = document.getElementById('review-photos');
+        const ratingStars = document.querySelectorAll('.rating-star');
+        const finalComment = document.getElementById('final-comment');
+        const photoSection = document.getElementById('photo-section');
+        const voiceCommentBtn = document.getElementById('voice-comment-btn');
+        const voiceIssueBtn = document.getElementById('voice-issue-btn');
+        const voiceStatus = document.getElementById('voice-status');
+        const voiceIssueStatus = document.getElementById('voice-issue-status');
+        
+        // Speech recognition setup
+        let recognition = null;
+        let currentTextarea = null;
+        let currentStatus = null;
+        
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    console.warn('Браузер не поддерживает API распознавания речи');
+                    voiceCommentBtn.style.display = 'none';
+                    voiceIssueBtn.style.display = 'none';
+                    return;
+                }
+                
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'ru-RU';
+                
+                recognition.onstart = function() {
+                    if (currentStatus) {
+                        currentStatus.textContent = 'Слушаю...';
+                        currentStatus.classList.add('show');
+                    }
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    if (currentTextarea) {
+                        currentTextarea.value += ' ' + transcript;
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Ошибка распознавания:', event.error);
+                    if (currentStatus) {
+                        currentStatus.textContent = 'Ошибка: ' + event.error;
+                        setTimeout(() => {
+                            currentStatus.classList.remove('show');
+                        }, 3000);
+                    }
+                };
+                
+                recognition.onend = function() {
+                    if (currentStatus) {
+                        currentStatus.textContent = 'Готово';
+                        setTimeout(() => {
+                            currentStatus.classList.remove('show');
+                        }, 1000);
+                    }
+                };
+            } catch (e) {
+                console.error('Ошибка инициализации распознавания речи:', e);
+                voiceCommentBtn.style.display = 'none';
+                voiceIssueBtn.style.display = 'none';
+            }
+        }
+        
+        // Start voice input
+        function startVoiceInput(textarea, statusElement) {
+            if (!recognition) {
+                alert('Ваш браузер не поддерживает голосовой ввод или произошла ошибка инициализации');
+                return;
+            }
+            
+            currentTextarea = textarea;
+            currentStatus = statusElement;
+            
+            try {
+                recognition.start();
+                textarea.focus();
+            } catch (e) {
+                console.error('Ошибка запуска распознавания:', e);
+                if (currentStatus) {
+                    currentStatus.textContent = 'Ошибка запуска';
+                    setTimeout(() => {
+                        currentStatus.classList.remove('show');
+                    }, 2000);
+                }
+            }
+        }
+        
+        // Initialize the app
+        function initApp() {
+            // Set current light from active menu item
+            const activeMenuItem = document.querySelector('.menu-item.active');
+            appState.currentLight = activeMenuItem.dataset.light;
+            
+            // Load saved data if available
+            loadLightData(appState.currentLight);
+            
+            // Initialize speech recognition
+            initSpeechRecognition();
+        }
+        
+        // Load light data into UI
+        function loadLightData(light) {
+            const lightData = appState.lights[light];
+            
+            // Load photo if exists
+            if (lightData.photo) {
+                photoPreview.src = lightData.photo;
+                photoPreview.style.display = 'block';
+                photoPlaceholder.style.display = 'none';
+            } else {
+                photoPreview.style.display = 'none';
+                photoPlaceholder.style.display = 'flex';
+            }
+            
+            // Load checks
+            inspectionItems.forEach(item => {
+                const checkId = item.id.replace('check-', '');
+                if (lightData.checks.includes(checkId)) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+        }
+        
+        // Save light data from UI
+        function saveLightData(light) {
+            const lightData = appState.lights[light];
+            
+            // Save checks
+            lightData.checks = [];
+            inspectionItems.forEach(item => {
+                if (item.classList.contains('checked')) {
+                    const checkId = item.id.replace('check-', '');
+                    lightData.checks.push(checkId);
+                }
+            });
+        }
+        
+        // Move to next light
+        function moveToNextLight() {
+            // Save current light data
+            saveLightData(appState.currentLight);
+            
+            // Mark current light as completed
+            const currentMenuItem = document.querySelector(`.menu-item[data-light="${appState.currentLight}"]`);
+            currentMenuItem.classList.add('completed');
+            appState.completedLights++;
+            
+            // Check if all lights are completed
+            if (appState.completedLights === 5) {
+                showReviewSection();
+                return;
+            }
+            
+            // Find next light that's not completed
+            let nextLight = null;
+            menuItems.forEach(item => {
+                if (!item.classList.contains('completed') && !nextLight) {
+                    nextLight = item.dataset.light;
+                }
+            });
+            
+            if (nextLight) {
+                switchToLight(nextLight);
+            }
+        }
+        
+        // Switch to specific light
+        function switchToLight(light) {
+            // Save current light data
+            saveLightData(appState.currentLight);
+            
+            // Update current light
+            appState.currentLight = light;
+            
+            // Update active menu item
+            menuItems.forEach(item => {
+                if (item.dataset.light === light) {
+                    item.classList.add('active');
+                    item.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        item.style.transform = 'scale(1)';
+                    }, 200);
+                } else {
+                    item.classList.remove('active');
+                    item.style.transform = 'scale(1)';
+                }
+            });
+            
+            // Update light name
+            let displayName = '';
+            switch(light) {
+                case 'front-r': displayName = 'ПЕРЕДНЯЯ ПРАВАЯ СТОРОНА'; break;
+                case 'front-l': displayName = 'ПЕРЕДНЯЯ ЛЕВАЯ СТОРОНА'; break;
+                case 'rear-r': displayName = 'ЗАДНЯЯ ПРАВАЯ СТОРОНА'; break;
+                case 'rear-l': displayName = 'ЗАДНЯЯ ЛЕВАЯ СТОРОНА'; break;
+                case 'components': displayName = 'КОМПОНЕНТЫ ПОДВЕСКИ'; break;
+            }
+            lightName.textContent = displayName;
+            
+            // Load new light data
+            loadLightData(light);
+        }
+        
+        // Show review section with all photos
+        function showReviewSection() {
+            inspectionSection.style.display = 'none';
+            reviewSection.style.display = 'block';
+            
+            // Hide photo section and menu
+            photoSection.style.display = 'none';
+            
+            // Clear existing photos
+            reviewPhotos.innerHTML = '';
+            
+            // Add all light photos
+            for (const [light, data] of Object.entries(appState.lights)) {
+                if (data.photo) {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'review-photo';
+                    
+                    let caption = '';
+                    switch(light) {
+                        case 'front-r': caption = 'Передняя правая'; break;
+                        case 'front-l': caption = 'Передняя левая'; break;
+                        case 'rear-r': caption = 'Задняя правая'; break;
+                        case 'rear-l': caption = 'Задняя левая'; break;
+                        case 'components': caption = 'Компоненты'; break;
+                    }
+                    
+                    photoDiv.innerHTML = `
+                        <img src="${data.photo}" alt="${light}">
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; padding: 0.5rem; text-align: center; font-size: 0.8rem;">${caption}</div>
+                    `;
+                    reviewPhotos.appendChild(photoDiv);
+                }
+            }
+            
+            // Update action buttons for review section
+            btnProblem.style.display = 'none';
+            btnNoProblem.textContent = 'Завершить осмотр';
+            btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
+        }
+        
+        // Complete the inspection
+        function completeInspection() {
+            // Save rating and final comment
+            appState.rating = document.querySelector('.rating-star.active')?.dataset.rating || 0;
+            appState.finalComment = finalComment.value;
+            
+            // Show completion modal
+            showModal(completeModal);
+            
+            // Here you would typically send the data to a server
+            console.log('Осмотр завершен:', appState);
+        }
+        
+        // Show modal
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+        
+        // Hide modal
+        function hideModal(modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Event listeners
+        photoPlaceholder.addEventListener('click', () => {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    photoPreview.src = event.target.result;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    
+                    // Save photo to current light
+                    appState.lights[appState.currentLight].photo = event.target.result;
+                    
+                    // Add slight zoom animation
+                    photoPreview.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        photoPreview.style.transform = 'scale(1)';
+                        photoPreview.style.transition = 'transform 0.5s ease';
+                    }, 50);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Inspection items toggle
+        inspectionItems.forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('checked');
+                
+                // Add bounce animation to checkmark
+                const icon = this.querySelector('i');
+                icon.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
+                }, 300);
+            });
+        });
+        
+        // Light menu selection
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const light = this.dataset.light;
+                if (!this.classList.contains('completed')) {
+                    switchToLight(light);
+                }
+            });
+        });
+        
+        // Info icon click
+        infoIcon.addEventListener('click', function() {
+            this.style.transform = 'scale(1.2) rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1) rotate(0)';
+                alert('Комплексный осмотр подвески включает проверку:\n\n• Состояния пружин и амортизаторов\n• Целостности сайлентблоков и втулок\n• Люфтов шаровых опор и подшипников\n• Состояния рычагов и стабилизаторов\n• Герметичности элементов подвески\n• Крепления всех компонентов');
+            }, 300);
+        });
+        
+        // Problem button click
+        btnProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Show comment modal
+            issueComment.value = appState.lights[appState.currentLight].comment;
+            showModal(commentModal);
+        });
+        
+        // No problem button click
+        btnNoProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            if (reviewSection.style.display === 'block') {
+                completeInspection();
+            } else {
+                // Check if at least one item is checked
+                const checkedItems = document.querySelectorAll('.inspection-item.checked');
+                if (checkedItems.length === 0) {
+                    alert('Пожалуйста, отметьте хотя бы один пункт осмотра перед продолжением.');
+                    return;
+                }
+                
+                // Check if photo was added
+                if (!appState.lights[appState.currentLight].photo) {
+                    if (!confirm('Вы не добавили фото этого элемента подвески. Продолжить без фото?')) {
+                        return;
+                    }
+                }
+                
+                moveToNextLight();
+            }
+        });
+        
+        // Modal buttons
+        modalCancel.addEventListener('click', () => {
+            hideModal(commentModal);
+        });
+        
+        modalSubmit.addEventListener('click', () => {
+            // Save comment to current light
+            appState.lights[appState.currentLight].comment = issueComment.value;
+            hideModal(commentModal);
+            
+            // Move to next light
+            moveToNextLight();
+        });
+        
+        modalClose.addEventListener('click', () => {
+            hideModal(completeModal);
+        });
+        
+        // Rating stars
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                
+                // Update stars display
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Voice input buttons
+        voiceCommentBtn.addEventListener('click', function() {
+            this.classList.toggle('listening');
+            if (this.classList.contains('listening')) {
+                startVoiceInput(finalComment, voiceStatus);
+            } else {
+                if (recognition) {
+                    recognition.stop();
+                }
+            }
+        });
+        
+        voiceIssueBtn.addEventListener('click', function() {
+            this.classList.toggle('listening');
+            if (this.classList.contains('listening')) {
+                startVoiceInput(issueComment, voiceIssueStatus);
+            } else {
+                if (recognition) {
+                    recognition.stop();
+                }
+            }
+        });
+        
+        // Initialize the app
+        initApp();
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Осмотр автомобиля</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <style>
+        :root {
+            --primary: rgba(30, 41, 59, 0.8);
+            --primary-light: #4895ef;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --danger: #f72585;
+            --success: #a855f7;
+            --success-dark: #38b6db;
+            --dark: #212529;
+            --light: #dadada;
+            --gray: #adb5bd;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #dadada;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Header with photo section */
+        .photo-section {
+            height: 25vh;
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: var(--transition);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-overlay:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-overlay i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .photo-overlay:hover i {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay span {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        #photo-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 1;
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .section-name {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.8rem;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .section-menu {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        .menu-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.3rem;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            max-width: 90%;
+        }
+        
+        .menu-item {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .menu-item.active {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item.completed::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+        
+        /* Inspection section */
+        .inspection-section {
+            background-color: white;
+            padding: 2rem 1.5rem 6rem;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.8rem;
+            color: var(--primary);
+        }
+        
+        .inspection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: var(--radius);
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspection-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .inspection-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .inspection-item:hover::before {
+            width: 5px;
+        }
+        
+        .inspection-item span {
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+        
+        .inspection-item i {
+            color: var(--gray);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        
+        .inspection-item.checked {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(72, 201, 240, 0.3);
+        }
+        
+        .inspection-item.checked i {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .inspection-item.checked::before {
+            display: none;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 10;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+        
+        .btn {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-problem {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .btn-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+        }
+        
+        .btn-no-problem {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+        
+        .btn-no-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        /* Hidden file input for photo */
+        #photo-input {
+            display: none;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .modal-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-cancel {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .modal-btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Review section (hidden by default) */
+        .review-section {
+            display: none;
+            padding: 2rem 1.5rem;
+        }
+        
+        .review-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        .review-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .review-photo {
+            height: 150px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .review-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .rating-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .rating-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-star {
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .rating-star.active {
+            color: #ffc107;
+        }
+        
+        .review-comment {
+            margin-top: 1.5rem;
+        }
+        
+        /* Animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        /* Slider verification block */
+        .verification-block {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            z-index: 1000;
+            transition: all 0.5s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .verification-block.show {
+            bottom: 100px;
+        }
+        
+        .verification-text {
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .slider-container {
+            width: 100%;
+            height: 50px;
+            background: #f1f1f1;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-track {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #666;
+            z-index: 1;
+            pointer-events: none;
+             transition: opacity 0.3s ease; 
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-radius: 50%;
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider-success {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+             pointer-events: none; 
+        }
+        
+        .verification-success {
+            font-size: 2rem;
+            color: var(--success);
+            margin-top: 1rem;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s ease;
+        }
+        
+        .verification-block.completed .slider-success {
+            opacity: 1;
+        }
+        
+        .verification-block.completed .verification-success {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Desktop adaptations - Premium Version */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                max-width: 800px;
+                min-height: auto;
+                border-radius: var(--radius-xl);
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .photo-section {
+                grid-column: 1;
+                grid-row: 1 / span 3;
+                height: 100%;
+                min-height: auto;
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .photo-overlay,
+            #photo-preview {
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .inspection-section {
+                grid-column: 2;
+                grid-row: 1;
+                padding: 2.5rem;
+                border-top-right-radius: var(--radius-xl);
+            }
+            
+            .review-section {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+                padding: 2.5rem;
+            }
+            
+            .action-buttons {
+                grid-column: 2;
+                grid-row: 3;
+                position: relative;
+                border-radius: 0 0 var(--radius-xl) 0;
+                box-shadow: none;
+                padding: 1.5rem 2.5rem;
+            }
+            
+            .section-menu {
+                bottom: auto;
+                top: 2rem;
+                right: 2rem;
+                left: auto;
+            }
+            
+            .menu-container {
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.3);
+                padding: 0.5rem;
+            }
+            
+            .menu-item {
+                padding: 0.8rem 1.5rem;
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+            
+            .section-name {
+                top: 2rem;
+                left: 2rem;
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+            }
+            
+            .inspection-item {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Custom scroll for content */
+            .scroll-container {
+                overflow-y: auto;
+                max-height: calc(100% - 120px);
+                padding-right: 1rem;
+            }
+            
+            .scroll-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            /* Review section desktop */
+            .review-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            
+            .review-photo {
+                height: 180px;
+            }
+            
+            /* Verification block desktop */
+            .verification-block {
+                bottom: -120px;
+            }
+            
+            .verification-block.show {
+                bottom: 40px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+        
+        /* Custom styles for inspection cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .inspection-card {
+            flex: 1 1 calc(50% - 1rem);
+            min-width: 200px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .inspection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header i {
+            font-size: 1.2rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-item:last-child {
+            border-bottom: none;
+        }
+        
+        .card-item span {
+            font-size: 0.9rem;
+        }
+        
+        .card-item i {
+            color: var(--gray);
+            transition: var(--transition);
+        }
+        
+        .card-item.checked i {
+            color: var(--success);
+            transform: scale(1.2);
+        }
+        
+        .card-completed {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+        }
+        
+        .card-completed .card-header {
+            background: rgba(30, 41, 59, 0.9);
+        }
+        
+        .card-completed .card-item i {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inspection-section" id="inspection-section">
+            <div class="scroll-container">
+                <br>
+                <div class="section-title animate-in" style="margin-top: 2rem; margin-left: 20px;">
+                    <i class="fas fa-clipboard-list"></i>
+                    Карточки осмотра
+                </div>
+
+                <div class="card-container">
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Шины</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Давление в шинах</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Крепления</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Проверка болтов</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Состояние диска</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Фары и освещение</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Передние фары</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Задние фонари</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Поворотники</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Стоп-сигналы</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Тормозная система</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Тормозные колодки</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Тормозные диски</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Тормозная жидкость</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Ручной тормоз</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Подвеска</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Амортизаторы</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Пружины</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Рычаги</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Сайлентблоки</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Электроника</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Аккумулятор</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Генератор</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Проводка</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Бортовой компьютер</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inspection-card card-completed">
+                        <div class="card-header">
+                            <span>Тормозная система</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item checked">
+                                <span>Тормозные колодки</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Тормозные диски</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Тормозная жидкость</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item checked">
+                                <span>Ручной тормоз</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Verification block -->
+    <div class="verification-block" id="verification-block">
+        <div class="verification-text">Протяните ползунок вправо для завершения</div>
+        <div class="slider-container">
+            <div class="slider-track">
+                <div class="slider-text">Протяните вправо →</div>
+                <div class="slider-thumb"><i class="fas fa-arrow-right"></i></div>
+                <div class="slider-success"><i class="fas fa-check"></i> Проверка завершена</div>
+            </div>
+        </div>
+        <div class="verification-success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+    </div>
+    
+    <script>
+        // Make all card items checked by default
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show verification block after 5 seconds
+            setTimeout(function() {
+                const verificationBlock = document.getElementById('verification-block');
+                verificationBlock.classList.add('show');
+                
+                // Setup slider functionality
+                setupSlider();
+            }, 2000);
+        });
+        
+        function setupSlider() {
+            const thumb = document.querySelector('.slider-thumb');
+            const track = document.querySelector('.slider-track');
+            const block = document.getElementById('verification-block');
+            let isDragging = false;
+            let startX = 0;
+            let currentX = 0;
+            
+            thumb.addEventListener('mousedown', startDrag);
+            thumb.addEventListener('touchstart', startDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+                currentX = thumb.offsetLeft;
+                
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
+                
+                e.preventDefault();
+            }
+            
+            function drag(e) {
+    if (!isDragging) return;
+    
+    const x = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+    const deltaX = x - startX;
+    let newX = currentX + deltaX;
+    
+    // Constrain movement
+    const maxX = track.offsetWidth - thumb.offsetWidth;
+    newX = Math.max(0, Math.min(newX, maxX));
+    
+    thumb.style.left = newX + 'px';
+    
+    // Плавно уменьшаем прозрачность текста по мере движения
+    const sliderText = document.querySelector('.slider-text');
+    const opacity = 1 - (newX / maxX);
+    sliderText.style.opacity = opacity;
+    
+    // Check if slider reached the end
+    if (newX >= maxX - 10) {
+        completeVerification();
+    }
+}
+
+function endDrag() {
+    isDragging = false;
+    
+    const thumb = document.querySelector('.slider-thumb');
+    const track = document.querySelector('.slider-track');
+    const sliderText = document.querySelector('.slider-text');
+    const maxX = track.offsetWidth - thumb.offsetWidth;
+    const currentLeft = parseInt(thumb.style.left || 0);
+    
+    // Если не дошел до конца, возвращаем и восстанавливаем прозрачность
+    if (currentLeft < maxX - 50) {
+        thumb.style.transition = 'left 0.3s ease';
+        sliderText.style.transition = 'opacity 0.3s ease';
+        thumb.style.left = '0';
+        sliderText.style.opacity = '1';
+        setTimeout(() => {
+            thumb.style.transition = '';
+            sliderText.style.transition = '';
+        }, 300);
+    }
+    
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchend', endDrag);
+}
+            function completeVerification() {
+                block.classList.add('completed');
+                
+                // After animation, redirect to end.html
+                setTimeout(() => {
+                    window.location.href = 'end.html';
+                }, 2000);
+            }
+        }
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+    </script>
+</body>
+</html>
