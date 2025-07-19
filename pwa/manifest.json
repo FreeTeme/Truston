@@ -1,0 +1,19 @@
+{
+  "name": "Truston",
+  "short_name": "Truston",
+  "start_url": "/pwa/index.html",
+  "scope": "/pwa/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4285f4",
+  "description": "PWA автосервиса Truston.",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+} 
