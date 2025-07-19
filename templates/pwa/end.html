@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет по осмотру фар</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#4285f4">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Иконка для старого Safari -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <style>
+        :root {
+            --primary: rgba(30, 41, 59, 0.8);
+            --primary-light: #4895ef;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --danger: #f72585;
+            --success: #a855f7;
+            --success-dark: #38b6db;
+            --dark: #212529;
+            --light: #dadada;
+            --gray: #adb5bd;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #dadada;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Preloader styles */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .preloader-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        /* Report page styles */
+        .report-section {
+            padding: 2rem 1.5rem;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .report-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 20px rgba(72, 201, 240, 0.3);
+        }
+        
+        .report-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .report-subtitle {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 80%;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .qr-code img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .report-actions {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        
+        .report-btn {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .report-btn i {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        .btn-share {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+        
+        .btn-share:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        .btn-open {
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--light);
+        }
+        
+        .btn-open:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
+        }
+        
+        .btn-issues {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .btn-issues:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-text {
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+        
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-btn:hover {
+            background: var(--primary-light);
+        }
+        
+        /* Share animation */
+        .share-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .share-animation.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* Desktop adaptations */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                max-width: 500px;
+                min-height: auto;
+                border-radius: var(--radius-xl);
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            }
+            
+            .report-section {
+                padding: 3rem 2.5rem;
+            }
+            
+            .report-title {
+                font-size: 2rem;
+            }
+            
+            .report-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .report-actions {
+                flex-direction: row;
+                gap: 1rem;
+            }
+            
+            .report-btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="spinner"></div>
+        <div class="preloader-text">Подождите, генерируется отчет...</div>
+    </div>
+    
+    <!-- Report section -->
+    <div class="container">
+        <div class="report-section" id="report-section">
+            <div class="report-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1 class="report-title">Отчет готов!</h1>
+            <p class="report-subtitle">Осмотр авто завершен. Вы можете поделиться отчетом или сохранить его для дальнейшего использования.</p>
+            
+            <div class="qr-code">
+                <!-- QR code would be generated here -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html" alt="QR Code">
+            </div>
+            
+            <div class="report-actions">
+                <button class="report-btn btn-share" id="share-btn">
+                    <i class="fas fa-share-alt"></i>
+                    Поделиться
+                </button>
+                <button class="report-btn btn-open" onclick="window.open('audi.pdf')">
+                    <i class="fas fa-file-pdf"></i>
+                    Открыть
+                </button>
+                <button class="report-btn btn-issues" id="issues-btn">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Есть неполадки
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Share animation -->
+    <div class="share-animation" id="share-animation">
+        <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+        Ссылка скопирована!
+    </div>
+    
+    <!-- Modal for issues -->
+    <div class="modal" id="issues-modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="modal-title">Сообщение отправлено</h2>
+            <p class="modal-text">Ваше сообщение о неполадках успешно отправлено администратору. Мы свяжемся с вами в ближайшее время.</p>
+            <button class="modal-btn" id="modal-close-btn">Хорошо</button>
+        </div>
+    </div>
+    
+    <script>
+        // Simulate report generation
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('preloader');
+            const reportSection = document.getElementById('report-section');
+            const shareBtn = document.getElementById('share-btn');
+            const shareAnimation = document.getElementById('share-animation');
+            const issuesBtn = document.getElementById('issues-btn');
+            const issuesModal = document.getElementById('issues-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            
+            // Show preloader for 3 seconds
+            setTimeout(function() {
+                preloader.classList.add('hidden');
+                
+                // Show report section after preloader hides
+                setTimeout(function() {
+                    reportSection.style.display = 'flex';
+                }, 500);
+            }, 3000);
+            
+            // Button click effects
+            const buttons = document.querySelectorAll('.report-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+            
+            // Share button functionality
+            shareBtn.addEventListener('click', function() {
+                // Copy link to clipboard
+                navigator.clipboard.writeText('https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html')
+                    .then(() => {
+                        // Show animation
+                        shareAnimation.classList.add('show');
+                        
+                        // Hide after 2 seconds
+                        setTimeout(() => {
+                            shareAnimation.classList.remove('show');
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        alert('Не удалось скопировать ссылку');
+                    });
+            });
+            
+            // Issues button functionality
+            issuesBtn.addEventListener('click', function() {
+                issuesModal.classList.add('show');
+            });
+            
+            // Close modal
+            modalCloseBtn.addEventListener('click', function() {
+                issuesModal.classList.remove('show');
+            });
+            
+            // Close modal when clicking outside
+            issuesModal.addEventListener('click', function(e) {
+                if (e.target === issuesModal) {
+                    issuesModal.classList.remove('show');
+                }
+            });
+        });
+
+        // Проверка поддержки и окружения
+        if ('serviceWorker' in navigator && 
+            (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+          
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js')
+              .then(function(registration) {
+                console.log('ServiceWorker зарегистрирован:', registration.scope);
+                
+                // Отслеживание обновлений
+                registration.addEventListener('updatefound', () => {
+                  const newWorker = registration.installing;
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'activated') {
+                      console.log('Новая версия SW готова к использованию!');
+                      // Можно добавить уведомление для пользователя
+                    }
+                  });
+                });
+              })
+              .catch(function(error) {
+                console.error('Ошибка регистрации ServiceWorker:', error);
+              });
+          });
+        } else {
+          console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+        }
+    </script>
+</body>
+</html>

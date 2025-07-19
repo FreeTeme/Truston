@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCheck - Диагностика автомобиля</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --accent: #818cf8;
+            --light: #1e293b;
+            --dark: #f8fafc;
+            --success: #22d3ee;
+            --warning: #f43f5e;
+            --input-bg: #334155;
+            --border-color: #475569;
+            --card-bg: #1e293b;
+            --body-bg: #0f172a;
+            --text-muted: #94a3b8;
+            --progress-bg: #334155;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--body-bg);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out;
+            border: 1px solid var(--border-color);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--progress-bg);
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 2px;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transform: translateY(-50%);
+            z-index: 2;
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--progress-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+        
+        .step-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .step.active .step-text {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .step.completed .step-text {
+            color: var(--success);
+        }
+        
+        .form-container {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .required::after {
+            content: ' *';
+            color: var(--warning);
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--input-bg);
+            color: var(--dark);
+        }
+        
+        textarea {
+            resize: vertical;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .radio-option input {
+            width: auto;
+        }
+        
+        .radio-option label {
+            margin-bottom: 0;
+            color: var(--dark);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--dark);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+            box-shadow: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .info-box {
+            background: var(--input-bg);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+            animation: pulse 2s infinite;
+            color: var(--dark);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(72, 149, 239, 0.1); }
+            70% { box-shadow: 0 0 0 10px rgba(72, 149, 239, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(72, 149, 239, 0); }
+        }
+        
+        .datetime-picker {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .date-container, .time-container {
+            position: relative;
+        }
+        
+        .date-container::after, .time-container::after {
+            content: "\f073";
+            font-family: "Font Awesome 5 Free";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+        }
+        
+        .time-container::after {
+            content: "\f017";
+        }
+        
+        input[type="date"], input[type="time"] {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 2.5rem !important;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .time-slot {
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 8px;
+            background: var(--input-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--dark);
+            border: 1px solid var(--border-color);
+        }
+        
+        .time-slot:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .time-slot.selected {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .success-container {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .success-container.active {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: bounce 1s;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+        
+        .success-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .success-message {
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+        }
+        
+        .confirmation-details {
+            background: var(--input-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: left;
+            margin: 2rem auto;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .confirmation-details h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--dark);
+        }
+        
+        .detail-item div:last-child {
+            color: var(--text-muted);
+        }
+        
+        /* Стили для чекбокса */
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+        
+        /* Стили для выпадающих списков */
+        select option {
+            background: var(--input-bg);
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Запись на диагностику Truston</h1>
+        
+        <div class="progress-steps">
+            <div class="progress-bar" style="width: 33%;"></div>
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-text">Информация об авто</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-text">Личные данные</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-text">Подтверждение</div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <!-- Шаг 1: Информация об авто -->
+            <div class="form-section active" data-section="1">
+                <h2>Информация о вашем автомобиле</h2>
+                <p>Пожалуйста, укажите информацию о вашем автомобиле и месте проведения диагностики.</p>
+                
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> Поля, отмеченные *, обязательны для заполнения.
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" class="required">Где вы хотите провести диагностику?</label>
+                    <select id="location" required>
+                        <option value="" selected disabled>Выберите...</option>
+                        <option value="center">Автосервис Центр (ул. Центральная, 15)</option>
+                        <option value="north">Автосервис Северный (пр. Северный, 42)</option>
+                        <option value="south">Автосервис Южный (ул. Южная, 8)</option>
+                        <option value="mobile">Мобильная диагностика (выезд специалиста)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-number">Знаете ли вы регистрационный номер автомобиля?</label>
+                    <input type="text" id="reg-number" placeholder="Например, А123БВ777">
+                </div>
+                
+                <div class="form-group">
+                    <label for="make" class="required">Марка автомобиля</label>
+                    <select id="make" required>
+                        <option value="" selected disabled>Выберите...</option>
+                        <option value="audi">Audi</option>
+                        <option value="bmw">BMW</option>
+                        <option value="ford">Ford</option>
+                        <option value="honda">Honda</option>
+                        <option value="hyundai">Hyundai</option>
+                        <option value="kia">KIA</option>
+                        <option value="lexus">Lexus</option>
+                        <option value="mazda">Mazda</option>
+                        <option value="mercedes">Mercedes-Benz</option>
+                        <option value="nissan">Nissan</option>
+                        <option value="skoda">Skoda</option>
+                        <option value="toyota">Toyota</option>
+                        <option value="volkswagen">Volkswagen</option>
+                        <option value="other">Другая</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model" class="required">Модель автомобиля</label>
+                    <select id="model" required disabled>
+                        <option value="" selected disabled>Сначала выберите марку</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Есть ли у автомобиля действующие ТО и регистрация?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="wot-yes" name="wot" value="yes" required>
+                            <label for="wot-yes">Да</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="wot-no" name="wot" value="no">
+                            <label for="wot-no">Нет</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="wot-unknown" name="wot" value="unknown">
+                            <label for="wot-unknown">Не знаю</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <i class="fas fa-exclamation-triangle"></i> Если марка/модель отсутствует в списке или у вас редкий/спортивный автомобиль, рекомендуем обратиться к авторизованному дилеру для специализированной диагностики.
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button class="btn next-btn" data-next="2">Далее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Шаг 2: Личные данные -->
+            <div class="form-section" data-section="2">
+                <div class="form-group">
+                    <label for="date" class="required">Дата и время диагностики</label>
+                    <div class="datetime-picker">
+                        <div class="date-container">
+                            <input type="date" id="date" required 
+                                   min="<?= date('Y-m-d') ?>" 
+                                   class="calendar-input">
+                        </div>
+                        <div class="time-container">
+                            <input type="time" id="time" required
+                                   min="09:00" 
+                                   max="19:00" 
+                                   step="1800">
+                        </div>
+                    </div>
+                    <div class="time-slots">
+                        <div class="time-slot">09:00</div>
+                        <div class="time-slot">10:00</div>
+                        <div class="time-slot">11:00</div>
+                        <div class="time-slot">12:00</div>
+                        <div class="time-slot">13:00</div>
+                        <div class="time-slot">14:00</div>
+                        <div class="time-slot">15:00</div>
+                        <div class="time-slot">16:00</div>
+                        <div class="time-slot">17:00</div>
+                        <div class="time-slot">18:00</div>
+                    </div>
+                </div>
+
+                <h2>Ваши личные данные</h2>
+                <p>Пожалуйста, укажите ваши контактные данные для записи и связи.</p>
+                
+                <div class="form-group">
+                    <label for="fullname" class="required">ФИО</label>
+                    <input type="text" id="fullname" placeholder="Иванов Иван Иванович" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="required">Телефон</label>
+                    <input type="tel" id="phone" placeholder="+7 (123) 456-78-90" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">Email</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Адрес (если требуется выездная диагностика)</label>
+                    <input type="text" id="address" placeholder="ул. Примерная, д. 10, кв. 25">
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Дополнительные комментарии</label>
+                    <textarea id="notes" rows="3" placeholder="Особые пожелания или информация о проблемах автомобиля"></textarea>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary prev-btn" data-prev="1"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button class="btn next-btn" data-next="3">Далее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Шаг 3: Подтверждение -->
+            <div class="form-section" data-section="3">
+                <h2>Подтверждение записи</h2>
+                <p>Пожалуйста, проверьте введенные данные перед подтверждением.</p>
+                
+                <div class="confirmation-details">
+                    <h3>Информация об автомобиле:</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Место диагностики:</div>
+                        <div id="confirm-location">Автосервис Центр (ул. Центральная, 15)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Рег. номер:</div>
+                        <div id="confirm-reg">А123БВ777</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Марка/модель:</div>
+                        <div id="confirm-make-model">Toyota Camry</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ТО/регистрация:</div>
+                        <div id="confirm-wot">Да</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem;">Контактные данные:</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">ФИО:</div>
+                        <div id="confirm-name">Иванов Иван Иванович</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Телефон:</div>
+                        <div id="confirm-phone">+7 (123) 456-78-90</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email:</div>
+                        <div id="confirm-email">example@mail.com</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Адрес:</div>
+                        <div id="confirm-address">ул. Примерная, д. 10, кв. 25</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Комментарии:</div>
+                        <div id="confirm-notes">Проверить тормозную систему</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="radio-option">
+                        <input type="checkbox" id="agree-terms" required>
+                        <label for="agree-terms" class="required">Я согласен с условиями обработки персональных данных и политикой конфиденциальности</label>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary prev-btn" data-prev="2"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button class="btn confirm-btn">Подтвердить запись <i class="fas fa-check"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Успешная запись -->
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-title">Запись успешно оформлена!</h2>
+            <p class="success-message">Мы отправили подтверждение на ваш email. В ближайшее время с вами свяжется наш специалист для уточнения деталей.</p>
+            
+            <div class="confirmation-details">
+                <h3>Детали записи:</h3>
+                <div class="detail-item">
+                    <div class="detail-label">Номер заявки:</div>
+                    <div>AC-2023-05678</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Место:</div>
+                    <div id="success-location">Автосервис Центр (ул. Центральная, 15)</div>
+                </div>
+                <div class="detail-item">
+                    <div>Будем рады вас видеть!</div>
+                </div>
+            </div>
+            
+            <button class="btn" id="new-booking"><i class="fas fa-car"></i> Новая запись</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Модели автомобилей
+            const carModels = {
+                audi: ['A3', 'A4', 'A6', 'Q3', 'Q5', 'Q7', 'TT'],
+                bmw: ['3 серии', '5 серии', '7 серии', 'X1', 'X3', 'X5'],
+                ford: ['Focus', 'Fiesta', 'Mondeo', 'Kuga', 'Explorer'],
+                honda: ['Accord', 'Civic', 'CR-V', 'HR-V', 'Pilot'],
+                hyundai: ['Solaris', 'Elantra', 'Tucson', 'Santa Fe', 'Creta'],
+                kia: ['Rio', 'Cerato', 'Optima', 'Sportage', 'Sorento'],
+                lexus: ['ES', 'RX', 'NX', 'LS', 'GX'],
+                mazda: ['3', '6', 'CX-5', 'CX-30', 'CX-9'],
+                mercedes: ['A-class', 'C-class', 'E-class', 'GLC', 'GLE'],
+                nissan: ['Almera', 'Qashqai', 'X-Trail', 'Murano', 'Terrano'],
+                skoda: ['Octavia', 'Rapid', 'Kodiaq', 'Karoq', 'Superb'],
+                toyota: ['Camry', 'Corolla', 'RAV4', 'Land Cruiser', 'Highlander'],
+                volkswagen: ['Polo', 'Jetta', 'Tiguan', 'Passat', 'Touareg'],
+                other: ['Другая модель']
+            };
+            
+            // Элементы формы
+            const makeSelect = document.getElementById('make');
+            const modelSelect = document.getElementById('model');
+            const nextButtons = document.querySelectorAll('.next-btn');
+            const prevButtons = document.querySelectorAll('.prev-btn');
+            const confirmBtn = document.querySelector('.confirm-btn');
+            const newBookingBtn = document.getElementById('new-booking');
+            const formSections = document.querySelectorAll('.form-section');
+            const steps = document.querySelectorAll('.step');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            // Заполнение моделей при выборе марки
+            makeSelect.addEventListener('change', function() {
+                const selectedMake = this.value;
+                modelSelect.innerHTML = '';
+                modelSelect.disabled = !selectedMake;
+                
+                if (selectedMake) {
+                    const models = carModels[selectedMake] || ['Другая модель'];
+                    
+                    models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.toLowerCase().replace(' ', '-');
+                        option.textContent = model;
+                        modelSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'Сначала выберите марку';
+                    option.selected = true;
+                    option.disabled = true;
+                    modelSelect.appendChild(option);
+                }
+            });
+            
+            // Навигация по шагам
+            function goToStep(step) {
+                // Скрыть все секции
+                formSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Показать нужную секцию
+                document.querySelector(`.form-section[data-section="${step}"]`).classList.add('active');
+                
+                // Обновить прогресс
+                steps.forEach(stepEl => {
+                    stepEl.classList.remove('active', 'completed');
+                    
+                    const stepNumber = parseInt(stepEl.dataset.step);
+                    if (stepNumber < step) {
+                        stepEl.classList.add('completed');
+                    } else if (stepNumber === step) {
+                        stepEl.classList.add('active');
+                    }
+                });
+                
+                // Обновить прогресс бар
+                const progressPercent = ((step - 1) / (steps.length - 1)) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            }
+            
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const currentSection = document.querySelector('.form-section.active');
+                    const nextStep = parseInt(this.dataset.next);
+                    
+                    // Валидация формы перед переходом
+                    let isValid = true;
+                    const requiredFields = currentSection.querySelectorAll('[required]');
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value) {
+                            field.style.borderColor = 'var(--warning)';
+                            isValid = false;
+                        } else {
+                            field.style.borderColor = '';
+                        }
+                        
+                        if (field.type === 'checkbox' && !field.checked) {
+                            field.nextElementSibling.style.color = 'var(--warning)';
+                            isValid = false;
+                        } else if (field.type === 'checkbox') {
+                            field.nextElementSibling.style.color = '';
+                        }
+                    });
+                    
+                    if (isValid) {
+                        // Обновить данные подтверждения на шаге 3
+                        if (nextStep === 3) {
+                            updateConfirmationData();
+                        }
+                        
+                        goToStep(nextStep);
+                    } else {
+                        alert('Пожалуйста, заполните все обязательные поля.');
+                    }
+                });
+            });
+            
+            prevButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const prevStep = parseInt(this.dataset.prev);
+                    goToStep(prevStep);
+                });
+            });
+            
+            // Обновление данных подтверждения
+            function updateConfirmationData() {
+                document.getElementById('confirm-location').textContent = 
+                    document.getElementById('location').options[document.getElementById('location').selectedIndex].text;
+                
+                document.getElementById('confirm-reg').textContent = 
+                    document.getElementById('reg-number').value || 'Не указан';
+                
+                document.getElementById('confirm-make-model').textContent = 
+                    `${document.getElementById('make').options[document.getElementById('make').selectedIndex].text} ${document.getElementById('model').options[document.getElementById('model').selectedIndex].text}`;
+                
+                document.getElementById('confirm-wot').textContent = 
+                    document.querySelector('input[name="wot"]:checked')?.nextElementSibling.textContent || 'Не указано';
+                
+                document.getElementById('confirm-name').textContent = 
+                    document.getElementById('fullname').value;
+                
+                document.getElementById('confirm-phone').textContent = 
+                    document.getElementById('phone').value;
+                
+                document.getElementById('confirm-email').textContent = 
+                    document.getElementById('email').value;
+                
+                document.getElementById('confirm-address').textContent = 
+                    document.getElementById('address').value || 'Не указан';
+                
+                document.getElementById('confirm-notes').textContent = 
+                    document.getElementById('notes').value || 'Нет комментариев';
+            }
+            
+            // Подтверждение записи
+            confirmBtn.addEventListener('click', function() {
+                if (document.getElementById('agree-terms').checked) {
+                    // Скрыть форму
+                    document.querySelector('.form-container').style.display = 'none';
+                    
+                    // Обновить данные в успешном сообщении
+                    document.getElementById('success-location').textContent = 
+                        document.getElementById('location').options[document.getElementById('location').selectedIndex].text;
+                    
+                    // Показать успешное сообщение
+                    document.querySelector('.success-container').classList.add('active');
+                    
+                    // Прокрутить к верху
+                    window.scrollTo(0, 0);
+                } else {
+                    alert('Пожалуйста, подтвердите согласие с условиями.');
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+            const timeSlots = document.querySelectorAll('.time-slot');
+            const timeInput = document.getElementById('time');
+            const dateInput = document.getElementById('date');
+
+            // Обработка выбора времени
+            timeSlots.forEach(slot => {
+                slot.addEventListener('click', function() {
+                    timeSlots.forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    timeInput.value = this.textContent + ':00';
+                });
+            });
+
+            // Валидация даты
+            dateInput.addEventListener('change', function() {
+                const selectedDate = new Date(this.value);
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                
+                if(selectedDate < today) {
+                    alert("Пожалуйста, выберите дату в будущем");
+                    this.value = '';
+                }
+            }); });
+
+            // Новая запись
+            newBookingBtn.addEventListener('click', function() {
+                // Скрыть успешное сообщение
+                document.querySelector('.success-container').classList.remove('active');
+                
+                // Показать форму
+                document.querySelector('.form-container').style.display = 'block';
+                
+                // Сбросить форму
+                document.querySelector('form').reset();
+                modelSelect.disabled = true;
+                
+                // Вернуться к первому шагу
+                goToStep(1);
+            });
+        });
+    </script>
+</body>
+</html>

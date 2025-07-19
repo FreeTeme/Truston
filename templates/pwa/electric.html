@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Осмотр электроники</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <style>
+        :root {
+            --primary: rgba(30, 41, 59, 0.8);
+            --primary-light: #4895ef;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --danger: #f72585;
+            --success: #a855f7;
+            --success-dark: #38b6db;
+            --dark: #212529;
+            --light: #dadada;
+            --gray: #adb5bd;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #dadada;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Header with photo section */
+        .photo-section {
+            height: 25vh;
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: var(--transition);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        #photo-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 1;
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .section-name {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.8rem;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .section-menu {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        .menu-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.3rem;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .menu-item.active {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item.completed::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+        
+        /* Inspection section */
+        .inspection-section {
+            background-color: white;
+            padding: 2rem 1.5rem 6rem;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.8rem;
+            color: var(--primary);
+        }
+        
+        .inspection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: var(--radius);
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspection-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .inspection-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .inspection-item:hover::before {
+            width: 5px;
+        }
+        
+        .inspection-item span {
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+        
+        .inspection-item i {
+            color: var(--gray);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        
+        .inspection-item.checked {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(72, 201, 240, 0.3);
+        }
+        
+        .inspection-item.checked i {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 10;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+        
+        .btn {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-problem {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .btn-no-problem {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .modal-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        
+        .modal-btn-cancel {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .modal-btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Hidden file input */
+        #photo-input {
+            display: none;
+        }
+        
+        /* Review section */
+        .review-section {
+            display: none;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        
+        .review-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .review-comment {
+            margin-top: 1.5rem;
+        }
+        
+        .review-comment textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Photo section -->
+        <div class="photo-section" id="photo-section">
+            <img id="photo-preview" alt="Фото электроники">
+            <div class="photo-container">
+                <div class="photo-overlay" id="photo-placeholder">
+                    <i class="fas fa-camera"></i>
+                    <span>Добавить фото</span>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" capture="environment">
+                
+                <div class="section-name">
+                    ОСМОТР ЭЛЕКТРОНИКИ
+                    <div class="info-icon" title="Детали осмотра">i</div>
+                </div>
+                
+                <div class="section-menu">
+                    <div class="menu-container">
+                        <div class="menu-item active" data-section="exterior">Внешняя</div>
+                        <div class="menu-item" data-section="interior">Внутренняя</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inspection section -->
+        <div class="inspection-section" id="inspection-section">
+            <h2 class="section-title">
+                <i class="fas fa-clipboard-check"></i>
+                Чек-лист осмотра
+            </h2>
+            
+            <div id="exterior-checks" class="section-checks">
+                <div class="inspection-item" id="check-lights">
+                    <span>Проверить внешнее освещение (фары, поворотники)</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-sensors">
+                    <span>Проверить работу датчиков парковки</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-camera">
+                    <span>Проверить камеры заднего вида</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-wiring">
+                    <span>Проверить внешнюю электропроводку</span>
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            
+            <div id="interior-checks" class="section-checks" style="display:none;">
+                <div class="inspection-item" id="check-dashboard">
+                    <span>Проверить приборную панель</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-multimedia">
+                    <span>Проверить мультимедийную систему</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-climate">
+                    <span>Проверить климат-контроль</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="inspection-item" id="check-connectors">
+                    <span>Проверить разъемы и соединения</span>
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Review section -->
+        <div class="review-section" id="review-section">
+            <h2 class="review-title">Осмотр электроники завершен</h2>
+            <p>Все разделы проверены</p>
+            
+            <div class="review-comment">
+                <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-problem" id="btn-problem">
+                <i class="fas fa-exclamation-triangle"></i>
+                Найдены проблемы
+            </button>
+            <button class="btn btn-no-problem" id="btn-no-problem">
+                <i class="fas fa-check-circle"></i>
+                Все в порядке
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal for issues comment -->
+    <div class="modal" id="comment-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Опишите найденные проблемы</h3>
+            <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modal-cancel">Отмена</button>
+                <button class="modal-btn modal-btn-submit" id="modal-submit">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for completion -->
+    <div class="modal" id="complete-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Осмотр завершен!</h3>
+            <p style="margin-bottom: 1.5rem;">Спасибо за проведенный осмотр электроники автомобиля.</p>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button class="modal-btn modal-btn-submit" id="modal-close" onclick="window.location.href='glav_pwa copy 5.html'">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // App state
+        const appState = {
+            currentSection: 'exterior',
+            sections: {
+                'exterior': { photo: null, checks: [], comment: '' },
+                'interior': { photo: null, checks: [], comment: '' }
+            },
+            completedSections: 0
+        };
+        
+        // DOM elements
+        const photoInput = document.getElementById('photo-input');
+        const photoPlaceholder = document.getElementById('photo-placeholder');
+        const photoPreview = document.getElementById('photo-preview');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const sectionChecks = {
+            'exterior': document.getElementById('exterior-checks'),
+            'interior': document.getElementById('interior-checks')
+        };
+        const inspectionItems = document.querySelectorAll('.inspection-item');
+        const btnProblem = document.getElementById('btn-problem');
+        const btnNoProblem = document.getElementById('btn-no-problem');
+        const commentModal = document.getElementById('comment-modal');
+        const completeModal = document.getElementById('complete-modal');
+        const issueComment = document.getElementById('issue-comment');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalSubmit = document.getElementById('modal-submit');
+        const modalClose = document.getElementById('modal-close');
+        const inspectionSection = document.getElementById('inspection-section');
+        const reviewSection = document.getElementById('review-section');
+        const infoIcon = document.querySelector('.info-icon');
+        
+        // Initialize the app
+        function initApp() {
+            // Set current section from active menu item
+            const activeMenuItem = document.querySelector('.menu-item.active');
+            appState.currentSection = activeMenuItem.dataset.section;
+            
+            // Load saved data if available
+            loadSectionData(appState.currentSection);
+        }
+        
+        // Load section data into UI
+        function loadSectionData(section) {
+            const sectionData = appState.sections[section];
+            
+            // Load photo if exists
+            if (sectionData.photo) {
+                photoPreview.src = sectionData.photo;
+                photoPreview.style.display = 'block';
+                photoPlaceholder.style.display = 'none';
+            } else {
+                photoPreview.style.display = 'none';
+                photoPlaceholder.style.display = 'flex';
+            }
+            
+            // Show correct checks section
+            for (const [sec, element] of Object.entries(sectionChecks)) {
+                element.style.display = sec === section ? 'block' : 'none';
+            }
+            
+            // Load checks
+            const sectionItems = sectionChecks[section].querySelectorAll('.inspection-item');
+            sectionItems.forEach(item => {
+                const checkId = item.id.replace('check-', '');
+                if (sectionData.checks.includes(checkId)) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+        }
+        
+        // Save section data from UI
+        function saveSectionData(section) {
+            const sectionData = appState.sections[section];
+            
+            // Save checks
+            sectionData.checks = [];
+            const sectionItems = sectionChecks[section].querySelectorAll('.inspection-item');
+            sectionItems.forEach(item => {
+                if (item.classList.contains('checked')) {
+                    const checkId = item.id.replace('check-', '');
+                    sectionData.checks.push(checkId);
+                }
+            });
+        }
+        
+        // Move to next section
+        function moveToNextSection() {
+            // Save current section data
+            saveSectionData(appState.currentSection);
+            
+            // Mark current section as completed
+            const currentMenuItem = document.querySelector(`.menu-item[data-section="${appState.currentSection}"]`);
+            currentMenuItem.classList.add('completed');
+            appState.completedSections++;
+            
+            // Check if all sections are completed
+            if (appState.completedSections === 2) {
+                showReviewSection();
+                return;
+            }
+            
+            // Find next section that's not completed
+            let nextSection = null;
+            menuItems.forEach(item => {
+                if (!item.classList.contains('completed') && !nextSection) {
+                    nextSection = item.dataset.section;
+                }
+            });
+            
+            if (nextSection) {
+                switchToSection(nextSection);
+            }
+        }
+        
+        // Switch to specific section
+        function switchToSection(section) {
+            // Save current section data
+            saveSectionData(appState.currentSection);
+            
+            // Update current section
+            appState.currentSection = section;
+            
+            // Update active menu item
+            menuItems.forEach(item => {
+                if (item.dataset.section === section) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Load new section data
+            loadSectionData(section);
+        }
+        
+        // Show review section
+        function showReviewSection() {
+            inspectionSection.style.display = 'none';
+            reviewSection.style.display = 'block';
+            
+            // Hide photo section
+            document.getElementById('photo-section').style.display = 'none';
+            
+            // Update action buttons
+            btnProblem.style.display = 'none';
+            btnNoProblem.textContent = 'Завершить осмотр';
+            btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
+        }
+        
+        // Complete the inspection
+        function completeInspection() {
+            // Show completion modal
+            completeModal.style.display = 'flex';
+            
+            // Here you would typically send the data to a server
+            console.log('Осмотр завершен:', appState);
+        }
+        
+        // Event listeners
+        photoPlaceholder.addEventListener('click', () => {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    photoPreview.src = event.target.result;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    
+                    // Save photo to current section
+                    appState.sections[appState.currentSection].photo = event.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Inspection items toggle
+        inspectionItems.forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('checked');
+            });
+        });
+        
+        // Section menu selection
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const section = this.dataset.section;
+                if (!this.classList.contains('completed')) {
+                    switchToSection(section);
+                }
+            });
+        });
+        
+        // Info icon click
+        infoIcon.addEventListener('click', function() {
+            alert('Комплексный осмотр электроники включает проверку:\n\n• Внешних электронных систем\n• Внутренней электроники автомобиля\n• Работы всех датчиков\n• Состояния проводки и соединений');
+        });
+        
+        // Problem button click
+        btnProblem.addEventListener('click', function() {
+            // Show comment modal
+            issueComment.value = appState.sections[appState.currentSection].comment;
+            commentModal.style.display = 'flex';
+        });
+        
+        // No problem button click
+        btnNoProblem.addEventListener('click', function() {
+            if (reviewSection.style.display === 'block') {
+                completeInspection();
+            } else {
+                // Check if at least one item is checked
+                const currentChecks = sectionChecks[appState.currentSection];
+                const checkedItems = currentChecks.querySelectorAll('.inspection-item.checked');
+                if (checkedItems.length === 0) {
+                    alert('Пожалуйста, отметьте хотя бы один пункт осмотра перед продолжением.');
+                    return;
+                }
+                
+                moveToNextSection();
+            }
+        });
+        
+        // Modal buttons
+        modalCancel.addEventListener('click', () => {
+            commentModal.style.display = 'none';
+        });
+        
+        modalSubmit.addEventListener('click', () => {
+            // Save comment to current section
+            appState.sections[appState.currentSection].comment = issueComment.value;
+            commentModal.style.display = 'none';
+            
+            // Move to next section
+            moveToNextSection();
+        });
+        
+        modalClose.addEventListener('click', () => {
+            completeModal.style.display = 'none';
+        });
+        
+        // Initialize the app
+        initApp();
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truston - Диагностика Audi A6</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --secondary-dark: #9333ea;
+            --accent: #561bb6;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --light-gray: #e2e8f0;
+            --gray: #94a3b8;
+            --dark-gray: #475569;
+            --card-bg: #1e293b;
+            --card-bg-hover: #334155;
+            --badge-new: #10b981;
+            --badge-electric: #3b82f6;
+            --badge-best-price: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            --critical: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #46465b;
+            color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'gill sens', serif;
+            font-weight: 700;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        nav ul {
+            display: none; /* Скрываем навигацию на мобильных */
+        }
+
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 5rem auto 3rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        /* Car Info Section - Mobile Optimized */
+        .car-info-mobile {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .car-title-mobile {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+
+        .car-subtitle-mobile {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .car-specs-mobile {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .spec-item-mobile {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .spec-icon-mobile {
+            width: 30px;
+            height: 30px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .spec-text-mobile h4 {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.1rem;
+        }
+
+        .spec-text-mobile p {
+            font-size: 0.9rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .car-price-mobile {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .vin-code-mobile {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.6rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .vin-code-mobile i {
+            color: var(--primary);
+        }
+
+        /* Inspection Buttons - Mobile Optimized */
+        .inspection-buttons-mobile {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .inspection-btn-mobile {
+            padding: 0.6rem 0.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.8rem;
+            min-height: 60px;
+        }
+
+        .inspection-btn-mobile.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .inspection-btn-mobile i {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Car Image Section */
+        .car-main-image-mobile {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            position: relative;
+            height: 220px;
+        }
+
+        .car-main-image-mobile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: var(--critical);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .hotspot.warning {
+            background: var(--warning);
+        }
+
+        .hotspot-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .hotspot:hover .hotspot-tooltip {
+            opacity: 1;
+            bottom: 120%;
+        }
+
+        /* Critical Points - Mobile Optimized */
+        .critical-points-mobile {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .points-title-mobile {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .points-list-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .point-item-mobile {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--critical);
+            padding: 0.6rem 0.8rem;
+            border-radius: 0 6px 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .point-item-mobile.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+        }
+
+        .point-icon-mobile {
+            color: var(--critical);
+            font-size: 1rem;
+            margin-top: 2px;
+        }
+
+        .point-item-mobile.warning .point-icon-mobile {
+            color: var(--warning);
+        }
+
+        .point-content-mobile h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+            color: white;
+        }
+
+        .point-content-mobile p {
+            color: var(--light-gray);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* Inspection Result - Mobile Optimized */
+        .inspection-result-mobile {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .result-title-mobile {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-rating-mobile {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .result-rating-mobile i {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .result-description-mobile {
+            color: var(--light-gray);
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .result-price-mobile {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .result-price-mobile span {
+            color: var(--primary);
+        }
+
+        /* Technical Specifications - Mobile Optimized */
+        .tech-specs-mobile {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .tech-specs-title-mobile {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .specs-grid-mobile {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .spec-group-mobile {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .spec-group-title-mobile {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spec-row-mobile {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .spec-row-mobile:last-child {
+            border-bottom: none;
+        }
+
+        .spec-name-mobile {
+            color: var(--gray);
+        }
+
+        .spec-value-mobile {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* QR Section - Mobile Optimized */
+        .qr-section-mobile {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .qr-content-mobile {
+            order: 2;
+        }
+
+        .qr-title-mobile {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+
+        .qr-text-mobile {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .qr-features-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .qr-feature-mobile {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .qr-feature-mobile i {
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .qr-container-mobile {
+            order: 1;
+            text-align: center;
+        }
+
+        .qr-code-mobile {
+            background: white;
+            padding: 0.8rem;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .qr-code-mobile img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .download-btn-mobile {
+            display: inline-block;
+            padding: 0.7rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .download-btn-mobile:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Gallery - Mobile Optimized */
+        .car-gallery-mobile {
+            margin: 1.5rem 0;
+        }
+
+        .gallery-title-mobile {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .gallery-slider-mobile .slick-slide {
+            padding: 0 5px;
+        }
+
+        .gallery-item-mobile {
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item-mobile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* News Slider - Mobile Optimized */
+        .news-slider-mobile {
+            margin: 1.5rem 0;
+        }
+
+        .news-slide-mobile {
+            position: relative;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .news-slide-bg-mobile {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .news-slide-content-mobile {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.2rem;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+            color: white;
+        }
+
+        .news-slide-mobile.registration-slide .news-slide-content-mobile {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7));
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+        }
+
+        .news-slide-tag-mobile {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            align-self: flex-start;
+        }
+
+        .news-slide-mobile.registration-slide .news-slide-tag-mobile {
+            align-self: center;
+        }
+
+        .news-slide-title-mobile {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+
+        .news-slide-text-mobile {
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .news-slide-btn-mobile {
+            display: inline-flex;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .news-slide-mobile.registration-slide .news-slide-btn-mobile {
+            background: white;
+            color: var(--primary);
+            align-self: center;
+            padding: 0.7rem 1.5rem;
+        }
+
+        /* Modal - Mobile Optimized */
+        .modal-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal-content-mobile {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.2rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close-mobile {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .modal-title-mobile {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            padding-right: 1.5rem;
+        }
+
+        .modal-severity-mobile {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-severity-mobile.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--critical);
+            border: 1px solid var(--critical);
+        }
+
+        .modal-severity-mobile.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .modal-image-mobile {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .modal-image-mobile img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .modal-description-mobile {
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top - Mobile */
+        .back-to-top-mobile {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+            z-index: 99;
+        }
+
+        .back-to-top-mobile.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* VIN Modal - Mobile */
+        .vin-modal-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .vin-modal-content-mobile {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.2rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .vin-modal-close-mobile {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .vin-modal-title-mobile {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .vin-modal-buttons-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .vin-modal-btn-mobile {
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .vin-modal-check-mobile {
+            background: var(--primary);
+            color: white;
+        }
+
+        .vin-modal-cancel-mobile {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .vin-video-container-mobile {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vin-video-container-mobile video {
+            width: 100%;
+            display: block;
+        }
+
+        .vin-instruction-mobile {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.2rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .vin-instruction-mobile h4 {
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: white;
+        }
+
+        .vin-instruction-mobile ol {
+            padding-left: 1rem;
+            color: var(--light-gray);
+        }
+
+        .vin-instruction-mobile li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Owners - Mobile */
+        .owners-mobile {
+            background: var(--card-bg);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .owner-mobile {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .owner-mobile:last-child {
+            border-bottom: none;
+        }
+
+        .owner-mobile strong {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        /* Footer - Mobile */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 2rem 0 1rem;
+        }
+
+        .footer-content-mobile {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding: 0 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column-mobile h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column-mobile h3::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40%;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        .footer-column-mobile p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-column-mobile ul {
+            list-style: none;
+        }
+
+        .footer-column-mobile li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-column-mobile a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links-mobile {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .social-links-mobile a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .footer-bottom-mobile {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.8rem;
+            padding: 0 1rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 480px) {
+            .inspection-buttons-mobile {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .car-main-image-mobile {
+                height: 280px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .inspection-buttons-mobile {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .car-main-image-mobile {
+                height: 350px;
+            }
+            
+            .footer-content-mobile {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            /* Hide mobile version and show desktop version */
+            .mobile-version {
+                display: none;
+            }
+            
+            .desktop-version {
+                display: block;
+            }
+        }
+
+        /* Initially hide desktop version on mobile */
+        .desktop-version {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Version -->
+    <div class="mobile-version">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <!-- <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <span>Truston</span>
+                </a> -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Car Info - Mobile -->
+            <div class="car-info-mobile">
+                <h1 class="car-title-mobile">Audi A6</h1>
+                <p class="car-subtitle-mobile">2020 год, 2.0 TDI, 190 л.с., Автомат</p>
+                
+                <div class="car-specs-mobile">
+                    <div class="spec-item-mobile">
+                        <div class="spec-icon-mobile">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="spec-text-mobile">
+                            <h4>Пробег</h4>
+                            <p>45 000 км</p>
+                        </div>
+                    </div>
+                    <div class="spec-item-mobile">
+                        <div class="spec-icon-mobile">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="spec-text-mobile">
+                            <h4>Топливо</h4>
+                            <p>Дизель</p>
+                        </div>
+                    </div>
+                    <div class="spec-item-mobile">
+                        <div class="spec-icon-mobile">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="spec-text-mobile">
+                            <h4>Кузов</h4>
+                            <p>Седан</p>
+                        </div>
+                    </div>
+                    <div class="spec-item-mobile">
+                        <div class="spec-icon-mobile">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="spec-text-mobile">
+                            <h4>Коробка</h4>
+                            <p>Автомат</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="car-price-mobile">42 000 $</div>
+                
+                <div class="vin-code-mobile">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>VIN: WAUZZZ4G6DN123456</span>
+                </div>
+
+                <div class="vin-code-mobile">
+                    <span>ID: 6038013 |  ГОС НОМЕР: LK 2430</span>
+                </div>
+            </div>
+            
+            <!-- Inspection Buttons - Mobile -->
+            <div class="inspection-buttons-mobile">
+                <button class="inspection-btn-mobile active" data-section="exterior">
+                    <i class="fas fa-car"></i>
+                    <span>Кузов</span>
+                </button>
+                <button class="inspection-btn-mobile" data-section="interior">
+                    <i class="fas fa-chair"></i>
+                    <span>Салон</span>
+                </button>
+                <button class="inspection-btn-mobile" data-section="engine">
+                    <i class="fas fa-cog"></i>
+                    <span>Двигатель</span>
+                </button>
+                <button class="inspection-btn-mobile" data-section="transmission">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Трансмиссия</span>
+                </button>
+                <button class="inspection-btn-mobile" data-section="suspension">
+                    <i class="fas fa-car-side"></i>
+                    <span>Подвеска</span>
+                </button>
+                <button class="inspection-btn-mobile" onclick="href='#tech'">
+                    <span >Тех характеристики</span>
+                </button>
+            </div>
+            
+            <!-- Car Image - Mobile -->
+            <div class="car-main-image-mobile" id="carImageMobile">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg" alt="Audi A6">
+                <!-- Hotspots -->
+                <div class="hotspot warning" style="top: 65%; left: 30%;" 
+                     data-title="Передний бампер" 
+                     data-image="https://a.allegroimg.com/original/11edaf/a491e1574fe1af7f1caf55cb5a63/AUDI-A6-C8-2018-2023-ZDERZAK-PRZEDNI-PRZOD-BLACK" 
+                     data-description="Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска." 
+                     data-severity="warning">
+                    <span class="hotspot-tooltip">Передний бампер</span>
+                </div>
+                <div class="hotspot" style="top: 40%; left: 70%;" 
+                     data-title="Правая передняя дверь" 
+                     data-image="https://hondavodam.ru/wp-content/uploads/2017/04/dverzarap.jpg" 
+                     data-description="Глубокая царапина до металла на правой передней двери. Требуется шпаклевка и покраска для предотвращения коррозии." 
+                     data-severity="critical">
+                    <span class="hotspot-tooltip">Правая дверь</span>
+                </div>
+            </div>
+            
+            <!-- Critical Points - Mobile -->
+            <div class="critical-points-mobile">
+                <h3 class="points-title-mobile">
+                    <i class="fas fa-exclamation-triangle"></i> Критические точки
+                </h3>
+                <div class="points-list-mobile">
+                    <div class="point-item-mobile warning" 
+                         data-title="Передний бампер" 
+                         data-image="https://example.com/bumper-damage.jpg" 
+                         data-description="Незначительные сколы и царапины. Рекомендуется локальная покраска." 
+                         data-severity="warning">
+                        <i class="fas fa-exclamation-circle point-icon-mobile"></i>
+                        <div class="point-content-mobile">
+                            <h4>Передний бампер</h4>
+                            <p>Незначительные сколы и царапины. Рекомендуется локальная покраска.</p>
+                        </div>
+                    </div>
+                    <div class="point-item-mobile" 
+                         data-title="Правая передняя дверь" 
+                         data-image="https://hondavodam.ru/wp-content/uploads/2017/04/dverzarap.jpg" 
+                         data-description="Глубокая царапина до металла. Требуется шпаклевка и покраска для предотвращения коррозии." 
+                         data-severity="critical">
+                        <i class="fas fa-times-circle point-icon-mobile"></i>
+                        <div class="point-content-mobile">
+                            <h4>Правая передняя дверь</h4>
+                            <p>Глубокая царапина до металла. Требуется шпаклевка и покраска.</p>
+                        </div>
+                    </div>
+                    <div class="point-item-mobile warning" 
+                         data-title="Левый порог" 
+                         data-image="https://example.com/threshold-dent.jpg" 
+                         data-description="Небольшая вмятина. Рекомендуется рихтовка." 
+                         data-severity="warning">
+                        <i class="fas fa-exclamation-circle point-icon-mobile"></i>
+                        <div class="point-content-mobile">
+                            <h4>Левый порог</h4>
+                            <p>Небольшая вмятина. Рекомендуется рихтовка.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inspection Result - Mobile -->
+            <div class="inspection-result-mobile">
+                <h3 class="result-title-mobile">
+                    <i class="fas fa-car"></i> Состояние кузова
+                </h3>
+                <div class="result-rating-mobile">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span>4.0 / 5.0</span>
+                </div>
+                <p class="result-description-mobile">
+                    Кузов автомобиля в хорошем состоянии. Имеются незначительные следы эксплуатации: 
+                    небольшие сколы на капоте и переднем бампере, мелкие царапины на дверях. 
+                    Лакокрасочное покрытие оригинальное, следов перекраски не обнаружено.
+                </p>
+                <p class="result-price-mobile">
+                    Рекомендуемый бюджет на устранение недочетов: <span>800-1200 $</span>
+                </p>
+            </div>
+            
+            <!-- Technical Specifications - Mobile -->
+            <div class="tech-specs-mobile" id="tech">
+                <h3 class="tech-specs-title-mobile">
+                    <i class="fas fa-info-circle"></i> Технические характеристики
+                </h3>
+                <div class="specs-grid-mobile">
+                    <div class="spec-group-mobile">
+                        <h4 class="spec-group-title-mobile">
+                            <i class="fas fa-car"></i> Общие данные
+                        </h4>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Марка</span>
+                            <span class="spec-value-mobile">Audi</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Модель</span>
+                            <span class="spec-value-mobile">A6</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Год выпуска</span>
+                            <span class="spec-value-mobile">2020</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Пробег</span>
+                            <span class="spec-value-mobile">45 000 км</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Кузов</span>
+                            <span class="spec-value-mobile">Седан</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spec-group-mobile">
+                        <h4 class="spec-group-title-mobile">
+                            <i class="fas fa-cog"></i> Двигатель
+                        </h4>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Тип двигателя</span>
+                            <span class="spec-value-mobile">Дизель</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Объем</span>
+                            <span class="spec-value-mobile">2.0 л</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Мощность</span>
+                            <span class="spec-value-mobile">190 л.с.</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Крутящий момент</span>
+                            <span class="spec-value-mobile">400 Нм</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Экологический класс</span>
+                            <span class="spec-value-mobile">Евро 6</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spec-group-mobile">
+                        <h4 class="spec-group-title-mobile">
+                            <i class="fas fa-exchange-alt"></i> Трансмиссия
+                        </h4>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Коробка передач</span>
+                            <span class="spec-value-mobile">Автоматическая</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Привод</span>
+                            <span class="spec-value-mobile">Полный (quattro)</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Тип коробки</span>
+                            <span class="spec-value-mobile">7-ступенчатая S tronic</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spec-group-mobile">
+                        <h4 class="spec-group-title-mobile">
+                            <i class="fas fa-tachometer-alt"></i> Ходовые качества
+                        </h4>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Разгон 0-100 км/ч</span>
+                            <span class="spec-value-mobile">7.9 сек</span>
+                        </div>  
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Макс. скорость</span>
+                            <span class="spec-value-mobile">240 км/ч</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Расход (город)</span>
+                            <span class="spec-value-mobile">5.8 л/100км</span>
+                        </div>
+                        <div class="spec-row-mobile">
+                            <span class="spec-name-mobile">Расход (трасса)</span>
+                            <span class="spec-value-mobile">4.5 л/100км</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Slider - Mobile -->
+            <!-- <div class="news-slider-mobile">
+                <div class="news-slide-mobile registration-slide">
+                    <div class="news-slide-bg-mobile" style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                    <div class="news-slide-content-mobile">
+                        <h3 class="news-slide-title-mobile">Записшись на диагностику</h3>
+                        <p class="news-slide-text-mobile">пройди регистрацию на осмотр авто</p>
+                        <a href="zapis copy.html" class="news-slide-btn-mobile">Записаться</a>
+                    </div>
+                </div>
+            </div> -->
+            
+            <!-- QR Section - Mobile -->
+            <div class="qr-section-mobile">
+                <div class="qr-container-mobile">
+                    <div class="qr-code-mobile">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://truston.by/diagnostic/audi-a6-2020-vin-wauzzz4g6dn123456" alt="QR Code">
+                    </div>
+                </div>
+                <div class="qr-content-mobile">
+                    <h3 class="qr-title-mobile">Полный отчет диагностики</h3>
+                    <p class="qr-text-mobile">
+                        Отсканируйте QR-код для просмотра полного отчета диагностики на вашем устройстве. 
+                        Вы можете сохранить его или поделиться с механиком, друзьями или потенциальными покупателями.
+                    </p>
+                    <div class="qr-features-mobile">
+                        <div class="qr-feature-mobile">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Доступ к полной истории диагностики</p>
+                        </div>
+                        <div class="qr-feature-mobile">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Рекомендации по ремонту и обслуживанию</p>
+                        </div>
+                        <div class="qr-feature-mobile">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Экспертная оценка состояния автомобиля</p>
+                        </div>
+                    </div>
+                    <button id="downloadReportMobile" class="download-btn-mobile">Скачать весь отчёт</button>
+                </div>
+            </div>
+            
+            <!-- Owners - Mobile -->
+            <div class="owners-mobile">
+                <h3>История владения</h3>
+                <div class="owner-mobile">
+                    <strong>Иван Иванов</strong><br />
+                    Период владения: Январь 2018 - Июль 2020<br />
+                    Описание: Ездил в основном по городу, вовремя проходил ТО.
+                </div>
+                <div class="owner-mobile">
+                    <strong>Ольга Смирнова</strong><br />
+                    Период владения: Август 2020 - Декабрь 2022<br />
+                    Описание: Аккуратный водитель, обслуживала авто у дилера.
+                </div>
+                <div class="owner-mobile">
+                    <strong>Алексей Петров</strong><br />
+                    Период владения: Январь 2023 - настоящее время<br />
+                    Описание: Использует авто для поездок по Европе.
+                </div>
+            </div>
+            
+            <!-- Gallery - Mobile -->
+            <div class="car-gallery-mobile">
+                <h3 class="gallery-title-mobile">Фотографии автомобиля</h3>
+                <div class="gallery-slider-mobile">
+                    <div class="gallery-item-mobile">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg" alt="Audi A6">
+                    </div>
+                    <div class="gallery-item-mobile">
+                        <img src="https://octane.rent/wp-content/uploads/2023/03/audi-a6-black-3-600x400.webp" alt="Audi A6 Interior">
+                    </div>
+                    <div class="gallery-item-mobile">
+                        <img src="https://avatars.mds.yandex.net/get-autoru-vos/2063660/19870df94a0f47ce78c9a5ebd6d72aa6/456x342" alt="Audi A6 Engine">
+                    </div>
+                    <div class="gallery-item-mobile">
+                        <img src="https://dd-tuning.lt/assets/cache/images/stingray/162274215552496-920x613-3c3.jpg" alt="Audi A6 Gearbox">
+                    </div>
+                    <div class="gallery-item-mobile">
+                        <img src="https://a.d-cd.net/zLywJd-kVa0uDcJoimhQKvOgs0Q-960.jpg" alt="Audi A6 Suspension">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer - Mobile -->
+        <footer>
+            <div class="footer-content-mobile">
+                <div class="footer-column-mobile">
+                    <h3>Truston</h3>
+                    <p>Ведущая платформа для покупки и продажи сертифицированных автомобилей в Беларуси и за рубежом.</p>
+                    <div class="social-links-mobile">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column-mobile">
+                    <h3>Каталог</h3>
+                    <ul>
+                        <li><a href="#">Новые автомобили</a></li>
+                        <li><a href="#">Автомобили с пробегом</a></li>
+                        <li><a href="#">Электромобили</a></li>
+                        <li><a href="#">Коммерческий транспорт</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column-mobile">
+                    <h3>Компания</h3>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Команда</a></li>
+                        <li><a href="#">Конвеер</a></li>
+                        <li><a href="#">Блог</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column-mobile">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 8029 </li>
+                        <li><i class="fas fa-envelope"></i> truston@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Минск</li>
+                        <li><i class="fas fa-clock"></i> Пн-Пт: 9:00 - 19:00</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom-mobile">
+                © 2023 Truston. Все права защищены.
+            </div>
+        </footer>
+
+        <!-- Back to Top - Mobile -->
+        <div class="back-to-top-mobile">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+    </div>
+
+    <!-- Desktop Version (hidden on mobile) -->
+    <div class="desktop-version">
+        <!-- Your original desktop HTML content here -->
+        <!-- ... -->
+    </div>
+
+    <!-- Modal - Mobile -->
+    <div class="modal-mobile" id="hotspotModalMobile">
+        <div class="modal-content-mobile">
+            <button class="modal-close-mobile" id="modalCloseMobile">&times;</button>
+            <h3 class="modal-title-mobile" id="modalTitleMobile">Передний бампер</h3>
+            <div class="modal-severity-mobile warning" id="modalSeverityMobile">Внимание</div>
+            <div class="modal-image-mobile">
+                <img id="modalImageMobile" src="" alt="Damage photo">
+            </div>
+            <p class="modal-description-mobile" id="modalDescriptionMobile">
+                Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска.
+            </p>
+        </div>
+    </div>
+
+    <!-- VIN Modal - Mobile -->
+    <div class="vin-modal-mobile" id="vinModalMobile">
+        <div class="vin-modal-content-mobile" id="vinModalContentMobile">
+            <button class="vin-modal-close-mobile" id="vinModalCloseMobile">&times;</button>
+            <h3 class="vin-modal-title-mobile">Проверьте VIN-номер авто для достоверности</h3>
+            
+            <div id="vinCheckContentMobile">
+                <p>Мы рекомендуем проверить VIN-номер автомобиля, чтобы убедиться в подлинности данных.</p>
+                
+                <div class="vin-modal-buttons-mobile">
+                    <button class="vin-modal-btn-mobile vin-modal-check-mobile" id="vinCheckBtnMobile">Проверить</button>
+                    <button class="vin-modal-btn-mobile vin-modal-cancel-mobile" id="vinCancelBtnMobile">Отмена</button>
+                </div>
+            </div>
+            
+            <div id="vinResultContentMobile" style="display: none;">
+                <div class="vin-video-container-mobile">
+                    <video id="vinVideoMobile" autoplay loop muted>
+                        <source src="video5458555119958259515.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                </div>
+                
+                <p>Проверьте VIN-номер автомобиля по следующим местам:</p>
+                
+                <div class="vin-instruction-mobile">
+                    <h4>Как найти VIN-номер:</h4>
+                    <ol>
+                        <li>На лобовом стекле со стороны водителя (в нижней части)</li>
+                        <li>На табличке в проеме двери водителя</li>
+                        <li>На двигателе (обычно на блоке цилиндров)</li>
+                        <li>В документах на автомобиль (ПТС, СТС)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        // Mobile Version Scripts
+        $(document).ready(function(){
+            // Initialize sliders for mobile
+            $('.gallery-slider-mobile').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                responsive: [
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+            
+            $('.news-slider-mobile').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000
+            });
+            
+            // Back to Top Button for mobile
+            window.addEventListener('scroll', function() {
+                const backToTopBtn = document.querySelector('.back-to-top-mobile');
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('active');
+                } else {
+                    backToTopBtn.classList.remove('active');
+                }
+            });
+            
+            document.querySelector('.back-to-top-mobile').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Inspection data for mobile
+            const inspectionDataMobile = {
+                exterior: {
+                    title: "Состояние кузова",
+                    icon: "fas fa-car",
+                    rating: 4,
+                    description: "Кузов автомобиля в хорошем состоянии. Имеются незначительные следы эксплуатации: небольшие сколы на капоте и переднем бампере, мелкие царапины на дверях. Лакокрасочное покрытие оригинальное, следов перекраски не обнаружено.",
+                    price: "800-1200 $",
+                    points: [
+                        {
+                            type: "warning",
+                            title: "Передний бампер",
+                            description: "Незначительные сколы и царапины. Рекомендуется локальная покраска.",
+                            image: "https://a.allegroimg.com/original/11edaf/a491e1574fe1af7f1caf55cb5a63/AUDI-A6-C8-2018-2023-ZDERZAK-PRZEDNI-PRZOD-BLACK"
+                        },
+                        {
+                            type: "critical",
+                            title: "Правая передняя дверь",
+                            description: "Глубокая царапина до металла. Требуется шпаклевка и покраска для предотвращения коррозии.",
+                            image: "https://hondavodam.ru/wp-content/uploads/2017/04/dverzarap.jpg"
+                        },
+                        {
+                            type: "warning",
+                            title: "Левый порог",
+                            description: "Небольшая вмятина. Рекомендуется рихтовка.",
+                            image: "https://example.com/threshold-dent.jpg"
+                        }
+                    ],
+                    hotspots: [
+                        {
+                            top: "65%",
+                            left: "30%",
+                            type: "warning",
+                            title: "Передний бампер",
+                            description: "Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска.",
+                            image: "https://a.allegroimg.com/original/11edaf/a491e1574fe1af7f1caf55cb5a63/AUDI-A6-C8-2018-2023-ZDERZAK-PRZEDNI-PRZOD-BLACK"
+                        },
+                        {
+                            top: "40%",
+                            left: "70%",
+                            type: "critical",
+                            title: "Правая передняя дверь",
+                            description: "Глубокая царапина до металла на правой передней двери. Требуется шпаклевка и покраска для предотвращения коррозии.",
+                            image: "https://hondavodam.ru/wp-content/uploads/2017/04/dverzarap.jpg"
+                        }
+                    ]
+                },
+                interior: {
+                    title: "Состояние салона",
+                    icon: "fas fa-chair",
+                    rating: 4.5,
+                    description: "Салон в отличном состоянии. Кожаные сиденья без потертостей и повреждений. Пластиковые элементы без царапин. Электроника работает исправно. Имеется небольшой запах табака, который можно устранить химчисткой.",
+                    price: "300-500 $",
+                    points: [
+                        {
+                            type: "warning",
+                            title: "Запах в салоне",
+                            description: "Присутствует слабый запах табака. Рекомендуется профессиональная химчистка.",
+                         
+                        },
+                        {
+                            type: "critical",
+                            title: "Электростеклоподъемник",
+                            description: "Правый задний электростеклоподъемник иногда заедает. Требуется диагностика и возможная замена механизма.",
+                            image: "https://a.d-cd.net/CtLnEvprElnyuQOdJLjhdZ6JyVM-960.jpg"
+                        }
+                    ],
+                    hotspots: [
+                        {
+                            top: "40%",
+                            left: "20%",
+                            type: "warning",
+                            title: "Запах в салоне",
+                            description: "Присутствует слабый запах табака. Рекомендуется профессиональная химчистка.",
+                      
+                        },
+                        {
+                            top: "60%",
+                            left: "80%",
+                            type: "critical",
+                            title: "Электростеклоподъемник",
+                            description: "Правый задний электростеклоподъемник иногда заедает. Требуется диагностика и возможная замена механизма.",
+                            image: "https://a.d-cd.net/CtLnEvprElnyuQOdJLjhdZ6JyVM-960.jpg"
+                        }
+                    ]
+                },
+                engine: {
+                    title: "Состояние двигателя",
+                    icon: "fas fa-cog",
+                    rating: 5,
+                    description: "Двигатель работает ровно, без посторонних шумов. Технические жидкости на уровне. Расход масла в норме. Турбина без люфтов. Ремень ГРМ заменен на 40 000 км. Рекомендуется замена масла через 5 000 км.",
+                    price: "0 $ (не требуется)",
+                    points: [
+                        {
+                            type: "warning",
+                            title: "Масло",
+                            description: "Рекомендуется замена масла и фильтров через 5 000 км.",
+                            image: "https://example.com/oil-change.jpg"
+                        }
+                    ],
+                    hotspots: [
+                        {
+                            top: "50%",
+                            left: "50%",
+                            type: "warning",
+                            title: "Масло",
+                            description: "Рекомендуется замена масла и фильтров через 5 000 км.",
+                            image: "https://example.com/oil-change.jpg"
+                        }
+                    ]
+                },
+                transmission: {
+                    title: "Состояние трансмиссии",
+                    icon: "fas fa-exchange-alt",
+                    rating: 4,
+                    description: "Коробка передач работает плавно, без рывков и пинков. Масло в АКПП чистое, заменено на 35 000 км. Раздаточная коробка и дифференциалы без шумов. Карданный вал без вибраций.",
+                    price: "400-600 $ (плановое обслуживание)",
+                    points: [
+                        {
+                            type: "warning",
+                            title: "Масло в АКПП",
+                            description: "Рекомендуется замена масла в АКПП через 15 000 км.",
+                            image: "https://example.com/transmission-oil.jpg"
+                        }
+                    ],
+                    hotspots: [
+                        {
+                            top: "30%",
+                            left: "40%",
+                            type: "warning",
+                            title: "Масло в АКПП",
+                            description: "Рекомендуется замена масла в АКПП через 15 000 км.",
+                            image: "https://example.com/transmission-oil.jpg"
+                        }
+                    ]
+                },
+                suspension: {
+                    title: "Состояние подвески",
+                    icon: "fas fa-car-side",
+                    rating: 3.5,
+                    description: "Подвеска в целом в хорошем состоянии. Имеется небольшой стук в передних амортизаторах. Сайлентблоки передних рычагов имеют начальные признаки износа. Задние амортизаторы в норме. Рекомендуется замена передних амортизаторов и сайлентблоков в ближайшее время.",
+                    price: "1200-1800 $",
+                    points: [
+                        {
+                            type: "critical",
+                            title: "Передние амортизаторы",
+                            description: "Небольшой стук в передних амортизаторах. Рекомендуется замена в ближайшее время.",
+                            image: "https://example.com/shock-absorber.jpg"
+                        },
+                        {
+                            type: "warning",
+                            title: "Сайлентблоки передних рычагов",
+                            description: "Начальные признаки износа. Рекомендуется замена при следующем ТО.",
+                            image: "https://example.com/bushings.jpg"
+                        }
+                    ],
+                    hotspots: [
+                        {
+                            top: "20%",
+                            left: "30%",
+                            type: "critical",
+                            title: "Передние амортизаторы",
+                            description: "Небольшой стук в передних амортизаторах. Рекомендуется замена в ближайшее время.",
+                            image: "https://example.com/shock-absorber.jpg"
+                        },
+                        {
+                            top: "25%",
+                            left: "70%",
+                            type: "warning",
+                            title: "Сайлентблоки передних рычагов",
+                            description: "Начальные признаки износа. Рекомендуется замена при следующем ТО.",
+                            image: "https://example.com/bushings.jpg"
+                        }
+                    ]
+                }
+            };
+            
+            // Inspection buttons functionality for mobile
+            const inspectionBtnsMobile = document.querySelectorAll('.inspection-btn-mobile');
+            const mainCarImageMobile = document.querySelector('.car-main-image-mobile img');
+            const inspectionResultMobile = document.querySelector('.inspection-result-mobile');
+            const criticalPointsMobile = document.querySelector('.points-list-mobile');
+            const carImageContainerMobile = document.querySelector('.car-main-image-mobile');
+            
+            // Modal elements for mobile
+            const hotspotModalMobile = document.getElementById('hotspotModalMobile');
+            const modalCloseMobile = document.getElementById('modalCloseMobile');
+            const modalTitleMobile = document.getElementById('modalTitleMobile');
+            const modalSeverityMobile = document.getElementById('modalSeverityMobile');
+            const modalImageMobile = document.getElementById('modalImageMobile');
+            const modalDescriptionMobile = document.getElementById('modalDescriptionMobile');
+            
+            // Function to open modal for mobile
+            function openModalMobile(title, severity, image, description) {
+                modalTitleMobile.textContent = title;
+                modalSeverityMobile.textContent = severity === 'critical' ? 'Критично' : 'Внимание';
+                modalSeverityMobile.className = `modal-severity-mobile ${severity}`;
+                modalImageMobile.src = image;
+                modalImageMobile.alt = title;
+                modalDescriptionMobile.textContent = description;
+                hotspotModalMobile.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Function to close modal for mobile
+            function closeModalMobile() {
+                hotspotModalMobile.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Modal event listeners for mobile
+            modalCloseMobile.addEventListener('click', closeModalMobile);
+            hotspotModalMobile.addEventListener('click', function(e) {
+                if (e.target === hotspotModalMobile) {
+                    closeModalMobile();
+                }
+            });
+            
+            // Hotspot click handler for mobile
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hotspot') || e.target.parentElement.classList.contains('hotspot')) {
+                    const hotspot = e.target.classList.contains('hotspot') ? e.target : e.target.parentElement;
+                    const title = hotspot.getAttribute('data-title');
+                    const severity = hotspot.classList.contains('warning') ? 'warning' : 'critical';
+                    const image = hotspot.getAttribute('data-image');
+                    const description = hotspot.getAttribute('data-description');
+                    
+                    openModalMobile(title, severity, image, description);
+                }
+            });
+            
+            // Point item click handler for mobile
+            document.addEventListener('click', function(e) {
+                const pointItem = e.target.closest('.point-item-mobile');
+                if (pointItem) {
+                    const title = pointItem.getAttribute('data-title');
+                    const severity = pointItem.getAttribute('data-severity');
+                    const image = pointItem.getAttribute('data-image');
+                    const description = pointItem.getAttribute('data-description');
+                    
+                    openModalMobile(title, severity, image, description);
+                }
+            });
+            
+            // Inspection buttons click handler for mobile
+            inspectionBtnsMobile.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    inspectionBtnsMobile.forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Change inspection result
+                    const section = this.getAttribute('data-section');
+                    const data = inspectionDataMobile[section];
+                    
+                    // Generate stars HTML
+                    let starsHtml = '';
+                    const fullStars = Math.floor(data.rating);
+                    const hasHalfStar = data.rating % 1 >= 0.5;
+                    
+                    for (let i = 0; i < 5; i++) {
+                        if (i < fullStars) {
+                            starsHtml += '<i class="fas fa-star"></i>';
+                        } else if (i === fullStars && hasHalfStar) {
+                            starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                        } else {
+                            starsHtml += '<i class="far fa-star"></i>';
+                        }
+                    }
+                    
+                    // Generate critical points HTML
+                    let pointsHtml = '';
+                    if (data.points && data.points.length > 0) {
+                        pointsHtml = data.points.map(point => `
+                            <div class="point-item-mobile ${point.type === 'warning' ? 'warning' : ''}" 
+                                 data-title="${point.title}" 
+                                 data-image="${point.image}" 
+                                 data-description="${point.description}" 
+                                 data-severity="${point.type}">
+                                <i class="fas ${point.type === 'warning' ? 'fa-exclamation-circle' : 'fa-times-circle'} point-icon-mobile"></i>
+                                <div class="point-content-mobile">
+                                    <h4>${point.title}</h4>
+                                    <p>${point.description}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    // Update inspection result
+                    inspectionResultMobile.innerHTML = `
+                        <h3 class="result-title-mobile">
+                            <i class="${data.icon}"></i> ${data.title}
+                        </h3>
+                        <div class="result-rating-mobile">
+                            ${starsHtml}
+                            <span>${data.rating.toFixed(1)} / 5.0</span>
+                        </div>
+                        <p class="result-description-mobile">
+                            ${data.description}
+                        </p>
+                        <p class="result-price-mobile">
+                            Рекомендуемый бюджет на устранение недочетов: <span>${data.price}</span>
+                        </p>
+                    `;
+                    
+                    // Update critical points
+                    criticalPointsMobile.innerHTML = pointsHtml;
+                    
+                    // Change main image based on section
+                    const imageMap = {
+                        exterior: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg",
+                        interior: "https://autolife.news/wp-content/uploads/2024/05/audi-a6-allroad-instrument-panel.webp",
+                        engine: "https://www.bochka-service.ru/admin/material_tmp/1476170895_0.jpg",
+                        transmission: "https://a.d-cd.net/veAAAgOHeeA-960.jpg",
+                        suspension: "https://autoservice-ap.ru/media/services/products/zamena-rychagov-podveski.jpg.1920x600_q85_box-0%2C198%2C1920%2C797_crop_detail.jpg"
+                    };
+                    
+                    mainCarImageMobile.src = imageMap[section];
+                    
+                    // Clear existing hotspots
+                    document.querySelectorAll('.hotspot').forEach(hotspot => hotspot.remove());
+                    
+                    // Add new hotspots for current section
+                    if (data.hotspots && data.hotspots.length > 0) {
+                        data.hotspots.forEach(hotspot => {
+                            const hotspotElement = document.createElement('div');
+                            hotspotElement.className = `hotspot ${hotspot.type === 'warning' ? 'warning' : ''}`;
+                            hotspotElement.style.top = hotspot.top;
+                            hotspotElement.style.left = hotspot.left;
+                            hotspotElement.setAttribute('data-title', hotspot.title);
+                            hotspotElement.setAttribute('data-image', hotspot.image);
+                            hotspotElement.setAttribute('data-description', hotspot.description);
+                            hotspotElement.setAttribute('data-severity', hotspot.type);
+                            
+                            const tooltip = document.createElement('span');
+                            tooltip.className = 'hotspot-tooltip';
+                            tooltip.textContent = hotspot.title;
+                            
+                            hotspotElement.appendChild(tooltip);
+                            carImageContainerMobile.appendChild(hotspotElement);
+                        });
+                    }
+                    
+                    // Scroll to image
+                    document.getElementById('carImageMobile').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Initialize first section for mobile
+            document.querySelector('.inspection-btn-mobile.active').click();
+            
+            // Download report button for mobile
+            document.getElementById('downloadReportMobile').addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.href = 'audi.pdf';
+                link.download = 'audi.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+            
+            // VIN Modal functionality for mobile
+            const vinModalMobile = document.getElementById('vinModalMobile');
+            const vinModalCloseMobile = document.getElementById('vinModalCloseMobile');
+            const vinCancelBtnMobile = document.getElementById('vinCancelBtnMobile');
+            const vinCheckBtnMobile = document.getElementById('vinCheckBtnMobile');
+            const vinCheckContentMobile = document.getElementById('vinCheckContentMobile');
+            const vinResultContentMobile = document.getElementById('vinResultContentMobile');
+            const vinVideoMobile = document.getElementById('vinVideoMobile');
+            
+            // Show VIN modal after delay for mobile
+            setTimeout(function() {
+                vinModalMobile.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }, 3000);
+            
+            // Close VIN modal for mobile
+            function closeVinModalMobile() {
+                vinModalMobile.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            vinModalCloseMobile.addEventListener('click', closeVinModalMobile);
+            vinCancelBtnMobile.addEventListener('click', closeVinModalMobile);
+            
+            vinModalMobile.addEventListener('click', function(e) {
+                if (e.target === vinModalMobile) {
+                    closeVinModalMobile();
+                }
+            });
+            
+            // Check VIN button for mobile
+            vinCheckBtnMobile.addEventListener('click', function() {
+                vinCheckContentMobile.style.display = 'none';
+                vinResultContentMobile.style.display = 'block';
+                vinVideoMobile.play();
+            });
+            
+            // Loop video for mobile
+            vinVideoMobile.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play();
+            });
+        });
+    </script>
+</body>
+</html>

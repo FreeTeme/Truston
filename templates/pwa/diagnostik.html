@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truston - Диагностика Audi A6</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --secondary-dark: #9333ea;
+            --accent: #561bb6;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --light-gray: #e2e8f0;
+            --gray: #94a3b8;
+            --dark-gray: #475569;
+            --card-bg: #1e293b;
+            --card-bg-hover: #334155;
+            --badge-new: #10b981;
+            --badge-electric: #3b82f6;
+            --badge-best-price: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            --critical: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #46465b;
+            color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'gill sens', serif;
+            font-weight: 700;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: white;
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-left: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 8rem auto 5rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .section-title p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        /* Car Inspection Section */
+        .inspection-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .car-overview {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .car-main-image {
+            flex: 1;
+            min-width: 0;
+            border-radius: 12px;
+            /* overflow: hidden; */
+            height: 400px;
+            position: relative;
+        }
+
+        .car-main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .car-main-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--critical);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .hotspot.warning {
+            background: var(--warning);
+        }
+
+        .hotspot:hover {
+            transform: scale(1.2);
+        }
+
+        .hotspot-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .hotspot:hover .hotspot-tooltip {
+            opacity: 1;
+            bottom: 120%;
+        }
+
+        .car-details {
+            flex: 1;
+            min-width: 0;
+            padding: 1rem;
+        }
+
+        .car-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .car-subtitle {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .car-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .spec-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .spec-text h4 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.2rem;
+        }
+
+        .spec-text p {
+            font-size: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .car-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .vin-code {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .vin-code i {
+            color: var(--primary);
+        }
+
+        .inspection-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .inspection-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inspection-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .inspection-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .inspection-result {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .left-inspection-result {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--primary);
+            z-index: 1007;
+        }
+        .result-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-rating i {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .result-description {
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .result-price {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-price span {
+            color: var(--primary);
+        }
+
+        .critical-points {
+            margin-top: 1.5rem;
+        }
+
+        .points-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .points-title i {
+            color: var(--critical);
+        }
+
+        .points-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .point-item {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--critical);
+            padding: 0.8rem 1rem;
+            border-radius: 0 6px 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .point-item.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+        }
+
+        .point-icon {
+            color: var(--critical);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .point-item.warning .point-icon {
+            color: var(--warning);
+        }
+
+        .point-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+
+        .point-content p {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* QR Code Section */
+        .qr-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .qr-content {
+            flex: 1;
+        }
+
+        .qr-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .qr-text {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .qr-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .qr-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .qr-feature i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .qr-feature p {
+            color: var(--light-gray);
+            font-size: 0.95rem;
+        }
+
+        .qr-container {
+            flex: 0 0 auto;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .qr-code img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .modal-image {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .modal-description {
+            color: var(--light-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .modal-severity {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-severity.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--critical);
+            border: 1px solid var(--critical);
+        }
+
+        .modal-severity.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        /* Car Gallery */
+        .car-gallery {
+            margin-top: 3rem;
+        }
+
+        .gallery-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .gallery-slider .slick-slide {
+            padding: 0 10px;
+        }
+
+        .gallery-item {
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            z-index: 99;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .footer-column p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .footer-column a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .car-overview {
+                flex-direction: column;
+            }
+            
+            .car-main-image {
+                height: 350px;
+            }
+
+            .qr-section {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .qr-features {
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                margin-top: 6rem;
+            }
+
+            .car-specs {
+                grid-template-columns: 1fr;
+            }
+
+            .inspection-buttons {
+                flex-direction: column;
+            }
+
+            .inspection-btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .car-main-image {
+                height: 250px;
+            }
+
+            .car-title {
+                font-size: 1.6rem;
+            }
+
+            .car-price {
+                font-size: 1.5rem;
+            }
+
+            .vin-code {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+
+            .hotspot {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Slider */
+        .news-slider {
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .news-slider .slick-list {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .news-slide {
+            position: relative;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .news-slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .news-slide:hover .news-slide-bg {
+            transform: scale(1.05);
+        }
+
+        .news-slide-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+            color: white;
+        }
+
+        .news-slide.registration-slide .news-slide-content {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7));
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+        }
+
+        .news-slide-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+
+        .news-slide.registration-slide .news-slide-tag {
+            align-self: center;
+        }
+
+        .news-slide-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .news-slide-text {
+            color: var(--light-gray);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+
+        .news-slide-btn {
+            display: inline-flex;
+            padding: 0.7rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            align-self: flex-start;
+        }
+
+        .news-slide-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .news-slide.registration-slide .news-slide-btn {
+            background: white;
+            color: var(--primary);
+            align-self: center;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
+
+        .news-slide.registration-slide .news-slide-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .slick-dots {
+            bottom: -40px;
+        }
+
+        .slick-dots li button:before {
+            color: var(--gray);
+            opacity: 0.5;
+            font-size: 10px;
+        }
+
+        .slick-dots li.slick-active button:before {
+            color: var(--primary);
+            opacity: 1;
+        }
+
+        .slick-arrow {
+            width: 40px;
+            height: 40px;
+            z-index: 1;
+        }
+
+        .slick-arrow:before {
+            font-size: 40px;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        .slick-arrow:hover:before {
+            opacity: 1;
+        }
+
+        .slick-prev {
+            left: 20px;
+        }
+
+        .slick-next {
+            right: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .owners {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .owner {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+        }
+
+        .owner:last-child {
+            border-bottom: none;
+        }
+
+        .owner strong {
+            color: var(--secondary-color);
+            font-size: 1.2em;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Technical Specifications */
+        .tech-specs {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tech-specs-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tech-specs-title i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .spec-group {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .spec-group-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spec-group-title i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+
+        .spec-name {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .spec-value {
+            color: white;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .car-additional-info {
+            flex: 0 0 250px;
+            margin-right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-block {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.2rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .info-block h4 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-block h4 i {
+            color: var(--primary);
+        }
+
+        .info-block ul {
+            list-style: none;
+        }
+
+        .info-block li {
+            padding: 0.4rem 0;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .info-block li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .car-additional-info {
+                flex: 1 0 100%;
+                margin-right: 0;
+                margin-top: 2rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .info-block {
+                flex: 1 0 calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-block {
+                flex: 1 0 100%;
+            }
+        }
+
+        /* New layout for critical points on the left */
+        .inspection-layout {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .critical-points-column {
+            flex: 0 0 300px;
+        }
+
+        .car-image-column {
+            flex: 1;
+            position: relative;
+        }
+
+        .car-details-column {
+            flex: 1;
+        }
+
+        @media (max-width: 1200px) {
+    .inspection-layout {
+        flex-direction: column;
+    }
+    
+    .critical-points-column {
+        flex: 1;
+        order: 1;
+    }
+    
+    .car-image-column {
+        order: 2;
+    }
+    
+    .car-details-column {
+        order: 3;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <!-- <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <span>Truston</span> -->
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#">Каталог</a></li>
+                    <li><a href="#">Диагностика</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <li><a href="#" class="nav-cta">Регистрация</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="inspection-container">
+            <div class="inspection-layout">
+                <!-- Left column - Critical points -->
+                
+        
+                <!-- Middle column - Car image -->
+                <div class="car-image-column">
+                    <div class="car-main-image">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg" alt="Audi A6" id="mainCarImage">
+                        <!-- Hotspots for exterior -->
+                        <div class="hotspot warning" style="top: 95%; left: 30%;" data-title="Передний бампер" data-image="https://example.com/bumper-damage.jpg" data-description="Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска." data-severity="warning">
+                            <span class="hotspot-tooltip">Передний бампер</span>
+                        </div>
+                        <div class="hotspot" style="top: 25%; left: 70%;" data-title="Правая передняя дверь" data-image="https://example.com/door-scratch.jpg" data-description="Глубокая царапина до металла на правой передней двери. Требуется шпаклевка и покраска для предотвращения коррозии." data-severity="critical">
+                            <span class="hotspot-tooltip">Правая дверь</span>
+                        </div>
+                    </div>
+                    <div class="critical-points-column">
+                        <div class="left-inspection-result">
+                            <h3 class="result-title">
+                                <i class="fas fa-exclamation-triangle"></i> Критические точки
+                            </h3>
+                            <div class="points-list">
+                                <div class="point-item warning">
+                                    <i class="fas fa-exclamation-circle point-icon"></i>
+                                    <div class="point-content">
+                                        <h4>Передний бампер</h4>
+                                        <p>Незначительные сколы и царапины. Рекомендуется локальная покраска.</p>
+                                    </div>
+                                </div>
+                                <div class="point-item">
+                                    <i class="fas fa-times-circle point-icon"></i>
+                                    <div class="point-content">
+                                        <h4>Правая передняя дверь</h4>
+                                        <p>Глубокая царапина до металла. Требуется шпаклевка и покраска для предотвращения коррозии.</p>
+                                    </div>
+                                </div>
+                                <div class="point-item warning">
+                                    <i class="fas fa-exclamation-circle point-icon"></i>
+                                    <div class="point-content">
+                                        <h4>Левый порог</h4>
+                                        <p>Небольшая вмятина. Рекомендуется рихтовка.</p>
+                                    </div>
+                                </div>
+                                <div class="point-item">
+                                    <i class="fas fa-times-circle point-icon"></i>
+                                    <div class="point-content">
+                                        <h4>Задний бампер</h4>
+                                        <p>Трещина в правой части. Требуется замена или ремонт.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right column - Car details and state -->
+                <div class="car-details-column">
+                    <div class="car-details">
+                        <h1 class="car-title">Audi A6</h1>
+                        <p class="car-subtitle">2020 год, 2.0 TDI, 190 л.с., Автомат</p>
+                        
+                        <div class="car-specs">
+                            <div class="spec-item">
+                                <div class="spec-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="spec-text">
+                                    <h4>Пробег</h4>
+                                    <p>45 000 км</p>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">
+                                    <i class="fas fa-gas-pump"></i>
+                                </div>
+                                <div class="spec-text">
+                                    <h4>Топливо</h4>
+                                    <p>Дизель</p>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="spec-text">
+                                    <h4>Кузов</h4>
+                                    <p>Седан</p>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="spec-text">
+                                    <h4>Коробка</h4>
+                                    <p>Автомат</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="car-price">42 000 $</div>
+                        
+                        <div class="vin-code">
+                            <i class="fas fa-fingerprint"></i>
+                            <span>VIN: WAUZZZ4G6DN123456</span>
+                        </div>
+        
+                        <div class="vin-code">
+                            <span>ID: 6038013</span>
+                        </div>
+                        
+                        <div class="inspection-buttons">
+                            <button class="inspection-btn active" data-section="exterior">
+                                <i class="fas fa-car"></i> Кузов
+                            </button>
+                            <button class="inspection-btn" data-section="interior">
+                                <i class="fas fa-chair"></i> Салон
+                            </button>
+                            <button class="inspection-btn" data-section="engine">
+                                <i class="fas fa-cog"></i> Двигатель
+                            </button>
+                            <button class="inspection-btn" data-section="transmission">
+                                <i class="fas fa-exchange-alt"></i> Трансмиссия
+                            </button>
+                            <button class="inspection-btn" data-section="suspension">
+                                <i class="fas fa-car-side"></i> Подвеска
+                            </button>
+                        </div>
+                        
+                        <div class="inspection-result">
+                            <h3 class="result-title">
+                                <i class="fas fa-car"></i> Состояние кузова
+                            </h3>
+                            <div class="result-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>4.0 / 5.0</span>
+                            </div>
+                            <p class="result-description">
+                                Кузов автомобиля в хорошем состоянии. Имеются незначительные следы эксплуатации: 
+                                небольшие сколы на капоте и переднем бампере, мелкие царапины на дверях. 
+                                Лакокрасочное покрытие оригинальное, следов перекраски не обнаружено.
+                            </p>
+                            <p class="result-price">
+                                Рекомендуемый бюджет на устранение недочетов: <span>800-1200 $</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="tech-specs">
+            <h3 class="tech-specs-title">
+                <i class="fas fa-info-circle"></i> Технические характеристики
+            </h3>
+            <div class="specs-grid">
+                <div class="spec-group">
+                    <h4 class="spec-group-title">
+                        <i class="fas fa-car"></i> Общие данные
+                    </h4>
+                    <div class="spec-row">
+                        <span class="spec-name">Марка</span>
+                        <span class="spec-value">Audi</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Модель</span>
+                        <span class="spec-value">A6</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Год выпуска</span>
+                        <span class="spec-value">2020</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Пробег</span>
+                        <span class="spec-value">45 000 км</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Кузов</span>
+                        <span class="spec-value">Седан</span>
+                    </div>
+                </div>
+                
+                <div class="spec-group">
+                    <h4 class="spec-group-title">
+                        <i class="fas fa-cog"></i> Двигатель
+                    </h4>
+                    <div class="spec-row">
+                        <span class="spec-name">Тип двигателя</span>
+                        <span class="spec-value">Дизель</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Объем</span>
+                        <span class="spec-value">2.0 л</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Мощность</span>
+                        <span class="spec-value">190 л.с.</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Крутящий момент</span>
+                        <span class="spec-value">400 Нм</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Экологический класс</span>
+                        <span class="spec-value">Евро 6</span>
+                    </div>
+                </div>
+                
+                <div class="spec-group">
+                    <h4 class="spec-group-title">
+                        <i class="fas fa-exchange-alt"></i> Трансмиссия
+                    </h4>
+                    <div class="spec-row">
+                        <span class="spec-name">Коробка передач</span>
+                        <span class="spec-value">Автоматическая</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Привод</span>
+                        <span class="spec-value">Полный (quattro)</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Тип коробки</span>
+                        <span class="spec-value">7-ступенчатая S tronic</span>
+                    </div>
+                </div>
+                
+                <div class="spec-group">
+                    <h4 class="spec-group-title">
+                        <i class="fas fa-tachometer-alt"></i> Ходовые качества
+                    </h4>
+                    <div class="spec-row">
+                        <span class="spec-name">Разгон 0-100 км/ч</span>
+                        <span class="spec-value">7.9 сек</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Макс. скорость</span>
+                        <span class="spec-value">240 км/ч</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Расход (город)</span>
+                        <span class="spec-value">5.8 л/100км</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-name">Расход (трасса)</span>
+                        <span class="spec-value">4.5 л/100км</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Slider -->
+        <div class="news-slider">
+            <div class="news-slide registration-slide">
+                <div class="news-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');"></div>
+                <div class="news-slide-content">
+                    <h3 class="news-slide-title">Записшись на конвеер</h3>
+                    <p class="news-slide-text">пройди регистрацию на осмотр авто</p>
+                    <a href="#" class="news-slide-btn">Записаться</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div class="qr-section">
+            <div class="qr-content">
+                <h3 class="qr-title">Полный отчет диагностики</h3>
+                <p class="qr-text">
+                    Отсканируйте QR-код для просмотра полного отчета диагностики на вашем устройстве. 
+                    Вы можете сохранить его или поделиться с механиком, друзьями или потенциальными покупателями.
+                </p>
+                <div class="qr-features">
+                    <div class="qr-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Доступ к полной истории диагностики</p>
+                    </div>
+                    <div class="qr-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Рекомендации по ремонту и обслуживанию</p>
+                    </div>
+                    <div class="qr-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Экспертная оценка состояния автомобиля</p>
+                    </div>
+                    <a href="#" class="news-slide-btn">Скачать весь отчёт</a>
+                </div>
+                
+            </div>
+            <div class="qr-container">
+                <div class="qr-code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://truston.by/diagnostic/audi-a6-2020-vin-wauzzz4g6dn123456" alt="QR Code">
+                </div>
+            </div>
+        </div>
+
+        <h2>График событий</h2>
+        <div class="chart-container">
+            <canvas id="eventsChart"></canvas>
+        </div>
+
+        <br>
+
+        <h2>История владения</h2>
+        <div class="owners">
+            <div class="owner">
+                <strong>Иван Иванов</strong><br />
+                Период владения: Январь 2018 - Июль 2020<br />
+                Описание: Ездил в основном по городу, вовремя проходил ТО.
+            </div>
+            <div class="owner">
+                <strong>Ольга Смирнова</strong><br />
+                Период владения: Август 2020 - Декабрь 2022<br />
+                Описание: Аккуратный водитель, обслуживала авто у дилера.
+            </div>
+            <div class="owner">
+                <strong>Алексей Петров</strong><br />
+                Период владения: Январь 2023 - настоящее время<br />
+                Описание: Использует авто для поездок по Европе.
+            </div>
+        </div>
+
+        <div class="car-gallery">
+            <h3 class="gallery-title">Фотографии автомобиля</h3>
+            <div class="gallery-slider">
+                <div class="gallery-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg" alt="Audi A6">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://octane.rent/wp-content/uploads/2023/03/audi-a6-black-3-600x400.webp" alt="Audi A6 Interior">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://avatars.mds.yandex.net/get-autoru-vos/2063660/19870df94a0f47ce78c9a5ebd6d72aa6/456x342" alt="Audi A6 Engine">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://dd-tuning.lt/assets/cache/images/stingray/162274215552496-920x613-3c3.jpg" alt="Audi A6 Gearbox">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://a.d-cd.net/zLywJd-kVa0uDcJoimhQKvOgs0Q-960.jpg" alt="Audi A6 Suspension">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://www.toyland.md/upfiles/gallery/img66991_1.jpg" alt="Audi A6 Dashboard">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="hotspotModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h3 class="modal-title" id="modalTitle">Передний бампер</h3>
+            <div class="modal-severity warning" id="modalSeverity">Внимание</div>
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="Damage photo">
+            </div>
+            <p class="modal-description" id="modalDescription">
+                Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Truston</h3>
+                <p>Ведущая платформа для покупки и продажи премиальных автомобилей в Беларуси и за рубежом.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Каталог</h3>
+                <ul>
+                    <li><a href="#">Новые автомобили</a></li>
+                    <li><a href="#">Автомобили с пробегом</a></li>
+                    <li><a href="#">Электромобили</a></li>
+                    <li><a href="#">Коммерческий транспорт</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Компания</h3>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Команда</a></li>
+                    <li><a href="#">Конвеер</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> 8029 </li>
+                    <li><i class="fas fa-envelope"></i> truston@gmail.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Минск</li>
+                    <li><i class="fas fa-clock"></i> Пн-Пт: 9:00 - 19:00</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Inspection buttons functionality
+        const inspectionBtns = document.querySelectorAll('.inspection-btn');
+        const mainCarImage = document.getElementById('mainCarImage');
+        const inspectionResult = document.querySelector('.inspection-result');
+        const criticalPointsColumn = document.querySelector('.critical-points-column .points-list');
+        
+        // Modal elements
+        const hotspotModal = document.getElementById('hotspotModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSeverity = document.getElementById('modalSeverity');
+        const modalImage = document.getElementById('modalImage');
+        const modalDescription = document.getElementById('modalDescription');
+        
+        // Inspection data for each section
+        const inspectionData = {
+            exterior: {
+                title: "Состояние кузова",
+                icon: "fas fa-car",
+                rating: 4,
+                description: "Кузов автомобиля в хорошем состоянии. Имеются незначительные следы эксплуатации: небольшие сколы на капоте и переднем бампере, мелкие царапины на дверях. Лакокрасочное покрытие оригинальное, следов перекраски не обнаружено.",
+                price: "800-1200 $",
+                points: [
+                    {
+                        type: "warning",
+                        title: "Передний бампер",
+                        description: "Незначительные сколы и царапины. Рекомендуется локальная покраска.",
+                        image: "https://example.com/bumper-damage.jpg"
+                    },
+                    {
+                        type: "critical",
+                        title: "Правая передняя дверь",
+                        description: "Глубокая царапина до металла. Требуется шпаклевка и покраска для предотвращения коррозии.",
+                        image: "https://hondavodam.ru/wp-content/uploads/2017/04/dverzarap.jpg"
+                    },
+                    {
+                        type: "warning",
+                        title: "Левый порог",
+                        description: "Небольшая вмятина. Рекомендуется рихтовка.",
+                        image: "https://example.com/threshold-dent.jpg"
+                    },
+                    {
+                        type: "critical",
+                        title: "Задний бампер",
+                        description: "Трещина в правой части. Требуется замена или ремонт.",
+                        image: "https://example.com/rear-bumper-crack.jpg"
+                    }
+                ],
+                hotspots: [
+                    {
+                        top: "65%",
+                        left: "30%",
+                        type: "warning",
+                        title: "Передний бампер",
+                        description: "Незначительные сколы и царапины на переднем бампере. Рекомендуется локальная покраска.",
+                        image: "https://example.com/bumper-damage.jpg"
+                    },
+                    {
+                        top: "40%",
+                        left: "70%",
+                        type: "critical",
+                        title: "Правая передняя дверь",
+                        description: "Глубокая царапина до металла на правой передней двери. Требуется шпаклевка и покраска для предотвращения коррозии.",
+                        image: "https://example.com/door-scratch.jpg"
+                    }
+                ]
+            },
+            interior: {
+                title: "Состояние салона",
+                icon: "fas fa-chair",
+                rating: 4.5,
+                description: "Салон в отличном состоянии. Кожаные сиденья без потертостей и повреждений. Пластиковые элементы без царапин. Электроника работает исправно. Имеется небольшой запах табака, который можно устранить химчисткой.",
+                price: "300-500 $",
+                points: [
+                    {
+                        type: "warning",
+                        title: "Запах в салоне",
+                        description: "Присутствует слабый запах табака. Рекомендуется профессиональная химчистка.",
+                        image: "https://example.com/interior-smell.jpg"
+                    },
+                    {
+                        type: "critical",
+                        title: "Электростеклоподъемник",
+                        description: "Правый задний электростеклоподъемник иногда заедает. Требуется диагностика и возможная замена механизма.",
+                        image: "https://example.com/window-mechanism.jpg"
+                    }
+                ],
+                hotspots: [
+                    {
+                        top: "40%",
+                        left: "20%",
+                        type: "warning",
+                        title: "Запах в салоне",
+                        description: "Присутствует слабый запах табака. Рекомендуется профессиональная химчистка.",
+                        image: "https://example.com/interior-smell.jpg"
+                    },
+                    {
+                        top: "60%",
+                        left: "80%",
+                        type: "critical",
+                        title: "Электростеклоподъемник",
+                        description: "Правый задний электростеклоподъемник иногда заедает. Требуется диагностика и возможная замена механизма.",
+                        image: "https://example.com/window-mechanism.jpg"
+                    }
+                ]
+            },
+            engine: {
+                title: "Состояние двигателя",
+                icon: "fas fa-cog",
+                rating: 5,
+                description: "Двигатель работает ровно, без посторонних шумов. Технические жидкости на уровне. Расход масла в норме. Турбина без люфтов. Ремень ГРМ заменен на 40 000 км. Рекомендуется замена масла через 5 000 км.",
+                price: "0 $ (не требуется)",
+                points: [
+                    {
+                        type: "warning",
+                        title: "Масло",
+                        description: "Рекомендуется замена масла и фильтров через 5 000 км.",
+                        image: "https://example.com/oil-change.jpg"
+                    }
+                ],
+                hotspots: [
+                    {
+                        top: "50%",
+                        left: "50%",
+                        type: "warning",
+                        title: "Масло",
+                        description: "Рекомендуется замена масла и фильтров через 5 000 км.",
+                        image: "https://example.com/oil-change.jpg"
+                    }
+                ]
+            },
+            transmission: {
+                title: "Состояние трансмиссии",
+                icon: "fas fa-exchange-alt",
+                rating: 4,
+                description: "Коробка передач работает плавно, без рывков и пинков. Масло в АКПП чистое, заменено на 35 000 км. Раздаточная коробка и дифференциалы без шумов. Карданный вал без вибраций.",
+                price: "400-600 $ (плановое обслуживание)",
+                points: [
+                    {
+                        type: "warning",
+                        title: "Масло в АКПП",
+                        description: "Рекомендуется замена масла в АКПП через 15 000 км.",
+                        image: "https://example.com/transmission-oil.jpg"
+                    }
+                ],
+                hotspots: [
+                    {
+                        top: "30%",
+                        left: "40%",
+                        type: "warning",
+                        title: "Масло в АКПП",
+                        description: "Рекомендуется замена масла в АКПП через 15 000 км.",
+                        image: "https://example.com/transmission-oil.jpg"
+                    }
+                ]
+            },
+            suspension: {
+                title: "Состояние подвески",
+                icon: "fas fa-car-side",
+                rating: 3.5,
+                description: "Подвеска в целом в хорошем состоянии. Имеется небольшой стук в передних амортизаторах. Сайлентблоки передних рычагов имеют начальные признаки износа. Задние амортизаторы в норме. Рекомендуется замена передних амортизаторов и сайлентблоков в ближайшее время.",
+                price: "1200-1800 $",
+                points: [
+                    {
+                        type: "critical",
+                        title: "Передние амортизаторы",
+                        description: "Небольшой стук в передних амортизаторах. Рекомендуется замена в ближайшее время.",
+                        image: "https://example.com/shock-absorber.jpg"
+                    },
+                    {
+                        type: "warning",
+                        title: "Сайлентблоки передних рычагов",
+                        description: "Начальные признаки износа. Рекомендуется замена при следующем ТО.",
+                        image: "https://example.com/bushings.jpg"
+                    }
+                ],
+                hotspots: [
+                    {
+                        top: "20%",
+                        left: "30%",
+                        type: "critical",
+                        title: "Передние амортизаторы",
+                        description: "Небольшой стук в передних амортизаторах. Рекомендуется замена в ближайшее время.",
+                        image: "https://example.com/shock-absorber.jpg"
+                    },
+                    {
+                        top: "25%",
+                        left: "70%",
+                        type: "warning",
+                        title: "Сайлентблоки передних рычагов",
+                        description: "Начальные признаки износа. Рекомендуется замена при следующем ТО.",
+                        image: "https://example.com/bushings.jpg"
+                    }
+                ]
+            }
+        };
+        
+        // Initialize slider
+        $(document).ready(function(){
+            $('.gallery-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        
+            $('.news-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000
+            });
+        });
+        
+        // Back to Top Button
+        window.addEventListener('scroll', function() {
+            const backToTopBtn = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('active');
+            } else {
+                backToTopBtn.classList.remove('active');
+            }
+        });
+        
+        document.querySelector('.back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Events Chart
+        const ctx = document.getElementById('eventsChart').getContext('2d');
+        const eventsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Янв 2020', 'Июн 2020', 'Мар 2021', 'Янв 2022', 'Июл 2023'],
+                datasets: [{
+                    label: 'События',
+                    data: [2, 1, 3, 2, 4],
+                    borderColor: '#8a2be2',
+                    backgroundColor: 'rgba(138, 43, 226, 0.3)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#1e90ff',
+                    pointBorderColor: '#fff',
+                    pointRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        ticks: { color: '#e0e0ff' },
+                        grid: { color: '#2c2c44' }
+                    },
+                    y: {
+                        ticks: { color: '#e0e0ff' },
+                        grid: { color: '#2c2c44' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e0e0ff',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Modal functionality
+        function openModal(title, severity, image, description) {
+            modalTitle.textContent = title;
+            modalSeverity.textContent = severity === 'critical' ? 'Критично' : 'Внимание';
+            modalSeverity.className = `modal-severity ${severity}`;
+            modalImage.src = image;
+            modalImage.alt = title;
+            modalDescription.textContent = description;
+            hotspotModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            hotspotModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        modalClose.addEventListener('click', closeModal);
+        hotspotModal.addEventListener('click', function(e) {
+            if (e.target === hotspotModal) {
+                closeModal();
+            }
+        });
+        
+        // Hotspot click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('hotspot') || e.target.parentElement.classList.contains('hotspot')) {
+                const hotspot = e.target.classList.contains('hotspot') ? e.target : e.target.parentElement;
+                const title = hotspot.getAttribute('data-title');
+                const severity = hotspot.classList.contains('warning') ? 'warning' : 'critical';
+                const image = hotspot.getAttribute('data-image');
+                const description = hotspot.getAttribute('data-description');
+                
+                openModal(title, severity, image, description);
+            }
+        });
+        
+        // Inspection buttons click handler
+        inspectionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                inspectionBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Change inspection result
+                const section = this.getAttribute('data-section');
+                const data = inspectionData[section];
+                
+                // Generate stars HTML
+                let starsHtml = '';
+                const fullStars = Math.floor(data.rating);
+                const hasHalfStar = data.rating % 1 >= 0.5;
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        starsHtml += '<i class="fas fa-star"></i>';
+                    } else if (i === fullStars && hasHalfStar) {
+                        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        starsHtml += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                // Generate critical points HTML
+                let pointsHtml = '';
+                if (data.points && data.points.length > 0) {
+                    pointsHtml = data.points.map(point => `
+                        <div class="point-item ${point.type === 'warning' ? 'warning' : ''}" data-image="${point.image}" data-description="${point.description}" data-title="${point.title}" data-severity="${point.type}">
+                            <i class="fas ${point.type === 'warning' ? 'fa-exclamation-circle' : 'fa-times-circle'} point-icon"></i>
+                            <div class="point-content">
+                                <h4>${point.title}</h4>
+                                <p>${point.description}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Update inspection result
+                inspectionResult.innerHTML = `
+                    <h3 class="result-title">
+                        <i class="${data.icon}"></i> ${data.title}
+                    </h3>
+                    <div class="result-rating">
+                        ${starsHtml}
+                        <span>${data.rating.toFixed(1)} / 5.0</span>
+                    </div>
+                    <p class="result-description">
+                        ${data.description}
+                    </p>
+                    <p class="result-price">
+                        Рекомендуемый бюджет на устранение недочетов: <span>${data.price}</span>
+                    </p>
+                `;
+                
+                // Update critical points column
+                criticalPointsColumn.innerHTML = pointsHtml;
+                
+                // Change main image based on section
+                const imageMap = {
+                    exterior: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Audi_A6_2018_%2844686505662%29.jpg/1200px-Audi_A6_2018_%2844686505662%29.jpg",
+                    interior: "https://autolife.news/wp-content/uploads/2024/05/audi-a6-allroad-instrument-panel.webp",
+                    engine: "https://www.bochka-service.ru/admin/material_tmp/1476170895_0.jpg",
+                    transmission: "https://a.d-cd.net/veAAAgOHeeA-960.jpg",
+                    suspension: "https://autoservice-ap.ru/media/services/products/zamena-rychagov-podveski.jpg.1920x600_q85_box-0%2C198%2C1920%2C797_crop_detail.jpg"
+                };
+                
+                mainCarImage.src = imageMap[section];
+                
+                // Clear existing hotspots
+                document.querySelectorAll('.hotspot').forEach(hotspot => hotspot.remove());
+                
+                // Add new hotspots for current section
+                if (data.hotspots && data.hotspots.length > 0) {
+                    data.hotspots.forEach(hotspot => {
+                        const hotspotElement = document.createElement('div');
+                        hotspotElement.className = `hotspot ${hotspot.type === 'warning' ? 'warning' : ''}`;
+                        hotspotElement.style.top = hotspot.top;
+                        hotspotElement.style.left = hotspot.left;
+                        hotspotElement.setAttribute('data-title', hotspot.title);
+                        hotspotElement.setAttribute('data-image', hotspot.image);
+                        hotspotElement.setAttribute('data-description', hotspot.description);
+                        hotspotElement.setAttribute('data-severity', hotspot.type);
+                        
+                        const tooltip = document.createElement('span');
+                        tooltip.className = 'hotspot-tooltip';
+                        tooltip.textContent = hotspot.title;
+                        
+                        hotspotElement.appendChild(tooltip);
+                        document.querySelector('.car-main-image').appendChild(hotspotElement);
+                    });
+                }
+                
+                // Add click handlers to point items
+                document.querySelectorAll('.point-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const title = this.getAttribute('data-title');
+                        const severity = this.getAttribute('data-severity');
+                        const image = this.getAttribute('data-image');
+                        const description = this.getAttribute('data-description');
+                        
+                        openModal(title, severity, image, description);
+                    });
+                });
+            });
+        });
+        
+        // Initialize first section
+        document.querySelector('.inspection-btn.active').click();
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+        </script>
+</body>
+</html>

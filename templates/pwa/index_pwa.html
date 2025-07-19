@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администратор - Truston</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --secondary-dark: #9333ea;
+            --accent: #561bb6;
+            --dark: #dadada;
+            --darker: #020617;
+            --light: #f8fafc;
+            --light-gray: #e2e8f0;
+            --gray: #94a3b8;
+            --dark-gray: #475569;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-bg-hover: rgba(51, 65, 85, 0.9);
+            --badge-new: #10b981;
+            --badge-electric: #3b82f6;
+            --badge-best-price: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            --critical: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 0;
+            position: relative;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--light);
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--gray);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--accent) 100%);
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-glass {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-new {
+            background-color: var(--badge-new);
+            color: white;
+        }
+
+        .badge-electric {
+            background-color: var(--badge-electric);
+            color: white;
+        }
+
+        .badge-best {
+            background-color: var(--badge-best-price);
+            color: var(--darker);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        header.scrolled {
+            padding: 12px 0;
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: var(--shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light-gray);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Admin Dashboard */
+        .admin-dashboard {
+            margin-top: 80px;
+            padding: 40px 0;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--light), var(--light-gray));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-filter-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-button {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-button:hover {
+            border-color: var(--primary);
+        }
+
+        .filter-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            min-width: 200px;
+            z-index: 100;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-menu.show {
+            display: block;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light-gray);
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .order-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            transition: var(--transition);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .order-id {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .order-date {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .order-body {
+            margin-bottom: 20px;
+        }
+
+        .order-customer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .order-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .order-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .order-detail i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-in-progress {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--badge-electric);
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--badge-new);
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .search-filter-container {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--darker);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                border-bottom: 1px solid var(--glass-border);
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <i class="fas fa-qrcode logo-icon"></i>
+                    <span>Truston</span>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="#" class="active">Заказы</a>
+                    <a href="#">Клиенты</a>
+                    <a href="#">Автомобили</a>
+                    <a href="#">Отчеты</a>
+                    <a href="#">Настройки</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <div class="user-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Admin" width="40" height="40" style="border-radius: 50%;">
+                    </div>
+                    <button class="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard -->
+    <section class="admin-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <!-- <h4 class="dashboard-title">Добро пожаловать, Владислав!</h4> -->
+
+   
+                <div class="search-filter-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Поиск заказов...">
+                    </div>
+                    
+                    <div class="filter-dropdown">
+                        <button class="filter-button">
+                            <i class="fas fa-filter"></i>
+                            Фильтры
+                        </button>
+                        
+                        <div class="filter-menu">
+                            <div class="filter-group">
+                                <label class="filter-label">Статус</label>
+                                <select class="filter-select">
+                                    <option value="">Все</option>
+                                    <option value="pending">Не начат</option>
+                                    <option value="in-progress">В процессе</option>
+                                    <option value="completed">Завершен</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label class="filter-label">Дата</label>
+                                <select class="filter-select">
+                                    <option value="">Все</option>
+                                    <option value="today">Сегодня</option>
+                                    <option value="week">Эта неделя</option>
+                                    <option value="month">Этот месяц</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-actions">
+                                <button class="btn btn-outline" style="padding: 8px 15px;">Сбросить</button>
+                                <button class="btn btn-primary" style="padding: 8px 15px;">Применить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="orders-grid">
+                <!-- Order Card 1 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-001</span>
+                        <span class="order-date">12.10.2023, 14:30</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Иванов Иван Иванович</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Toyota Camry, 2018</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: JT2BF22K1W0134567</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Полная диагностика</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-in-progress">В процессе</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Card 2 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-002</span>
+                        <span class="order-date">11.10.2023, 10:15</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Петрова Анна Сергеевна</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>BMW X5, 2020</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: WBAJH7C5XGG123456</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Проверка перед покупкой</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-completed">Завершен</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Card 3 -->
+                <div class="order-card" onclick="window.location.href='glav_pwa.html'">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-003</span>
+                        <span class="order-date">10.10.2023, 16:45</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Сидоров Дмитрий Викторович</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Audi A6, 2019</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: WAUB4AF41MA012345</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Полная диагностика</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-pending">Не начат</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Card 4 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-004</span>
+                        <span class="order-date">09.10.2023, 11:20</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Кузнецова Елена Александровна</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Mercedes-Benz C-Class, 2021</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: WDDZF4JB7MA567890</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Полная диагностика</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-in-progress">В процессе</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Card 5 -->
+                <div class="order-card" onclick="window.open('glav_pwa.html')">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-005</span>
+                        <span class="order-date">08.10.2023, 09:00</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Васильев Михаил Олегович</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Lexus RX, 2017</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: 2T2BZMCA9HC123456</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Полная диагностика</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-completed">Завершен</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Card 6 -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">#TR-2023-006</span>
+                        <span class="order-date">07.10.2023, 13:10</span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <h3 class="order-customer">Смирнова Ольга Игоревна</h3>
+                        
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Volkswagen Tiguan, 2020</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-barcode"></i>
+                                <span>VIN: 3VV2B7AX9KM123456</span>
+                            </div>
+                            <div class="order-detail">
+                                <i class="fas fa-wrench"></i>
+                                <span>Полная диагностика</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <span class="order-status status-pending">Не начат</span>
+                        
+                        <div class="order-actions">
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('show');
+        });
+
+        // Filter dropdown toggle
+        document.querySelector('.filter-button').addEventListener('click', function() {
+            document.querySelector('.filter-menu').classList.toggle('show');
+        });
+
+        // Close filter menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const filterMenu = document.querySelector('.filter-menu');
+            const filterButton = document.querySelector('.filter-button');
+            
+            if (filterMenu.classList.contains('show') && 
+                !filterMenu.contains(event.target) && 
+                !filterButton.contains(event.target)) {
+                filterMenu.classList.remove('show');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.nav-links').classList.remove('show');
+                }
+            });
+        });
+
+        // Animation on scroll for order cards
+        const animateCards = function() {
+            const cards = document.querySelectorAll('.order-card');
+            
+            cards.forEach((card, index) => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (cardPosition < screenPosition) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // Set initial state for animated cards
+        document.querySelectorAll('.order-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `opacity 0.5s ease, transform 0.5s ease ${index * 0.1}s`;
+        });
+
+        window.addEventListener('scroll', animateCards);
+        window.addEventListener('load', animateCards);
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+    </script>
+</body>
+</html>

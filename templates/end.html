@@ -367,7 +367,7 @@
             
             <div class="qr-code">
                 <!-- QR code would be generated here -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vladtichonenko.github.io/trusston/diagnostik.html" alt="QR Code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html" alt="QR Code">
             </div>
             
             <div class="report-actions">
@@ -375,7 +375,7 @@
                     <i class="fas fa-share-alt"></i>
                     Поделиться
                 </button>
-                <button class="report-btn btn-open">
+                <button class="report-btn btn-open" onclick="window.open('audi.pdf')">
                     <i class="fas fa-file-pdf"></i>
                     Открыть
                 </button>
@@ -440,7 +440,7 @@
             // Share button functionality
             shareBtn.addEventListener('click', function() {
                 // Copy link to clipboard
-                navigator.clipboard.writeText('https://vladtichonenko.github.io/trusston/diagnostik.html')
+                navigator.clipboard.writeText('https://vladtichonenko.github.io/favdnkjndfs/diagnostik.html')
                     .then(() => {
                         // Show animation
                         shareAnimation.classList.add('show');

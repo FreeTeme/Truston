@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Осмотр автомобиля</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4285f4">
+<link rel="manifest" href="/manifest.json">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Иконка для старого Safari -->
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <style>
+        :root {
+            --primary: rgba(30, 41, 59, 0.8);
+            --primary-light: #4895ef;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --danger: #f72585;
+            --success: #a855f7;
+            --success-dark: #38b6db;
+            --dark: #212529;
+            --light: #dadada;
+            --gray: #adb5bd;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #dadada;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Header with photo section */
+        .photo-section {
+            height: 25vh;
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: var(--transition);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .photo-overlay:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-overlay i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .photo-overlay:hover i {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay span {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        #photo-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 1;
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
+        }
+        
+        .section-name {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.8rem;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .section-menu {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        .menu-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.3rem;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            max-width: 90%;
+        }
+        
+        .menu-item {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .menu-item.active {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item.completed::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+        
+        /* Inspection section */
+        .inspection-section {
+            background-color: white;
+            padding: 2rem 1.5rem 6rem;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.8rem;
+            color: var(--primary);
+        }
+        
+        .inspection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: var(--radius);
+            background: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspection-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .inspection-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .inspection-item:hover::before {
+            width: 5px;
+        }
+        
+        .inspection-item span {
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+        
+        .inspection-item i {
+            color: var(--gray);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        
+        .inspection-item.checked {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(72, 201, 240, 0.3);
+        }
+        
+        .inspection-item.checked i {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .inspection-item.checked::before {
+            display: none;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 10;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+        
+        .btn {
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-problem {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .btn-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+        }
+        
+        .btn-no-problem {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+        
+        .btn-no-problem:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 201, 240, 0.3);
+        }
+        
+        /* Hidden file input for photo */
+        #photo-input {
+            display: none;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .modal-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-cancel {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .modal-btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Review section (hidden by default) */
+        .review-section {
+            display: none;
+            padding: 2rem 1.5rem;
+        }
+        
+        .review-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        .review-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .review-photo {
+            height: 150px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .review-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .rating-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .rating-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-star {
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .rating-star.active {
+            color: #ffc107;
+        }
+        
+        .review-comment {
+            margin-top: 1.5rem;
+        }
+        
+        /* Animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        /* Desktop adaptations - Premium Version */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                max-width: 800px;
+                min-height: auto;
+                border-radius: var(--radius-xl);
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .photo-section {
+                grid-column: 1;
+                grid-row: 1 / span 3;
+                height: 100%;
+                min-height: auto;
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .photo-overlay,
+            #photo-preview {
+                border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+                border-bottom-left-radius: var(--radius-xl);
+            }
+            
+            .inspection-section {
+                grid-column: 2;
+                grid-row: 1;
+                padding: 2.5rem;
+                border-top-right-radius: var(--radius-xl);
+            }
+            
+            .review-section {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+                padding: 2.5rem;
+            }
+            
+            .action-buttons {
+                grid-column: 2;
+                grid-row: 3;
+                position: relative;
+                border-radius: 0 0 var(--radius-xl) 0;
+                box-shadow: none;
+                padding: 1.5rem 2.5rem;
+            }
+            
+            .section-menu {
+                bottom: auto;
+                top: 2rem;
+                right: 2rem;
+                left: auto;
+            }
+            
+            .menu-container {
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.3);
+                padding: 0.5rem;
+            }
+            
+            .menu-item {
+                padding: 0.8rem 1.5rem;
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+            
+            .section-name {
+                top: 2rem;
+                left: 2rem;
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+            }
+            
+            .inspection-item {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Custom scroll for content */
+            .scroll-container {
+                overflow-y: auto;
+                max-height: calc(100% - 120px);
+                padding-right: 1rem;
+            }
+            
+            .scroll-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            /* Review section desktop */
+            .review-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            
+            .review-photo {
+                height: 180px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+        
+        /* Custom styles for inspection cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .inspection-card {
+            flex: 1 1 calc(50% - 1rem);
+            min-width: 200px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .inspection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header i {
+            font-size: 1.2rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-item:last-child {
+            border-bottom: none;
+        }
+        
+        .card-item span {
+            font-size: 0.9rem;
+        }
+        
+        .card-item i {
+            color: var(--gray);
+            transition: var(--transition);
+        }
+        
+        .card-item.checked i {
+            color: var(--success);
+            transform: scale(1.2);
+        }
+        
+        .card-completed {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+        }
+        
+        .card-completed .card-header {
+            background: rgba(30, 41, 59, 0.9);
+        }
+        
+        .card-completed .card-item i {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="container">
+ 
+        <div class="photo-section" id="photo-section">
+            <img id="photo-preview" alt="Фото автомобиля">
+            <div class="photo-container">
+                <div class="photo-overlay" id="photo-placeholder">
+                    <i class="fas fa-car"></i>
+                    <span>Добавить фото автомобиля</span>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" capture="environment">
+                
+                <div class="section-name">
+                    ОСМОТР АВТОМОБИЛЯ
+                    <div class="info-icon" title="Детали осмотра">i</div>
+                </div>
+                
+                <div class="section-menu">
+                    <div class="menu-container">
+                        <div class="menu-item active" data-section="exterior">Кузов</div>
+                        <div class="menu-item" data-section="wheels">Колёса</div>
+                        <div class="menu-item" data-section="interior">Салон</div>
+                        <div class="menu-item" data-section="engine">Двигатель</div>
+                        <div class="menu-item completed" data-section="lights">Фары</div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- Inspection sections -->
+        <!-- <div class="inspection-section" id="inspection-section">
+            <div class="scroll-container"> -->
+                <!-- Кузов
+                <div class="section-title animate-in" id="exterior-title">
+                    <i class="fas fa-car-side"></i>
+                    Осмотр кузова
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-body">
+                    <span>Проверить кузов на повреждения</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-doors">
+                    <span>Проверить двери и замки</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-windows">
+                    <span>Проверить стекла и зеркала</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-paint">
+                    <span>Проверить лакокрасочное покрытие</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                 -->
+                <!-- Колёса -->
+                <!-- <div class="section-title animate-in" id="wheels-title" style="display: none;">
+                    <i class="fas fa-tire"></i>
+                    Осмотр колёс
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-tires" style="display: none;">
+                    <span>Проверить состояние шин</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-pressure" style="display: none;">
+                    <span>Проверить давление в шинах</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-rims" style="display: none;">
+                    <span>Проверить состояние дисков</span>
+                    <i class="fas fa-check"></i>
+                </div> -->
+                
+                <!-- Салон -->
+                <!-- <div class="section-title animate-in" id="interior-title" style="display: none;">
+                    <i class="fas fa-chair"></i>
+                    Осмотр салона
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-seats" style="display: none;">
+                    <span>Проверить сиденья</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-dashboard" style="display: none;">
+                    <span>Проверить приборную панель</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-controls" style="display: none;">
+                    <span>Проверить органы управления</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                 -->
+                <!-- Двигатель -->
+                <!-- <div class="section-title animate-in" id="engine-title" style="display: none;">
+                    <i class="fas fa-oil-can"></i>
+                    Осмотр двигателя
+                </div>
+                
+                <div class="inspection-item animate-in delay-1" id="check-oil" style="display: none;">
+                    <span>Проверить уровень масла</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-2" id="check-coolant" style="display: none;">
+                    <span>Проверить охлаждающую жидкость</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <div class="inspection-item animate-in delay-3" id="check-belts" style="display: none;">
+                    <span>Проверить ремни и шланги</span>
+                    <i class="fas fa-check"></i>
+                </div>
+                 -->
+                <!-- Карточки осмотра (альтернативный вариант) -->
+
+                <br>
+                <div class="section-title animate-in" style="margin-top: 2rem; margin-left: 20px;">
+                    <i class="fas fa-clipboard-list"></i>
+                    Карточки осмотра
+                </div>
+                
+
+
+
+                <div class="card-container">
+
+                    <div class="inspection-card">
+                        <div class="card-header" onclick="window.location.href='salon.html'">
+ <span>Осмотр салона</span>
+                            <!-- <i class="fas fa-stopwatch"></i> -->
+                        </div>
+                        <div class="card-body" onclick="window.location.href='salon.html'">
+                            <div class="card-item">
+                                <span>Передние сиденья</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Задние сиденья</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Панель приборов</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Багажник</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                            <div class="inspection-card">
+                        <div class="card-header">
+                           
+
+
+
+
+
+
+
+
+                            <span>Шины</span>
+                            <!-- <i class="fas fa-stopwatch"></i> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item">
+                                <span>Давление в шинах</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Крепления</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Проверка болтов</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Состояние диска</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Карточка осмотра фар (выполнена) -->
+                    <div class="inspection-card">
+                        <div class="card-header">
+                            <span>Фары и освещение</span>
+                            <!-- <i class="fas fa-lightbulb"></i> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item ">
+                                <span>Передние фары</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Задние фонари</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Поворотники</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item ">
+                                <span>Стоп-сигналы</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка осмотра тормозов -->
+                    
+                    
+                    <!-- Карточка осмотра подвески -->
+                    <div class="inspection-card">
+                        <div class="card-header">
+                            <span>Подвеска</span>
+                            <!-- <i class="fas fa-car-bump"></i> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item">
+                                <span>Амортизаторы</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Пружины</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Рычаги</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Сайлентблоки</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка осмотра электроники -->
+                    <div class="inspection-card">
+                        <div class="card-header">
+                            <span>Электроника</span>
+                            <!-- <i class="fas fa-bolt"></i> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item">
+                                <span>Аккумулятор</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Генератор</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Проводка</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Бортовой компьютер</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inspection-card">
+                        <div class="card-header">
+                            <span>Тормозная система</span>
+                            <!-- <i class="fas fa-stopwatch"></i> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="card-item">
+                                <span>Тормозные колодки</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Тормозные диски</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Тормозная жидкость</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="card-item">
+                                <span>Ручной тормоз</span>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- Review section (hidden by default) -->
+        <div class="review-section" id="review-section">
+            <div class="review-grid" id="review-photos">
+                <!-- Фото будут добавлены динамически -->
+            </div>
+            
+            <div class="rating-section">
+                <h3 class="rating-title">Оцените общее состояние автомобиля</h3>
+                <div class="rating-stars">
+                    <i class="fas fa-star rating-star" data-rating="1"></i>
+                    <i class="fas fa-star rating-star" data-rating="2"></i>
+                    <i class="fas fa-star rating-star" data-rating="3"></i>
+                    <i class="fas fa-star rating-star" data-rating="4"></i>
+                    <i class="fas fa-star rating-star" data-rating="5"></i>
+                </div>
+            </div>
+            
+            <div class="review-comment">
+                <textarea class="modal-textarea" id="final-comment" placeholder="Добавьте комментарии по результатам осмотра..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Action buttons -->
+        <!-- <div class="action-buttons">
+            <button class="btn btn-problem" id="btn-problem">
+                <i class="fas fa-exclamation-triangle"></i>
+                Найдены проблемы
+            </button>
+            <button class="btn btn-no-problem" id="btn-no-problem">
+                <i class="fas fa-check-circle"></i>
+                Все в порядке
+            </button>
+        </div> -->
+    </div>
+    
+    <!-- Modal for issues comment -->
+    <div class="modal" id="comment-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Опишите найденные проблемы</h3>
+            <textarea class="modal-textarea" id="issue-comment" placeholder="Опишите проблемы, обнаруженные при осмотре..."></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modal-cancel">Отмена</button>
+                <button class="modal-btn modal-btn-submit" id="modal-submit">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for completion -->
+    <div class="modal" id="complete-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Осмотр автомобиля завершен!</h3>
+            <p style="margin-bottom: 1.5rem; text-align: center;">Спасибо за проведенный осмотр.</p>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button class="modal-btn modal-btn-submit" id="modal-close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // App state
+        const appState = {
+            currentSection: 'exterior',
+            sections: {
+                'exterior': { photo: null, checks: [], comment: '' },
+                'wheels': { photo: null, checks: [], comment: '' },
+                'interior': { photo: null, checks: [], comment: '' },
+                'engine': { photo: null, checks: [], comment: '' },
+                'lights': { photo: null, checks: [], comment: '' }
+            },
+            completedSections: 1, // Уже выполнена секция фар
+            rating: 0,
+            finalComment: ''
+        };
+        
+        // DOM elements
+        const photoInput = document.getElementById('photo-input');
+        const photoPlaceholder = document.getElementById('photo-placeholder');
+        const photoPreview = document.getElementById('photo-preview');
+        const inspectionItems = document.querySelectorAll('.inspection-item');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const sectionName = document.querySelector('.section-name');
+        const infoIcon = document.querySelector('.info-icon');
+        const btnProblem = document.getElementById('btn-problem');
+        const btnNoProblem = document.getElementById('btn-no-problem');
+        const commentModal = document.getElementById('comment-modal');
+        const completeModal = document.getElementById('complete-modal');
+        const issueComment = document.getElementById('issue-comment');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalSubmit = document.getElementById('modal-submit');
+        const modalClose = document.getElementById('modal-close');
+        const inspectionSection = document.getElementById('inspection-section');
+        const reviewSection = document.getElementById('review-section');
+        const reviewPhotos = document.getElementById('review-photos');
+        const ratingStars = document.querySelectorAll('.rating-star');
+        const finalComment = document.getElementById('final-comment');
+        const photoSection = document.getElementById('photo-section');
+        
+        // Section titles
+        const sectionTitles = {
+            'exterior': document.getElementById('exterior-title'),
+            'wheels': document.getElementById('wheels-title'),
+            'interior': document.getElementById('interior-title'),
+            'engine': document.getElementById('engine-title')
+        };
+        
+        // Section items
+        const sectionItems = {
+            'exterior': [
+                document.getElementById('check-body'),
+                document.getElementById('check-doors'),
+                document.getElementById('check-windows'),
+                document.getElementById('check-paint')
+            ],
+            'wheels': [
+                document.getElementById('check-tires'),
+                document.getElementById('check-pressure'),
+                document.getElementById('check-rims')
+            ],
+            'interior': [
+                document.getElementById('check-seats'),
+                document.getElementById('check-dashboard'),
+                document.getElementById('check-controls')
+            ],
+            'engine': [
+                document.getElementById('check-oil'),
+                document.getElementById('check-coolant'),
+                document.getElementById('check-belts')
+            ]
+        };
+        
+        // Initialize the app
+        function initApp() {
+            // Set current section from active menu item
+            const activeMenuItem = document.querySelector('.menu-item.active');
+            appState.currentSection = activeMenuItem.dataset.section;
+            
+            // Load saved data if available
+            loadSectionData(appState.currentSection);
+            
+            // Set up card items
+            setupCardItems();
+        }
+        
+        // Set up card items functionality
+        function setupCardItems() {
+            const cardItems = document.querySelectorAll('.card-item');
+            cardItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    
+                    // Add bounce animation to checkmark
+                    const icon = this.querySelector('i');
+                    icon.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
+                    }, 300);
+                });
+            });
+        }
+        
+        // Load section data into UI
+        function loadSectionData(section) {
+            const sectionData = appState.sections[section];
+            
+            // Load photo if exists
+            if (sectionData.photo) {
+                photoPreview.src = sectionData.photo;
+                photoPreview.style.display = 'block';
+                photoPlaceholder.style.display = 'none';
+            } else {
+                photoPreview.style.display = 'none';
+                photoPlaceholder.style.display = 'flex';
+            }
+            
+            // Show/hide sections
+            for (const [sec, title] of Object.entries(sectionTitles)) {
+                if (sec === section) {
+                    title.style.display = 'flex';
+                } else {
+                    title.style.display = 'none';
+                }
+            }
+            
+            for (const [sec, items] of Object.entries(sectionItems)) {
+                items.forEach(item => {
+                    if (sec === section) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Load checks
+            if (sectionItems[section]) {
+                sectionItems[section].forEach(item => {
+                    const checkId = item.id.replace('check-', '');
+                    if (sectionData.checks.includes(checkId)) {
+                        item.classList.add('checked');
+                    } else {
+                        item.classList.remove('checked');
+                    }
+                });
+            }
+        }
+        
+        // Save section data from UI
+        function saveSectionData(section) {
+            const sectionData = appState.sections[section];
+            
+            // Save checks
+            if (sectionItems[section]) {
+                sectionData.checks = [];
+                sectionItems[section].forEach(item => {
+                    if (item.classList.contains('checked')) {
+                        const checkId = item.id.replace('check-', '');
+                        sectionData.checks.push(checkId);
+                    }
+                });
+            }
+        }
+        
+        // Move to next section
+        function moveToNextSection() {
+            // Save current section data
+            saveSectionData(appState.currentSection);
+            
+            // Mark current section as completed if not already
+            const currentMenuItem = document.querySelector(`.menu-item[data-section="${appState.currentSection}"]`);
+            if (!currentMenuItem.classList.contains('completed')) {
+                currentMenuItem.classList.add('completed');
+                appState.completedSections++;
+            }
+            
+            // Check if all sections are completed
+            if (appState.completedSections === 5) {
+                showReviewSection();
+                return;
+            }
+            
+            // Find next section that's not completed
+            let nextSection = null;
+            menuItems.forEach(item => {
+                if (!item.classList.contains('completed') && !nextSection) {
+                    nextSection = item.dataset.section;
+                }
+            });
+            
+            if (nextSection) {
+                switchToSection(nextSection);
+            }
+        }
+        
+        // Switch to specific section
+        function switchToSection(section) {
+            // Save current section data
+            saveSectionData(appState.currentSection);
+            
+            // Update current section
+            appState.currentSection = section;
+            
+            // Update active menu item
+            menuItems.forEach(item => {
+                if (item.dataset.section === section) {
+                    item.classList.add('active');
+                    item.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        item.style.transform = 'scale(1)';
+                    }, 200);
+                } else {
+                    item.classList.remove('active');
+                    item.style.transform = 'scale(1)';
+                }
+            });
+            
+            // Update section name
+            let sectionNameText = 'ОСМОТР АВТОМОБИЛЯ: ';
+            switch(section) {
+                case 'exterior': sectionNameText += 'КУЗОВ'; break;
+                case 'wheels': sectionNameText += 'КОЛЁСА'; break;
+                case 'interior': sectionNameText += 'САЛОН'; break;
+                case 'engine': sectionNameText += 'ДВИГАТЕЛЬ'; break;
+                case 'lights': sectionNameText += 'ФАРЫ'; break;
+            }
+            sectionName.textContent = sectionNameText;
+            
+            // Load new section data
+            loadSectionData(section);
+        }
+        
+        // Show review section with all photos
+        function showReviewSection() {
+            inspectionSection.style.display = 'none';
+            reviewSection.style.display = 'block';
+            
+            // Hide photo section and menu
+            photoSection.style.display = 'none';
+            
+            // Clear existing photos
+            reviewPhotos.innerHTML = '';
+            
+            // Add all section photos
+            for (const [section, data] of Object.entries(appState.sections)) {
+                if (data.photo) {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'review-photo';
+                    
+                    let sectionTitle = '';
+                    switch(section) {
+                        case 'exterior': sectionTitle = 'Кузов'; break;
+                        case 'wheels': sectionTitle = 'Колёса'; break;
+                        case 'interior': sectionTitle = 'Салон'; break;
+                        case 'engine': sectionTitle = 'Двигатель'; break;
+                        case 'lights': sectionTitle = 'Фары'; break;
+                    }
+                    
+                    photoDiv.innerHTML = `
+                        <img src="${data.photo}" alt="${sectionTitle}">
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 0.5rem; text-align: center; font-size: 0.9rem;">${sectionTitle}</div>
+                    `;
+                    reviewPhotos.appendChild(photoDiv);
+                }
+            }
+            
+            // Update action buttons for review section
+            btnProblem.style.display = 'none';
+            btnNoProblem.textContent = 'Завершить осмотр';
+            btnNoProblem.innerHTML = '<i class="fas fa-check-circle"></i> Завершить осмотр';
+        }
+        
+        // Complete the inspection
+        function completeInspection() {
+            // Save rating and final comment
+            appState.rating = document.querySelector('.rating-star.active')?.dataset.rating || 0;
+            appState.finalComment = finalComment.value;
+            
+            // Show completion modal
+            showModal(completeModal);
+            
+            // Here you would typically send the data to a server
+            console.log('Осмотр завершен:', appState);
+        }
+        
+        // Show modal
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+        
+        // Hide modal
+        function hideModal(modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Event listeners
+        photoPlaceholder.addEventListener('click', () => {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    photoPreview.src = event.target.result;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    
+                    // Save photo to current section
+                    appState.sections[appState.currentSection].photo = event.target.result;
+                    
+                    // Add slight zoom animation
+                    photoPreview.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        photoPreview.style.transform = 'scale(1)';
+                        photoPreview.style.transition = 'transform 0.5s ease';
+                    }, 50);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Inspection items toggle
+        inspectionItems.forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('checked');
+                
+                // Add bounce animation to checkmark
+                const icon = this.querySelector('i');
+                icon.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    icon.style.transform = this.classList.contains('checked') ? 'scale(1.1)' : 'scale(1)';
+                }, 300);
+            });
+        });
+        
+        // Section menu selection
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const section = this.dataset.section;
+                switchToSection(section);
+            });
+        });
+        
+        // Info icon click
+        infoIcon.addEventListener('click', function() {
+            this.style.transform = 'scale(1.2) rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1) rotate(0)';
+                alert('Комплексный осмотр автомобиля включает проверку:\n\n• Внешнего состояния кузова\n• Работоспособности всех систем\n• Технических жидкостей\n• Электрооборудования\n• Ходовой части и тормозов');
+            }, 300);
+        });
+        
+        // Problem button click
+        btnProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Show comment modal
+            issueComment.value = appState.sections[appState.currentSection].comment;
+            showModal(commentModal);
+        });
+        
+        // No problem button click
+        btnNoProblem.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            if (reviewSection.style.display === 'block') {
+                completeInspection();
+            } else {
+                moveToNextSection();
+            }
+        });
+        
+        // Modal buttons
+        modalCancel.addEventListener('click', () => {
+            hideModal(commentModal);
+        });
+        
+        modalSubmit.addEventListener('click', () => {
+            // Save comment to current section
+            appState.sections[appState.currentSection].comment = issueComment.value;
+            hideModal(commentModal);
+            
+            // Move to next section
+            moveToNextSection();
+        });
+        
+        modalClose.addEventListener('click', () => {
+            hideModal(completeModal);
+        });
+        
+        // Rating stars
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                
+                // Update stars display
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Initialize the app
+        initApp();
+
+
+        // Проверка поддержки и окружения
+if ('serviceWorker' in navigator && 
+    (location.protocol === 'https:' || location.hostname.includes('localhost'))) {
+  
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker зарегистрирован:', registration.scope);
+        
+        // Отслеживание обновлений
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              console.log('Новая версия SW готова к использованию!');
+              // Можно добавить уведомление для пользователя
+            }
+          });
+        });
+      })
+      .catch(function(error) {
+        console.error('Ошибка регистрации ServiceWorker:', error);
+      });
+  });
+} else {
+  console.warn('Service Worker не поддерживается или работает только на HTTPS/localhost');
+}
+    </script>
+</body>
+</html>

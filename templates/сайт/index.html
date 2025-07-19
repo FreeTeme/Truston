@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Цифровой пароль</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #2c3e50;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .password-box {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .digit-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: #ecf0f1;
+        }
+
+        .digit-input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        button {
+            padding: 10px 30px;
+            font-size: 18px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="password-box">
+            <input type="number" class="digit-input" maxlength="1" data-index="0">
+            <input type="number" class="digit-input" maxlength="1" data-index="1">
+            <input type="number" class="digit-input" maxlength="1" data-index="2">
+            <input type="number" class="digit-input" maxlength="1" data-index="3">
+        </div>
+        <button onclick="checkPassword()">Проверить</button>
+        <div class="error" id="error">Неверный пароль!</div>
+    </div>
+
+    <script>
+        const inputs = document.querySelectorAll('.digit-input');
+        
+        // Автопереход между полями ввода
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length > 0) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '') {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+
+        function checkPassword() {
+            const password = Array.from(inputs).map(input => input.value).join('');
+            const error = document.getElementById('error');
+
+            if (password === '0777') {
+                // Перенаправление на секретную страницу
+                window.location.href = 'glav.html';
+            } else {
+                error.style.display = 'block';
+                inputs.forEach(input => input.style.borderColor = '#e74c3c');
+            }
+        }
+    </script>
+</body>
+</html>
