@@ -210,7 +210,7 @@
             align-items: center;
         }
 
-        .logo {
+        /* .logo {
             font-size: 28px;
             font-weight: 800;
             background: var(--gradient);
@@ -219,7 +219,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
+        } */
 
         .logo-icon {
             font-size: 32px;
@@ -572,6 +572,36 @@
                 grid-template-columns: 1fr;
             }
         }
+
+
+        .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo-main {
+    font-size: 28px;
+    font-weight: 800;
+
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.logo-sub {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--secondary); /* или любой другой цвет, который вам нравится */
+    margin-top: 2px;
+}
+
     </style>
 </head>
 <body>
@@ -580,10 +610,12 @@
         <div class="container">
             <nav>
                 <a href="#" class="logo">
-                    <i class="fas fa-qrcode logo-icon"></i>
-                   <span style="display: flex; flex-direction: column;">Truston </span>
-                   
-                </a>
+    <i class="fas fa-qrcode logo-icon"></i>
+    <div class="logo-text">
+        <span class="logo-main">Truston</span>
+        <span class="logo-sub">AutoScan</span>
+    </div>
+</a>
                 
                 <div class="nav-links"> 
                     <a href="#" class="active">Заказы</a>
