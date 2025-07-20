@@ -824,15 +824,15 @@
 
         .vin-modal-close-mobile {
     position: absolute;
-    top: 0.8rem;
+    top: 2rem;
     right: 0.8rem;
     background: none;
     border: none;
     color: var(--gray);
     font-size: 2rem; /* Увеличиваем размер шрифта кнопки закрытия */
     cursor: pointer;
-    width: 40px; /* Увеличиваем ширину кнопки */
-    height: 40px; /* Увеличиваем высоту кнопки */
+    width: 60px; /* Увеличиваем ширину кнопки */
+    height: 60px; /* Увеличиваем высоту кнопки */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1153,9 +1153,9 @@
                     <i class="fas fa-car-side"></i>
                     <span>Подвеска</span>
                 </button>
-                <button class="inspection-btn-mobile" onclick="href='#tech'">
-                    <span >Тех характеристики</span>
-                </button>
+                <button class="inspection-btn-mobile" data-section="tech" onclick="scrollToTech1()">
+    <span>Тех характеристики</span>
+</button>
             </div>
             
             <!-- Car Image - Mobile -->
@@ -2007,6 +2007,13 @@ window.scrollTo({
                 this.play();
             });
         });
+
+        function scrollToTech1() {
+    $('html, body').animate({
+        scrollTop: $('#tech').offset().top - 80
+    }, 500);
+    return false;
+}
     </script>
 </body>
 </html>

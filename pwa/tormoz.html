@@ -2058,7 +2058,7 @@
               .then(function(registration) {
                 console.log('ServiceWorker зарегистрирован:', registration.scope);
                 
-                // Отслеживание обновлений
+                // Отслеживание обновлений 
                 registration.addEventListener('updatefound', () => {
                   const newWorker = registration.installing;
                   newWorker.addEventListener('statechange', () => {
